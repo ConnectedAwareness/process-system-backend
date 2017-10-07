@@ -4,6 +4,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 
 import HeroRouter from './routes/HeroRouter';
+import UserRouter from './routes/UserRouter';
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -30,15 +31,8 @@ class App {
     /* This is just to get up and running, and to make sure what we've got is
      * working so far. This function will change when we start to add more
      * API endpoints */
-    let router = express.Router();
-    // placeholder route handler
-    router.get('/', (req, res, next) => {
-      res.json({
-        message: 'Hello World!'
-      });
-    });
-    this.express.use('/', router);
-    this.express.use('/api/v1/heroes', HeroRouter);
+    this.express.use('/heroes', HeroRouter);
+    this.express.use('/users', UserRouter);
   }
 
 }
