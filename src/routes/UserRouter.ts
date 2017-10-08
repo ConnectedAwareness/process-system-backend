@@ -1,8 +1,15 @@
-import {Router, Request, Response, NextFunction} from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
+import { IConnection, createConnection } from 'mysql';
+import { AbstractRouter } from "./AbstractRouter";
 
-export class UserRouter {
+export class UserRouter{
   router: Router
 
+  private con: IConnection = createConnection({
+    host: "localhost",
+    user: "root",
+    database: "conawa"
+  });
   /**
    * Initialize the UserRouter
    */
@@ -12,7 +19,25 @@ export class UserRouter {
   }
 
   public getUsers(req: Request, res: Response, next: NextFunction) {
-      res.status(200).send('It works!');
+
+    let con = createConnection({
+      host: "localhost",
+      user: "root",
+      database: "conawa"
+    });
+    con.connect((err) => {
+      if (err) {
+        res.status(400).send(err);
+      } else {
+        con.query('SELECT `id`, `name`, `registration_version` FROM `person`', (err, result, fields) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.status(200).send(result);
+          }
+        });
+      }
+    });
   }
 
   /**
@@ -30,7 +55,7 @@ export class UserRouter {
 }
 
 // Create the UserRouter, and export its configured Express.Router
-const UserRoutes = new UserRouter();
-UserRoutes.init();
+const userRouter = new UserRouter();
+userRouter.init();
 
-export default UserRoutes.router;
+export default userRouter.router;
