@@ -1,9 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { IConnection, createConnection } from 'mysql';
-import { AbstractRouter } from "./AbstractRouter";
 
 export class UserRouter{
-  router: Router
+  router: Router;
 
   private con: IConnection = createConnection({
     host: "localhost",
@@ -33,6 +32,7 @@ export class UserRouter{
           if (err) {
             res.status(500).send(err);
           } else {
+            
             res.status(200).send(result);
           }
         });
