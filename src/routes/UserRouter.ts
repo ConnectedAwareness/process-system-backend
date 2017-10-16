@@ -55,7 +55,4 @@ export class UserRouter{
 }
 
 // Create the UserRouter, and export its configured Express.Router
-const userRouter = new UserRouter();
-userRouter.init();
-
-export default userRouter.router;
+export default new UserRouter().router;

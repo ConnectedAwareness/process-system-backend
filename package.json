@@ -14,6 +14,7 @@
     "@types/body-parser": "0.0.33",
     "@types/chai": "^3.4.34",
     "@types/chai-http": "0.0.29",
+    "@types/crypto-js": "^3.1.37",
     "@types/debug": "0.0.29",
     "@types/express": "^4.0.33",
     "@types/jsonwebtoken": "^7.2.3",
@@ -31,6 +32,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "crypto-js": "^3.1.9-1",
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "jsonwebtoken": "^8.1.0",
