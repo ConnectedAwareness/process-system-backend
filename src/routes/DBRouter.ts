@@ -6,12 +6,26 @@ const db = {
   user: "root",
   database: "awarenessplatform"
 };
+const userTypes = [
+  'connectee',
+  'admin',
+  'connector',
+  'integrator',
+  'coordinator'
+]
 const tokenTimer = 20000;
 
 export class DBRouter {
 
   public static con: IConnection;
   router: Router;
+
+  public static validateUserType(type: string): boolean{
+    for(let i = 0; i<userTypes.length; i++){
+      if(userTypes[i]===type) return true
+    }
+    return false;
+  }
 
   /**
    * Initialize the DBRouter
