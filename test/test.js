@@ -14,10 +14,4 @@ describe("Color Code Converter", function() {
             expect(2).to.equal(2)
         });
     });
-
-    describe("First http-test", function() {
-        chai.request(app).get('/').end((err, res) => {
-            expect(res.status).to.equal(200)
-        });
-    });
 });

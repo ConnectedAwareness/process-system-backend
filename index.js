@@ -1,6 +1,5 @@
 const app = require('express')()
 const bodyParser = require('body-parser')
-const bookshelf = require('./bookshelf')
 
 // ROUTES
 const test = require('./routes/test')
@@ -10,7 +9,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     next()
 })
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
