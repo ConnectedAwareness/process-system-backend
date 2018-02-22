@@ -13,7 +13,6 @@ const userConnection = require('./db/user')
 // }
 
 // ROUTES
-const test = require('./routes/test')
 const login = require('./routes/login')
 const tokencheck = require('./routes/tokencheck')
 
@@ -44,6 +43,10 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 // app.use(flash())
 // app.use(cookieParser());
 app.use(passport.initialize())
+
+/**
+ * main resquest paths
+ */
 
 app.use('/login', login)
 app.use(tokencheck)

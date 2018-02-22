@@ -23,8 +23,12 @@ passport.use(new LocalApiKeyStrategy((apikey, done) => {
  * if incorrect: return error => the user has to login
  * if correct: give the user information to the requested service
  */
-
-routes.all('*', passport.authenticate('localapikey'), (req, res, next) => {
-    next()
-})
+routes.all('*', (req, res, next) => {
+        req.body.apikey = req.headers.apikey
+            // passport.authenticate('localapikey')
+        passport.authenticate('localapikey')(req, res, next);
+    })
+    // routes.all('*', passport.authenticate('localapikey'), (req, res, next) => {
+    //     next()
+    // })
 module.exports = routes
