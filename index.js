@@ -1,9 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const flash = require('connect-flash')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const cookieParser = require('cookie-parser')
 const userConnection = require('./db/user')
 
 // const ensureAuthenticated = (req, res, next) => {
@@ -40,8 +38,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
-// app.use(flash())
-// app.use(cookieParser());
 app.use(passport.initialize())
 
 /**
@@ -52,7 +48,7 @@ app.use('/login', login)
 app.use(tokencheck)
 app.get('/', (req, res) => {
     // cookieParser()
-    res.send('error')
+    res.send('default')
 })
 
 // start server
