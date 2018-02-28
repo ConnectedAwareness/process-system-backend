@@ -2,7 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const userConnection = require('./db/user')
+const bookshelf = require('./db/bookshelf')
+const userModel = require('./db/models').userModel
 
 // const ensureAuthenticated = (req, res, next) => {
 //     if (req.isAuthenticated()) { return next() }
@@ -13,6 +14,8 @@ const userConnection = require('./db/user')
 // ROUTES
 const login = require('./routes/login')
 const tokencheck = require('./routes/tokencheck')
+const user = require('./routes/user')
+const organisation = require('./routes/organisation')
 
 //passport middleware
 
@@ -21,8 +24,10 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser((id, done) => {
-    userConnection.findById(id, (err, user) => {
-        done(err, user)
+    //TODO: check multiple users
+    userModel.forge({id: id}).fetch().then((user)=>{
+        if(!user) done(null, false)
+        done(null, user)
     })
 })
 
@@ -46,10 +51,8 @@ app.use(passport.initialize())
 
 app.use('/login', login)
 app.use(tokencheck)
-app.get('/', (req, res) => {
-    // cookieParser()
-    res.send('default')
-})
+app.use('/user', user)
+app.use('/organisation', organisation)
 
 // start server
 app.all('*', (req, res) => {
