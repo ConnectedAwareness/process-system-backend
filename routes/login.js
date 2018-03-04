@@ -43,9 +43,9 @@ const updateToken = (user, done) => {
           user.token = token
           return done(null, user)
       })
-      .catch((err) => {done(err)});
+      .catch((err) => {return done(err)});
     })
-    .catch((err) => {done(err)});
+    .catch((err) => {return done(err)});
 }
 
 // PASSPORT

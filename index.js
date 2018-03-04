@@ -5,12 +5,6 @@ const LocalApiKeyStrategy = require('passport-localapikey').Strategy
 const bookshelf = require('./db/bookshelf')
 const userModel = require('./db/models').userModel
 
-// const ensureAuthenticated = (req, res, next) => {
-//     if (req.isAuthenticated()) { return next() }
-//     res.send('unauthorized')
-//         // res.redirect('/api/unauthorized')
-// }
-
 // ROUTES
 const login = require('./routes/login')
 const tokencheck = require('./routes/tokencheck')
@@ -28,10 +22,10 @@ passport.deserializeUser((id, done) => {
     userModel.forge({id: id}).fetch().then((user)=>{
         if(!user) done(null, false)
         done(null, user)
+    }).catch((err)=>{
+        done(err)
     })
 })
-
-
 
 //""MIDDLEWARE""
 const app = express()

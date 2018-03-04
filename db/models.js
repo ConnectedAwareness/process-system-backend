@@ -6,4 +6,4 @@ const bookshelf = require('./bookshelf')
 
 module.exports.userModel = bookshelf.Model.extend({
     tableName: 'user'
-});
+})

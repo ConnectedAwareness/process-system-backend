@@ -2,7 +2,7 @@
  * This module contains the bookshelf definition with DB settings
  * TODO: put on gitignore ???
  */
-
+// const Schema = require('bookshelf-schema')
 const knex = require('knex')({
     client: 'mysql',
     connection: {
@@ -11,7 +11,13 @@ const knex = require('knex')({
       password : '',
       database : 'awarenessplatform',
       charset  : 'utf8'
+    },
+    pool: {
+      min: 0,
+      max: 10
     }
-  });
+  })
+  const db = require('bookshelf')(knex)
+  // db.plugin(Schema({}))
 
-  module.exports = require('bookshelf')(knex);
+  module.exports = db
