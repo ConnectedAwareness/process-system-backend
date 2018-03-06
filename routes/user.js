@@ -1,5 +1,13 @@
 const routes = require('express').Router()
 const userModel = require('./../db/models').userModel
+const publicInformations = ["id", "email", "name", "forename", "surname", "role"]
+
+const sendError = (res, status, err) => {
+    res.status(status).json({
+        error: true,
+        data: { message: err.message }
+    })
+}
 
 const generateObject = (datanames, req) => {
     const obj = {}
@@ -15,56 +23,34 @@ const generateObject = (datanames, req) => {
 routes.post('/', (req, res) => {
 
     // test body parameters
-    if (!req.body.email || !req.body.password) {
-        res.status(500).json({
-            error: true,
-            data: { message: 'not data' }
-        })
+    if (req.body.email && req.body.password) {
+        //test if user exists
+        userModel.forge({ email: req.body.email }).fetch().then((user) => {
+            if (user) throw new Error('user exists!')
+
+            //generate and save new user
+            userModel.forge(generateObject(['email', 'password', 'name', 'forename', 'surname', 'role'], req)).save()
+                .then((data) => {
+                    res.json({ error: false, data: data })
+                }).catch((err) => { sendError(res, 500, err) })
+        }).catch((err) => { sendError(res, 500, err) })
+    } else {
+        sendError(res, 500, new Error('email and password neaded!'))
     }
-
-    //test if user exists
-    userModel.forge({ email: req.body.email }).fetch().then((user) => {
-        if (user) {
-            res.status(400).json({
-                error: true,
-                data: { message: 'user exists!' }
-            })
-        }
-
-        //generate and save new user
-        userModel.forge(generateObject(['email', 'password', 'name'], req)).save()
-            .then((user) => {
-                res.json({ error: false, user })
-            })
-            .catch((err) => {
-                res.status(500).json({
-                    error: true,
-                    data: { message: err.message }
-                })
-            })
-    })
 })
 /**
  * read user with special id
  */
 routes.get('/:id', (req, res) => {
-    userModel.forge({ id: req.params.id }).fetch().then((user) => {
-        console.log(user)
-        if (user) res.json({
+    userModel.forge({ id: req.params.id }).fetch({ columns: publicInformations }).then((data) => {
+        if (data) res.json({
             error: false,
-            data: {
-                id: user.attributes.id,
-                email: user.attributes.email,
-                name: user.attributes.name
-            }
+            data: data
         })
         else {
-            res.json({
-                error: true,
-                data: { message: 'user not found!' }
-            })
+            throw new Error('user not found!')
         }
-    })
+    }).catch((err) => { sendError(res, 500, err) })
 })
 /**
  * read group of users with limit and offset parameters
@@ -75,69 +61,50 @@ routes.get('/', (req, res, next) => {
     if (offset != NaN && limit != NaN) {
         userModel.query((qb) => {
             qb.limit(limit).offset(offset)
-        }).fetchAll().then((data) => {
-            data = data.toJSON()
-            res.json({error: false, data: data})
-        })
+        }).fetchAll({ columns: publicInformations })
+            .then((data) => {
+                res.json({ error: false, data: data.toJSON() })
+            })
     }
     else {
         next()
     }
-    console.log(res)
 })
 
+/**
+ * updates user informations
+ * TODO: email verification
+ */
 routes.put('/:id', (req, res) => {
     userModel.forge({ id: req.params.id })
-        .fetch({ require: true })
+        .fetch({ columns: publicInformations })
         .then((user) => {
             user.save({
-                name: req.body.name || user.get('name'),
                 email: req.body.email || user.get('email'),
-                password: req.body.password || user.get('password')
-            }).then(() => {
-                res.json({
-                    error: false,
-                    data: { message: 'User details updated' }
-                });
-            }).catch((err) => {
-                res.status(500).json({
-                    error: true,
-                    data: { message: err.message }
-                });
-            });
+                name: req.body.name || user.get('name'),
+                forename: req.body.forename || user.get('forename'),
+                surname: req.body.surname || user.get('surname'),
+                password: req.body.password || user.get('password'),
+                role: req.body.role || user.get('role')
+            }).then((data) => {
+                res.json({ error: false, data: data })
+            }).catch((err) => { sendError(res, 500, err) })
         })
-        .catch((err) => {
-            res.status(500).json({
-                error: true,
-                data: { message: err.message }
-            });
-        });
+        .catch((err) => { sendError(res, 500, err) })
 })
 
+/**
+ * deletes one user
+ */
 routes.delete('/:id', (req, res) => {
     userModel.forge({ id: req.params.id })
         .fetch({ require: true })
         .then(function (user) {
             user.destroy()
-                .then(() => {
-                    res.json({
-                        error: true,
-                        data: { message: 'User successfully deleted' }
-                    });
-                })
-                .catch((err) => {
-                    res.status(500).json({
-                        error: true,
-                        data: { message: err.message }
-                    });
-                });
+                .then(() => { res.json({ error: false }) })
+                .catch((err) => { sendError(res, 500, err) })
         })
-        .catch((err) => {
-            res.status(500).json({
-                error: true,
-                data: { message: err.message }
-            });
-        });
+        .catch((err) => { sendError(res, 500, err) })
 })
 
 

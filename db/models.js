@@ -7,3 +7,7 @@ const bookshelf = require('./bookshelf')
 module.exports.userModel = bookshelf.Model.extend({
     tableName: 'user'
 })
+
+module.exports.organisationModel = bookshelf.Model.extend({
+    tableName: 'organisation'
+})

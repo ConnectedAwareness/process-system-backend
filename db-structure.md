@@ -29,5 +29,5 @@ CREATE TABLE `organisation` (
  `name` varchar(50) NOT NULL,
  `coordinator_id` bigint(20) NOT NULL,
  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
 ```
