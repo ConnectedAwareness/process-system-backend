@@ -18,6 +18,7 @@ const knex = require('knex')({
     }
   })
   const db = require('bookshelf')(knex)
+  db.plugin('registry')
   // db.plugin(Schema({}))
 
   module.exports = db

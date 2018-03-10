@@ -1,21 +1,6 @@
 const routes = require('express').Router()
-const userModel = require('./../db/models').userModel
+const User = require('./../db/user').User
 const publicInformations = ["id", "email", "name", "forename", "surname", "role"]
-
-const sendError = (res, status, err) => {
-    res.status(status).json({
-        error: true,
-        data: { message: err.message }
-    })
-}
-
-const generateObject = (datanames, req) => {
-    const obj = {}
-    datanames.forEach(name => {
-        if (req.body[name]) obj[name] = req.body[name]
-    })
-    return obj
-}
 
 /**
  * create a new user 
@@ -25,24 +10,23 @@ routes.post('/', (req, res) => {
     // test body parameters
     if (req.body.email && req.body.password) {
         //test if user exists
-        userModel.forge({ email: req.body.email }).fetch().then((user) => {
+        User.byEmail(req.body.email).then((user) => {
             if (user) throw new Error('user exists!')
 
             //generate and save new user
-            userModel.forge(generateObject(['email', 'password', 'name', 'forename', 'surname', 'role'], req)).save()
-                .then((data) => {
-                    res.json({ error: false, data: data })
-                }).catch((err) => { sendError(res, 500, err) })
-        }).catch((err) => { sendError(res, 500, err) })
+            User.save(req.body).then((data) => {
+                res.json({ error: false, data: data })
+            }).catch((err) => { res.redirect('/error/404/?message=' + err.message) })
+        }).catch((err) => { res.redirect('/error/404/?message=' + err.message) })
     } else {
-        sendError(res, 500, new Error('email and password neaded!'))
+        res.redirect('/error/404/?message=' + new Error('email and password neaded!').message)
     }
 })
 /**
  * read user with special id
  */
 routes.get('/:id', (req, res) => {
-    userModel.forge({ id: req.params.id }).fetch({ columns: publicInformations }).then((data) => {
+    User.byId(req.params.id).then((data) => {
         if (data) res.json({
             error: false,
             data: data
@@ -50,7 +34,7 @@ routes.get('/:id', (req, res) => {
         else {
             throw new Error('user not found!')
         }
-    }).catch((err) => { sendError(res, 500, err) })
+    }).catch((err) => { res.redirect('/error/404/?message=' + err.message) })
 })
 /**
  * read group of users with limit and offset parameters
@@ -59,12 +43,11 @@ routes.get('/', (req, res, next) => {
     let offset = parseInt(req.query.offset) || 0
     let limit = parseInt(req.query.limit) || 10
     if (offset != NaN && limit != NaN) {
-        userModel.query((qb) => {
-            qb.limit(limit).offset(offset)
-        }).fetchAll({ columns: publicInformations })
-            .then((data) => {
-                res.json({ error: false, data: data.toJSON() })
+        User.getAll(limit, offset).then((data) => {
+            res.json({
+                error: false, data: data.toJSON()
             })
+        })
     }
     else {
         next()
@@ -74,9 +57,10 @@ routes.get('/', (req, res, next) => {
 /**
  * updates user informations
  * TODO: email verification
+ * TODO: link to model
  */
 routes.put('/:id', (req, res) => {
-    userModel.forge({ id: req.params.id })
+    User.forge({ id: req.params.id })
         .fetch({ columns: publicInformations })
         .then((user) => {
             user.save({
@@ -88,23 +72,24 @@ routes.put('/:id', (req, res) => {
                 role: req.body.role || user.get('role')
             }).then((data) => {
                 res.json({ error: false, data: data })
-            }).catch((err) => { sendError(res, 500, err) })
+            }).catch((err) => { res.redirect('/error/404/?message=' + err.message) })
         })
-        .catch((err) => { sendError(res, 500, err) })
+        .catch((err) => { res.redirect('/error/404/?message=' + err.message) })
 })
 
 /**
  * deletes one user
+ * TODO: link to model
  */
 routes.delete('/:id', (req, res) => {
-    userModel.forge({ id: req.params.id })
+    User.forge({ id: req.params.id })
         .fetch({ require: true })
         .then(function (user) {
             user.destroy()
                 .then(() => { res.json({ error: false }) })
-                .catch((err) => { sendError(res, 500, err) })
+                .catch((err) => { res.redirect('/error/404/?message=' + err.message) })
         })
-        .catch((err) => { sendError(res, 500, err) })
+        .catch((err) => { res.redirect('/error/404/?message=' + err.message) })
 })
 
 

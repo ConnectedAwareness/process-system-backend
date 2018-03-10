@@ -6,10 +6,10 @@
 const passport = require('passport')
 const routes = require('express').Router()
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const userModel = require('./../db/models').userModel
+const User = require('./../db/user').User
 
 const tokenExists = (token, done) => {
-    userModel.forge({token: token}).fetch().then((user)=>{
+    User.forge({token: token}).fetch().then((user)=>{
         if(!user) return done(null, false)
         return done(null, user)
     })
@@ -20,7 +20,7 @@ const tokenExists = (token, done) => {
  */
 passport.use(new LocalApiKeyStrategy({},(apikey, done) => {
     process.nextTick(() => {
-        userModel.forge({token: apikey}).fetch().then((user)=>{
+        User.forge({token: apikey}).fetch().then((user)=>{
             if(!user) return done(null, false)
             return done(null, user)
         })

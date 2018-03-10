@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
 const bookshelf = require('./db/bookshelf')
-const userModel = require('./db/models').userModel
+const User = require('./db/user').User
 
 // ROUTES
 const login = require('./routes/login')
@@ -19,7 +19,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
     //TODO: check multiple users
-    userModel.forge({id: id}).fetch().then((user)=>{
+    User.forge({id: id}).fetch().then((user)=>{
         if(!user) done(null, false)
         done(null, user)
     }).catch((err)=>{
@@ -42,7 +42,20 @@ app.use(passport.initialize())
 /**
  * main resquest paths
  */
-
+const validErrorCodes = [404, 505] // TODO: find other soltion to check error codes
+app.all('/error/:id', (req, res)=>{
+    let code;
+    validErrorCodes.forEach(c => {
+        if(c == req.params.id) code = c
+    })
+    if(code){
+        res.status(code).json({error: req.query.message})
+    } else {
+        res.status(404).json({
+            error: 'Invalid status code '+req.params.id
+        })
+    }
+})
 app.use('/login', login)
 app.use(tokencheck)
 app.use('/user', user)

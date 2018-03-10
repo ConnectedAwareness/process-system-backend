@@ -6,7 +6,7 @@ const passport = require('passport')
 const routes = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy
 const crypto = require('crypto')
-const userModel = require('./../db/models').userModel
+const User = require('./../db/user').User
 
 /**
  * generates a random String with length of 10 - 12 and chars from 0 to z
@@ -36,7 +36,7 @@ const generateTokenFromId = (id) => {
  */
 const updateToken = (user, done) => {
     const token = generateTokenFromId(user.id)
-    userModel.forge({id: user.id}).fetch({require: true})
+    User.forge({id: user.id}).fetch({require: true})
     .then((u) => {
       u.save({token: token})
       .then(() => {
@@ -57,7 +57,7 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 }, (email, password, done) => {
     process.nextTick(() => {
-        userModel.forge({email: email, password: password}).fetch().then((user)=>{
+        User.forge({email: email, password: password}).fetch().then((user)=>{
             if(!user) return done(null, false)
             return updateToken(user, done)
         })
