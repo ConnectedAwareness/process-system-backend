@@ -10,17 +10,17 @@ const generateObject = (datanames, data) => {
     return obj
 }
 
-bookshelf.knex.schema.createTable('user', (table) => {  
-    table.increments()
-    table.string('email')
-    table.string('password')
-    table.string('name')
-    table.string('forename')
-    table.string('surname')
-    table.string('token')
-    table.bigInteger('token_date')
-    table.string('role').defaultTo('admin')
-})
+// bookshelf.knex.schema.createTable('user', (table) => {  
+//     table.increments()
+//     table.string('email')
+//     table.string('password')
+//     table.string('name')
+//     table.string('forename')
+//     table.string('surname')
+//     table.string('token')
+//     table.bigInteger('token_date')
+//     table.string('role').defaultTo('admin')
+// })
 
 const User = bookshelf.Model.extend({
     tableName: 'user'
@@ -45,3 +45,19 @@ const User = bookshelf.Model.extend({
     }
 })
 module.exports.User = User
+
+const mongoose     = require('mongoose');
+const Schema       = mongoose.Schema;
+
+const UserSchema   = new Schema({
+    email: {type:String, required: true},
+    password: {type:String, required: true},
+    alias: String,
+    first_name: String,
+    last_name: String,
+    token: String,
+    token_date: Date,
+    role: String
+});
+
+module.exports.UserModel = mongoose.model('User', UserSchema);

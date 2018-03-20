@@ -1,33 +1,27 @@
 #DB-Structure
 
-This File Contains all sql-requests we used to create the mysql-database
-To get the create query from phpmyadmin you have to type the followin query
-into the sql tab:
-```SHOW CREATE TABLE user```
+
 
 ##Requests
 
-User-Table
+This is a default for the Organisations_Collection
 
 ```
-CREATE TABLE `user` (
- `id` bigint(20) NOT NULL AUTO_INCREMENT,
- `email` varchar(40) NOT NULL,
- `name` varchar(30) DEFAULT NULL,
- `password` varchar(30) NOT NULL,
- `token` varchar(100) DEFAULT NULL,
- `token_date` bigint(20) DEFAULT NULL,
- PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-```
-
-Organisation-Table
-
-```
-CREATE TABLE `organisation` (
- `id` bigint(20) NOT NULL AUTO_INCREMENT,
- `name` varchar(50) NOT NULL,
- `coordinator_id` bigint(20) NOT NULL,
- PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8
+{
+    "_id" : ObjectId("5aafcf80dd248f7ef86e05cf"),
+    "name" : "DEFAULT",
+    "users" : [ 
+        {
+            "_id" : ObjectId("5aafcf80dd248f7ef86e0500"),
+            "email" : "master@admin.de",
+            "password" : "0000",
+            "alias" : "admin",
+            "first_name" : "Max",
+            "last_name" : "Mustermann",
+            "role" : "coordinator",
+            "__v" : 0,
+            "token" : "7a9b6ff10e0bb0aa60635324dadf5f13ca090a0e7abfc369448e7192feae647d"
+        }
+    ]
+}
 ```

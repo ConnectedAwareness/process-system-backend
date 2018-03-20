@@ -6,7 +6,7 @@ const passport = require('passport')
 const routes = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy
 const crypto = require('crypto')
-const User = require('./../db/user').User
+const Organisation = require('./../db/organisation').Organisation
 
 /**
  * generates a random String with length of 10 - 12 and chars from 0 to z
@@ -29,25 +29,6 @@ const generateTokenFromId = (id) => {
         .digest('hex');
 }
 
-/**
- * generates a new Token and saves it in the DB
- * @param {user object} user 
- * @param {*done function of passport} done 
- */
-const updateToken = (user, done) => {
-    const token = generateTokenFromId(user.id)
-    User.forge({id: user.id}).fetch({require: true})
-    .then((u) => {
-      u.save({token: token})
-      .then(() => {
-          user.token = token
-          return done(null, user)
-      })
-      .catch((err) => {return done(err)});
-    })
-    .catch((err) => {return done(err)});
-}
-
 // PASSPORT
 
 /**
@@ -57,9 +38,18 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 }, (email, password, done) => {
     process.nextTick(() => {
-        User.forge({email: email, password: password}).fetch().then((user)=>{
-            if(!user) return done(null, false)
-            return updateToken(user, done)
+        Organisation.findOne({ 'users.email': email, 'users.password': password }, (err, organisation)=>{
+            let user = organisation.users[0]
+            const token = generateTokenFromId(user._id)
+            if (err) return done(err)
+            user.token = token
+
+            // save the user
+            user.save((err) => {
+                if (err) return done(err)
+
+                return done(null, user)
+            })
         })
     })
 }));
@@ -67,6 +57,7 @@ passport.use(new LocalStrategy({
 // REST
 
 /**
+ * local calls LocalStrategy from passport (Ammon)
  * defines the login request with pasport authentification and returns the token
  */
 routes.post('/', passport.authenticate('local', {

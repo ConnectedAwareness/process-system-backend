@@ -2,26 +2,14 @@
  * This module defines the relations of the DB
  */
 
-const bookshelf = require('./bookshelf')
-const User = require('./user').User
+const mongoose     = require('mongoose');
+const UserModel = require('./user').UserModel
+const Schema       = mongoose.Schema;
 
-const generateObject = (datanames, data) => {
-    const obj = {}
-    datanames.forEach(name => {
-        if (data[name]) obj[name] = data[name]
-    })
-    return obj
-}
+const OrganisationSchema   = new Schema({
+    name: {type:String, required: true},
+    coordinator_id: Number,
+    users: [UserModel.schema]
+});
 
-const Organisation = bookshelf.Model.extend({
-    tableName: 'organisation',
-    users: function(){
-        return this.hasMany(User);
-    }
-},{
-    getUsers: function(id){//TODO:
-        return Organisation.where('id', 1).fetch({withRelated: ['users']})
-    }
-})
-
-module.exports.Organisation = Organisation
+module.exports.Organisation = mongoose.model('Organisation', OrganisationSchema);

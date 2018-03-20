@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
+const mongoose = require('mongoose');
 const bookshelf = require('./db/bookshelf')
 const User = require('./db/user').User
 
@@ -13,16 +14,26 @@ const organisation = require('./routes/organisation')
 
 //passport middleware
 
+
+
+mongoose.connect('mongodb://localhost/test');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log('connected with database!')
+});
+
 passport.serializeUser((user, done) => {
     done(null, user.id)
 })
 
 passport.deserializeUser((id, done) => {
     //TODO: check multiple users
-    User.forge({id: id}).fetch().then((user)=>{
-        if(!user) done(null, false)
+    User.forge({ id: id }).fetch().then((user) => {
+        if (!user) done(null, false)
         done(null, user)
-    }).catch((err)=>{
+    }).catch((err) => {
         done(err)
     })
 })
@@ -43,16 +54,16 @@ app.use(passport.initialize())
  * main resquest paths
  */
 const validErrorCodes = [404, 505] // TODO: find other soltion to check error codes
-app.all('/error/:id', (req, res)=>{
+app.all('/error/:id', (req, res) => {
     let code;
     validErrorCodes.forEach(c => {
-        if(c == req.params.id) code = c
+        if (c == req.params.id) code = c
     })
-    if(code){
-        res.status(code).json({error: req.query.message})
+    if (code) {
+        res.status(code).json({ error: req.query.message })
     } else {
         res.status(404).json({
-            error: 'Invalid status code '+req.params.id
+            error: 'Invalid status code ' + req.params.id
         })
     }
 })

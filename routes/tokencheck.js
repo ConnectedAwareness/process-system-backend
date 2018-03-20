@@ -1,3 +1,4 @@
+
 /**
  * This Module defines the authentification with a token called apikey
  * It is called every time exept when login
@@ -6,23 +7,18 @@
 const passport = require('passport')
 const routes = require('express').Router()
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const User = require('./../db/user').User
+const Organisation = require('./../db/organisation').Organisation
 
-const tokenExists = (token, done) => {
-    User.forge({token: token}).fetch().then((user)=>{
-        if(!user) return done(null, false)
-        return done(null, user)
-    })
-}
 /**
  * registrates the auth strategy to the pasport service
  * TODO: apikey nicht in body bei get
  */
-passport.use(new LocalApiKeyStrategy({},(apikey, done) => {
+passport.use(new LocalApiKeyStrategy({}, (apikey, done) => {
     process.nextTick(() => {
-        User.forge({token: apikey}).fetch().then((user)=>{
-            if(!user) return done(null, false)
-            return done(null, user)
+        Organisation.findOne({ 'users.token': apikey }, (err, organisation) => {
+            if (err) return done(err)
+            if (!organisation || !organisation.users[0]) return done(null, false)
+            return done(null, organisation.users[0])
         })
     })
 }))
@@ -35,8 +31,7 @@ passport.use(new LocalApiKeyStrategy({},(apikey, done) => {
  * if correct: give the user information to the requested service
  */
 routes.all('*', (req, res, next) => {
-        req.body.apikey = req.headers.apikey
-            // passport.authenticate('localapikey')
-        passport.authenticate('localapikey')(req, res, next);
-    })
+    req.body.apikey = req.headers.apikey
+    passport.authenticate('localapikey')(req, res, next);
+})
 module.exports = routes
