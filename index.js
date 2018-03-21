@@ -3,8 +3,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
 const mongoose = require('mongoose');
-const bookshelf = require('./db/bookshelf')
-const User = require('./db/user').User
+const Organisation = require('./db/organisation').Organisation
 
 // ROUTES
 const login = require('./routes/login')
@@ -25,16 +24,15 @@ db.once('open', function () {
 });
 
 passport.serializeUser((user, done) => {
-    done(null, user.id)
+    done(null, user._id)
 })
 
 passport.deserializeUser((id, done) => {
     //TODO: check multiple users
-    User.forge({ id: id }).fetch().then((user) => {
-        if (!user) done(null, false)
-        done(null, user)
-    }).catch((err) => {
-        done(err)
+    Organisation.findOne({ 'users._id': id }, (err, organisation) => {
+        if (err) done(err)
+        else if(!res.json(organisation.users.id(id))) done(null, false)
+        else done(null, res.json(organisation.users.id(id)))
     })
 })
 

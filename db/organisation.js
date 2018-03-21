@@ -3,13 +3,13 @@
  */
 
 const mongoose     = require('mongoose');
-const UserModel = require('./user').UserModel
+const UserSchema = require('./user').UserSchema
 const Schema       = mongoose.Schema;
 
 const OrganisationSchema   = new Schema({
     name: {type:String, required: true},
     coordinator_id: Number,
-    users: [UserModel.schema]
+    users: [UserSchema]
 });
 
 module.exports.Organisation = mongoose.model('Organisation', OrganisationSchema);

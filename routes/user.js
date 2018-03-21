@@ -1,29 +1,46 @@
 const routes = require('express').Router()
-const UserModel = require('./../db/user').UserModel
+const Organisation = require('./../db/organisation').Organisation
+
+let Default_id = null
+Organisation.findOne({ 'name': 'DEFAULT' }, (err, organisation) => {
+    if (err) console.log(err.message)
+    if (!organisation) console.log(new Error('DEFAULT organisation does not exist!').message)
+    else {
+        Default_id = organisation._id
+    }
+})
 
 /**
  * create a new user 
+ * if the id is not set use DEFAULT organisation
  */
 routes.post('/', (req, res) => {
-    let user = new UserModel()
-    user.email = req.body.email
-    user.password = req.body.password
-    user.alias = req.body.alias
-    user.first_name = req.body.first_name
-    user.last_name = req.body.last_name
-    user.role = req.body.role
-    user.save((err) => {
+    Organisation.findById(req.body.id || Default_id, (err, organisation) => {
+
         if (err) res.send(err)
-        else res.json({ message: 'user created!' })
+        else {
+            let user = new UserModel()
+            user.email = req.body.email
+            user.password = req.body.password
+            user.alias = req.body.alias
+            user.first_name = req.body.first_name
+            user.last_name = req.body.last_name
+            user.role = req.body.role
+            organisation.users.push(user)
+            organisation.save((err) => {
+                if (err) res.send(err)
+                else res.json({ message: 'user created!' })
+            })
+        }
     })
 })
 /**
  * read user with special id
  */
 routes.get('/:id', (req, res) => {
-    UserModel.findById(req.params.id).select('-password').exec((err, user) => {
-        if (err) res.send(err)
-        else res.json(user)
+    Organisation.findOne({ 'users._id': req.params.id }, (err, organisation) => {
+        if (err) res.json(err.message)
+        else {res.json(organisation.users.id(req.params.id))}
     })
 })
 /**
@@ -31,12 +48,12 @@ routes.get('/:id', (req, res) => {
  * TODO: Skip && Limit
  */
 routes.get('/', (req, res, next) => {
-    let offset = parseInt(req.query.offset) || 0
-    let limit = parseInt(req.query.limit) || 10
-    UserModel.find().select('-password').skip(offset).limit(limit).exec((err, users) => {
-        if (err) res.send(err)
-        else res.json(users)
-    })
+    // let offset = parseInt(req.query.offset) || 0
+    // let limit = parseInt(req.query.limit) || 10
+    // UserModel.find().select('-password').skip(offset).limit(limit).exec((err, users) => {
+    //     if (err) res.send(err)
+    //     else res.json(users)
+    // })
 })
 
 /**
@@ -45,24 +62,24 @@ routes.get('/', (req, res, next) => {
  * TODO: link to model
  */
 routes.put('/:id', (req, res) => {
-    UserModel.findById(req.params.id, function (err, user) {
+    // UserModel.findById(req.params.id, function (err, user) {
 
-        if (err) res.send(err)
+    //     if (err) res.send(err)
 
-        if (req.body.email) user.email = req.body.email
-        if (req.body.password) user.password = req.body.password
-        user.alias = req.body.alias
-        user.first_name = req.body.first_name
-        user.last_name = req.body.last_name
-        user.role = req.body.role
+    //     if (req.body.email) user.email = req.body.email
+    //     if (req.body.password) user.password = req.body.password
+    //     user.alias = req.body.alias
+    //     user.first_name = req.body.first_name
+    //     user.last_name = req.body.last_name
+    //     user.role = req.body.role
 
-        // save the user
-        user.save(function (err) {
-            if (err) res.send(err)
+    //     // save the user
+    //     user.save(function (err) {
+    //         if (err) res.send(err)
 
-            res.json({ message: 'user updated!' })
-        })
-    })
+    //         res.json({ message: 'user updated!' })
+    //     })
+    // })
 })
 
 /**
@@ -70,13 +87,18 @@ routes.put('/:id', (req, res) => {
  * TODO: link to model
  */
 routes.delete('/:id', (req, res) => {
-    UserModel.remove({
-        _id: req.params.id
-    }, (err, user) => {
-        if (err) res.send(err)
+    
+    // Organisation.findOne({ 'users._id': req.params.id }, (err, organisation) => {
+    //     if (err) res.json(err.message)
+    //     else {res.json(organisation.users.id(req.params.id))}
+    // })
+    // UserModel.remove({
+    //     _id: req.params.id
+    // }, (err, user) => {
+    //     if (err) res.send(err)
 
-        res.json({ message: 'Successfully deleted' })
-    })
+    //     res.json({ message: 'Successfully deleted' })
+    // })
 })
 
 
