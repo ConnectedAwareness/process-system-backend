@@ -1,5 +1,5 @@
 const routes = require('express').Router()
-const Organisation = require('./../db/organisation').Organisation
+const Organisation = require('./../../db/organisation').Organisation
 
 let Default_id = null
 Organisation.findOne({ 'name': 'DEFAULT' }, (err, organisation) => {
@@ -15,38 +15,38 @@ Organisation.findOne({ 'name': 'DEFAULT' }, (err, organisation) => {
  * if the id is not set use DEFAULT organisation
  */
 routes.post('/', (req, res) => {
-    Organisation.findById(req.body.id || Default_id, (err, organisation) => {
+        Organisation.findById(req.body.id || Default_id, (err, organisation) => {
 
-        if (err) res.send(err)
-        else {
-            let user = new UserModel()
-            user.email = req.body.email
-            user.password = req.body.password
-            user.alias = req.body.alias
-            user.first_name = req.body.first_name
-            user.last_name = req.body.last_name
-            user.role = req.body.role
-            organisation.users.push(user)
-            organisation.save((err) => {
-                if (err) res.send(err)
-                else res.json({ message: 'user created!' })
-            })
-        }
+            if (err) res.send(err)
+            else {
+                let user = new UserModel()
+                user.email = req.body.email
+                user.password = req.body.password
+                user.alias = req.body.alias
+                user.first_name = req.body.first_name
+                user.last_name = req.body.last_name
+                user.role = req.body.role
+                organisation.users.push(user)
+                organisation.save((err) => {
+                    if (err) res.send(err)
+                    else res.json({ message: 'user created!' })
+                })
+            }
+        })
     })
-})
-/**
- * read user with special id
- */
+    /**
+     * read user with special id
+     */
 routes.get('/:id', (req, res) => {
-    Organisation.findOne({ 'users._id': req.params.id }, (err, organisation) => {
-        if (err) res.json(err.message)
-        else {res.json(organisation.users.id(req.params.id))}
+        Organisation.findOne({ 'users._id': req.params.id }, (err, organisation) => {
+            if (err) res.json(err.message)
+            else { res.json(organisation.users.id(req.params.id)) }
+        })
     })
-})
-/**
- * read group of users with limit and offset parameters
- * TODO: Skip && Limit
- */
+    /**
+     * read group of users with limit and offset parameters
+     * TODO: Skip && Limit
+     */
 routes.get('/', (req, res, next) => {
     // let offset = parseInt(req.query.offset) || 0
     // let limit = parseInt(req.query.limit) || 10
@@ -87,7 +87,7 @@ routes.put('/:id', (req, res) => {
  * TODO: link to model
  */
 routes.delete('/:id', (req, res) => {
-    
+
     // Organisation.findOne({ 'users._id': req.params.id }, (err, organisation) => {
     //     if (err) res.json(err.message)
     //     else {res.json(organisation.users.id(req.params.id))}

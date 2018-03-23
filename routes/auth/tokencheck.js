@@ -1,4 +1,3 @@
-
 /**
  * This Module defines the authentification with a token called apikey
  * It is called every time exept when login
@@ -7,7 +6,7 @@
 const passport = require('passport')
 const routes = require('express').Router()
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const Organisation = require('./../db/organisation').Organisation
+const Organisation = require('./../../db/organisation').Organisation
 
 /**
  * registrates the auth strategy to the pasport service

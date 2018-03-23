@@ -2,27 +2,16 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
-const mongoose = require('mongoose');
+require('./db/db')
 const Organisation = require('./db/organisation').Organisation
 
 // ROUTES
-const login = require('./routes/login')
-const tokencheck = require('./routes/tokencheck')
-const user = require('./routes/user')
-const organisation = require('./routes/organisation')
+const login = require('./routes/auth/login')
+const tokencheck = require('./routes/auth/tokencheck')
+const user = require('./routes/user/user')
+const organisation = require('./routes/organisation/organisation')
 
 //passport middleware
-
-
-
-mongoose.connect('mongodb://localhost/test');
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-    console.log('connected with database!')
-});
-
 passport.serializeUser((user, done) => {
     done(null, user._id)
 })
@@ -31,7 +20,7 @@ passport.deserializeUser((id, done) => {
     //TODO: check multiple users
     Organisation.findOne({ 'users._id': id }, (err, organisation) => {
         if (err) done(err)
-        else if(!res.json(organisation.users.id(id))) done(null, false)
+        else if (!res.json(organisation.users.id(id))) done(null, false)
         else done(null, res.json(organisation.users.id(id)))
     })
 })

@@ -6,7 +6,7 @@ const passport = require('passport')
 const routes = require('express').Router()
 const LocalStrategy = require('passport-local').Strategy
 const crypto = require('crypto')
-const Organisation = require('./../db/organisation').Organisation
+const Organisation = require('./../../db/organisation').Organisation
 
 /**
  * generates a random String with length of 10 - 12 and chars from 0 to z
@@ -38,7 +38,7 @@ passport.use(new LocalStrategy({
     usernameField: 'email'
 }, (email, password, done) => {
     process.nextTick(() => {
-        Organisation.findOne({ 'users.email': email, 'users.password': password }, (err, organisation)=>{
+        Organisation.findOne({ 'users.email': email, 'users.password': password }, (err, organisation) => {
             let user = organisation.users[0]
             const token = generateTokenFromId(user._id)
             if (err) return done(err)

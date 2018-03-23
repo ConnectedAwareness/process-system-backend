@@ -1,6 +1,6 @@
 const routes = require('express').Router()
-const User = require('./../db/user').User
-const Organisation = require('./../db/organisation').Organisation
+const User = require('./../../db/user').User
+const Organisation = require('./../../db/organisation').Organisation
 
 
 /**
