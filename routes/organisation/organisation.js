@@ -1,4 +1,5 @@
 const routes = require('express').Router()
+const userRouter = require('./user/user')
 const User = require('./../../db/user').User
 const Organisation = require('./../../db/organisation').Organisation
 
@@ -82,5 +83,7 @@ routes.delete('/:id', (req, res) => {
             else res.json({ message: 'Successfully deleted' });
         });
 })
+
+routes.use('/:orga_id/user', userRouter)
 
 module.exports = routes

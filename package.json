@@ -11,8 +11,6 @@
     "license": "ISC",
     "dependencies": {
         "body-parser": "^1.18.2",
-        "bookshelf": "^0.12.1",
-        "bookshelf-schema": "^0.3.6",
         "express": "^4.16.2",
         "knex": "^0.13.0",
         "mocha": "^4.0.1",

@@ -1,21 +1,14 @@
 const routes = require('express').Router()
 const Organisation = require('./../../db/organisation').Organisation
+const getDefaultOrganisationId = require('./../../db/organisation').getDefaultOrganisationId
 
-let Default_id = null
-Organisation.findOne({ 'name': 'DEFAULT' }, (err, organisation) => {
-    if (err) console.log(err.message)
-    if (!organisation) console.log(new Error('DEFAULT organisation does not exist!').message)
-    else {
-        Default_id = organisation._id
-    }
-})
 
 /**
  * create a new user 
  * if the id is not set use DEFAULT organisation
  */
 routes.post('/', (req, res) => {
-        Organisation.findById(req.body.id || Default_id, (err, organisation) => {
+        Organisation.findById(req.body.id || getDefaultOrganisationId(), (err, organisation) => {
 
             if (err) res.send(err)
             else {
