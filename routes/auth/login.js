@@ -2,21 +2,21 @@
  * This module defines the Loginrequest with pasport authentification
  */
 
-const passport = require('passport')
-const routes = require('express').Router()
-const LocalStrategy = require('passport-local').Strategy
-const crypto = require('crypto')
-const Organisation = require('./../../db/organisation').Organisation
+const passport = require('passport');
+const routes = require('express').Router();
+const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
+const Organisation = require('./../../db/organisation').Organisation;
 
 /**
  * generates a random String with length of 10 - 12 and chars from 0 to z
  */
-const generateRandomString = () => Math.random().toString(36).substring(2)
+const generateRandomString = () => Math.random().toString(36).substring(2);
 
 /**
  * defines the crypto secret while starting the api
  */
-const secret = generateRandomString()
+const secret = generateRandomString();
 
 /**
  * generates token from random String and user id
@@ -63,7 +63,8 @@ passport.use(new LocalStrategy({
 routes.post('/', passport.authenticate('local', {
     failureRedirect: '/',
 }), (req, res) => {
+    console.log('the post user function');
     res.json({ token: req.user.token })
-})
+});
 
-module.exports = routes
+module.exports = routes;

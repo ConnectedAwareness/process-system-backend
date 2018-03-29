@@ -1,12 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+var cors = require('cors')
 const passport = require('passport')
 const LocalApiKeyStrategy = require('passport-localapikey').Strategy
 require('./db/db')
 const Organisation = require('./db/organisation').Organisation
 
 // ROUTES
-const login = require('./routes/auth/login')
+const login = require('./routes/auth/login');
 const tokencheck = require('./routes/auth/tokencheck')
 const user = require('./routes/user/user')
 const organisation = require('./routes/organisation/organisation')
@@ -27,10 +28,11 @@ passport.deserializeUser((id, done) => {
 
 //""MIDDLEWARE""
 const app = express()
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    next()
-})
+app.use(cors())
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     next();
+// });
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
@@ -54,7 +56,7 @@ app.all('/error/:id', (req, res) => {
         })
     }
 })
-app.use('/login', login)
+app.use('/login', login);
 app.use(tokencheck)
 app.use('/user', user)
 app.use('/organisation', organisation)
