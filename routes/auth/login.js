@@ -36,7 +36,7 @@ const generateTokenFromId = (id) => {
  */
 passport.use(new LocalStrategy({
     usernameField: 'email'
-}, (email, password, done) => {
+}, (email, password, done) => {    
     process.nextTick(() => {
         Organisation.findOne({ 'users.email': email, 'users.password': password }, (err, organisation) => {
             let user = organisation.users[0]
@@ -47,7 +47,6 @@ passport.use(new LocalStrategy({
             // save the user
             user.save((err) => {
                 if (err) return done(err)
-
                 return done(null, user)
             })
         })
@@ -63,7 +62,6 @@ passport.use(new LocalStrategy({
 routes.post('/', passport.authenticate('local', {
     failureRedirect: '/',
 }), (req, res) => {
-    console.log('the post user function');
     res.json({ token: req.user.token })
 });
 
