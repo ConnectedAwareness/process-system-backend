@@ -5,7 +5,6 @@ const Organisation = require('./../../db/organisation').Organisation
 
 
 /**
- * TODO: create connector automaticaly
  * create one organisation
  */
 routes.post('/', (req, res) => {
@@ -30,17 +29,6 @@ routes.get('/:id', (req, res) => {
     })
 })
 
-// routes.get('/:id/users', (req, res) => {
-//     Organisation.getUsers(req.params.id).then((data) => {
-//         res.json({
-//             error: false,
-//             data: data
-//         })
-//     }).catch((err) => {
-//         res.redirect('/error/404/?message=' + err.message)
-//     })
-// })
-
 /**
  * read multiple organisation
  */
@@ -49,7 +37,6 @@ routes.get('/', (req, res, next) => {
     let limit = parseInt(req.query.limit) || 10
     Organisation.find().skip(offset).limit(limit).exec((err, organisation) => {
         if (err) res.redirect('/error/404/?message=' + err.message)
-        if (!organisation) res.redirect('/error/404/?message=organisation not found!')
         else res.json(organisation)
     })
 })

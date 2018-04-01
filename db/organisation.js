@@ -9,7 +9,9 @@ const Schema = mongoose.Schema;
 const OrganisationSchema = new Schema({
     name: { type: String, required: true },
     coordinator_id: Number,
-    users: [UserSchema]
+    users: [UserSchema],
+    version: String,
+    users_in_version: [Number]
 });
 
 module.exports.Organisation = mongoose.model('Organisation', OrganisationSchema);
