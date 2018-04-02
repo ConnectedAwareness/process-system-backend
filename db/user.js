@@ -10,7 +10,7 @@ const UserSchema = new Schema({
         last_name: String,
         token: String,
         token_date: Date,
-        role: String
+        roles: [String]
     })
     // UserSchema.pre('validate', function(next, val) {
     //     console.log(val())

@@ -20,7 +20,7 @@ routes.post('/', (req, res) => {
                     alias: req.body.alias,
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
-                    role: req.body.role
+                    roles: req.body.roles
                 })
                 // TODO: check if user with same password exists
             organisation.save((err) => {

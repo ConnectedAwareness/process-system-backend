@@ -6,12 +6,6 @@ const LocalApiKeyStrategy = require('passport-localapikey').Strategy
 require('./db/db')
 const Organisation = require('./db/organisation').Organisation
 
-// ROUTES
-const login = require('./routes/auth/login');
-const tokencheck = require('./routes/auth/tokencheck')
-const user = require('./routes/user/user')
-const organisation = require('./routes/organisation/organisation')
-
 //passport middleware
 passport.serializeUser((user, done) => {
     done(null, user._id)
@@ -36,30 +30,19 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
-
 app.use(passport.initialize())
 
 /**
  * main resquest paths
  */
-const validErrorCodes = [404, 505] // TODO: find other soltion to check error codes
-app.all('/error/:id', (req, res) => {
-    let code;
-    validErrorCodes.forEach(c => {
-        if (c == req.params.id) code = c
-    })
-    if (code) {
-        res.status(code).json({ error: req.query.message })
-    } else {
-        res.status(404).json({
-            error: 'Invalid status code ' + req.params.id
-        })
-    }
-})
-app.use('/login', login);
-app.use(tokencheck)
-app.use('/user', user)
-app.use('/organisation', organisation)
+// ROUTES
+
+app.use('/error', require('./routes/error/error'));
+app.use('/login', require('./routes/auth/login'));
+app.use(require('./routes/auth/tokencheck'))
+app.use('/logout', require('./routes/auth/logout'));
+app.use('/user', require('./routes/user/user'))
+app.use('/organisation', require('./routes/organisation/organisation'))
 
 // start server
 app.all('*', (req, res) => {

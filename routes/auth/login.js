@@ -7,6 +7,7 @@ const routes = require('express').Router();
 const LocalStrategy = require('passport-local').Strategy;
 const crypto = require('crypto');
 const Organisation = require('./../../db/organisation').Organisation;
+const User = require('./../../db/user').User;
 
 /**
  * generates a random String with length of 10 - 12 and chars from 0 to z
@@ -36,16 +37,15 @@ const generateTokenFromId = (id) => {
  */
 passport.use(new LocalStrategy({
     usernameField: 'email'
-}, (email, password, done) => {    
+}, (email, password, done) => {
     process.nextTick(() => {
         Organisation.findOne({ 'users.email': email, 'users.password': password }, (err, organisation) => {
+            if (!organisation) return done(null, false)
             let user = organisation.users[0]
-            const token = generateTokenFromId(user._id)
             if (err) return done(err)
-            user.token = token
-
+            user.token = generateTokenFromId(user._id)
             // save the user
-            user.save((err) => {
+            organisation.save((err) => {
                 if (err) return done(err)
                 return done(null, user)
             })
@@ -60,9 +60,19 @@ passport.use(new LocalStrategy({
  * defines the login request with pasport authentification and returns the token
  */
 routes.post('/', passport.authenticate('local', {
-    failureRedirect: '/',
+    failureRedirect: '/error/login',
 }), (req, res) => {
-    res.json({ token: req.user.token })
+    res.json({
+        user: {
+            id: req.user._id,
+            email: req.user.email,
+            alias: req.user.alias,
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            roles: req.user.roles,
+            token: req.user.token
+        }
+    })
 });
 
 module.exports = routes;

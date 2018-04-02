@@ -18,7 +18,7 @@ routes.post('/', (req, res) => {
                 user.alias = req.body.alias
                 user.first_name = req.body.first_name
                 user.last_name = req.body.last_name
-                user.role = req.body.role
+                user.roles = req.body.roles
                 organisation.users.push(user)
                 organisation.save((err) => {
                     if (err) res.send(err)
