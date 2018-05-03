@@ -6,7 +6,7 @@ import { OrganisationSchema, Organisation } from '../models/organisation.represe
 @Component()
 export class OrganisationService {
     constructor(@InjectModel(OrganisationSchema) private readonly organisationModel: Model<Organisation>) {}
-    
+
     async createOne(organisation: Organisation){
         const createdOrganisation = new this.organisationModel(organisation);
         return await createdOrganisation.save();

@@ -15,15 +15,14 @@ export class OrganisationController {
   }
   @Get(':id')
   async readOne(@Param() params) {
-    return params.id
+    return params.id;
   }
   @Put(':id')
   async updateOne(@Param() params) {
-    return params.id
+    return params.id;
   }
-  
   @Delete(':id')
   async deleteOne(@Param() params) {
-    return params.id
+    return params.id;
   }
 }

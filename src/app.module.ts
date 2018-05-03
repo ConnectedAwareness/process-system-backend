@@ -8,8 +8,9 @@ import {
   Get,
 } from '@nestjs/common';
 import { UserMgmtModule } from 'features/userMgmt/userMgmt.module';
+// import { ProcessDocModule } from 'features/processDoc/processDoc.module';
 @Module({
   imports: [],
-  modules: [UserMgmtModule],
+  modules: [UserMgmtModule], // ProcessDocModule],
 })
 export class AppModule {}

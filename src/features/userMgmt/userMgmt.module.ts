@@ -8,6 +8,6 @@ import { OrganisationService } from './services/organisation.service';
     imports: [MongooseModule.forRoot('mongodb://localhost/connected'),
     MongooseModule.forFeature([{ name: 'Organisation', schema: OrganisationSchema }])],
     controllers: [OrganisationController],
-    components:[OrganisationService],
+    components: [OrganisationService],
 })
-export class UserMgmtModule {};
+export class UserMgmtModule {}
