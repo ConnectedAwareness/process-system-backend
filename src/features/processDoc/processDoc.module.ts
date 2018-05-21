@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { DatabaseModule } from '../../main/database/database.module';
+
 import { VersionController } from './controllers/version.controller';
 import { VersionService } from './services/version.service';
-import { VersionSchema } from './models/version.representation';
+import { versionProviders } from './providers/version.providers';
 
 @Module({
-    imports: [MongooseModule.forRoot('mongodb://localhost/connected'),
-    MongooseModule.forFeature([{ name: 'Version', schema: VersionSchema }])],
+    imports: [DatabaseModule],
     controllers: [VersionController],
-    components: [VersionService],
+    providers: [VersionService, ...versionProviders],
 })
 export class ProcessDocModule {}

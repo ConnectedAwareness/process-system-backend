@@ -7,11 +7,16 @@
         "no-unused-expression": true
     },
     "rules": {
-        "eofline": false,
+        "no-console": [ false],
+        "comment-format": [false],
+        "trailing-comma": [false],
+        "ban-types": [false],
+        "typedef-whitespace": [false],
         "quotemark": [
-            true,
-            "single"
+          false,
+          "single"
         ],
+        "eofline": false,
         "indent": false,
         "member-access": [
             false

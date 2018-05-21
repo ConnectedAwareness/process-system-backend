@@ -1,11 +1,12 @@
 import { Model } from 'mongoose';
-import { Component } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { OrganisationSchema, Organisation } from '../models/organisation.representation';
 
-@Component()
+import { IOrganisation, Organisation } from '../models/organisation.representation';
+
+@Injectable()
 export class OrganisationService {
-    constructor(@InjectModel(OrganisationSchema) private readonly organisationModel: Model<Organisation>) {}
+    constructor(@Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>) {}
 
     async createOne(organisation: Organisation){
         const createdOrganisation = new this.organisationModel(organisation);

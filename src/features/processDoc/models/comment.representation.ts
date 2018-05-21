@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export interface IComment {
     userid: string;
@@ -7,13 +7,16 @@ export interface IComment {
 }
 
 export class Comment implements IComment {
+  constructor() {
+    this.userid = null;
+    this.comment = null;
+    this.vote =  null;
+  }
+
+  @ApiModelProperty({type: String, required: true})
   readonly userid: string;
+  @ApiModelProperty({type: String, required: false})
   readonly comment: string;
+  @ApiModelProperty({type: String, required: false})
   readonly vote: number;
 }
-
-export const CommentSchema = new mongoose.Schema({
-    userid: {type: mongoose.Schema.Types.ObjectId, required: true},
-    comment: String,
-    vote: {type: Number, required: true},
-});

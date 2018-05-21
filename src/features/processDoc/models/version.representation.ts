@@ -1,18 +1,24 @@
-import * as mongoose from 'mongoose';
+import { ApiModelProperty } from '@nestjs/swagger';
 
-import {ElementSchema, Element, IElement } from './element.representation';
+import { Element, IElement } from './element.representation';
 
-export interface IVersion {
-    published: boolean;
-    elements: [Element];
-}
+// export interface IVersion {
+//     versionId: string;
+//     published: boolean;
+//     elements: Array<Element>;
+// }
 
-export class Version implements IVersion {
+export class Version {
+  constructor() {
+    this.versionId = null;
+    this.published = null;
+    this.elements = new Array<Element>();
+  }
+
+  @ApiModelProperty({type: String, required: true})
+  readonly versionId: string;
+  @ApiModelProperty({type: Boolean, required: true})
   readonly published: boolean;
-  readonly elements: [Element];
+  @ApiModelProperty({type: Object, isArray: true, required: false })
+  readonly elements: Array<Element>;
 }
-
-export const VersionSchema = new mongoose.Schema({
-    published: { type: Boolean, required: true },
-    elements: [ElementSchema],
-});

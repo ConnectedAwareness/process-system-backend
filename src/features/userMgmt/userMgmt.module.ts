@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
-import { OrganisationSchema } from './models/organisation.representation';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { DatabaseModule } from '../../main/database/database.module';
+
 import { OrganisationController } from './controllers/organisation.controller';
 import { OrganisationService } from './services/organisation.service';
+import { organisationProviders } from './providers/organisation.providers';
 
 @Module({
-    imports: [MongooseModule.forRoot('mongodb://localhost/connected'),
-    MongooseModule.forFeature([{ name: 'Organisation', schema: OrganisationSchema }])],
+    imports: [DatabaseModule],
     controllers: [OrganisationController],
-    components: [OrganisationService],
+    providers: [OrganisationService, ...organisationProviders],
 })
 export class UserMgmtModule {}
