@@ -1,0 +1,7 @@
+﻿#####		Text	0		Vorwort
+#####		Header1	0		"Der einzelne Mensch
+und sein Bewusstsein über sich selbst"
+#####		Text	1		Einführung
+#####		Header2	1		Interaktion mit der Umwelt
+#####	I_ENVIRO_CONNECTED	Particle	2	1	Jeder Mensch ist mit seiner Umwelt verwoben.
+#####	I_ENVIRO_INTERDEP	Particle	2	2	Wir stehen stets in Wechselwirkung mit unserer Umwelt: Was wir tun, wirkt sich auf andere Menschen und alles andere in unserer Umwelt aus – was andere Menschen tun und auch sonst in unserer Umwelt geschieht, wirkt sich auf uns aus.

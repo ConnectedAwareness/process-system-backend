@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode } from '@nestjs/common';
 import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
 
 import { VersionService } from '../services/version.service';
-import { Version } from '../models/version.representation';
+import { Version, ImportVersion } from '../models/version.representation';
 
 @ApiUseTags('versions')
 @Controller('versions')
@@ -52,4 +52,13 @@ export class VersionController {
   async import(@Param('versionid') versionId: string, @Body('versionFile') versionFile: string) : Promise<boolean> {
       return this.versionService.importElementsRecursiveAsync(versionId, versionFile);
   }
+
+//   @Post('/import/:versionid')
+//   @ApiOperation({ title: 'import version from file' })
+//   //@ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
+//   //@ApiImplicitParam({ name: 'versionFile', required: true, type: String, description: 'version object' })
+//   @ApiResponse({ status: 201, description: 'Import successful', type: Version, isArray: false })
+//   async import(@Body() versionFile: string) : Promise<boolean> {
+//       return this.versionService.importElementsRecursiveAsync("v1.0", versionFile);
+//   }
 }

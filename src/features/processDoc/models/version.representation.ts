@@ -22,3 +22,15 @@ export class Version {
   @ApiModelProperty({type: Object, isArray: true, required: false })
   readonly elements: Array<Element>;
 }
+
+export class ImportVersion {
+  constructor() {
+    this.versionId = null;
+    this.elements = null;
+  }
+
+  @ApiModelProperty({type: String, required: true})
+  readonly versionId: string;
+  @ApiModelProperty({type: String, required: true})
+  readonly elements: string;
+}

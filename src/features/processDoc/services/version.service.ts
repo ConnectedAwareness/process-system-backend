@@ -2,9 +2,14 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import { Version } from '../models/version.representation';
+import { Element, ElementType } from '../models/element.representation';
 import { VersionSchema } from '../schemas/version.schema';
+
+import * as fs from 'fs';
+
 @Injectable()
 export class VersionService {
+
     constructor(@Inject('VersionModelToken') private readonly versionModel: Model<Version>) { }
 
     // CRUD
@@ -50,13 +55,17 @@ export class VersionService {
     // END CRUD
 
     async importElementsRecursiveAsync(versionId: string, versionfile: string): Promise<boolean> {
+        versionfile = fs.readFileSync('version_import.txt').toString();
+
         if (!versionId || versionId.length === 0)
             throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
-        const version = await this.getVersionAsync(versionId);
+        let version = await this.getVersionAsync(versionId);
 
-        if (versionfile.length === 0)
+        if (!versionfile || versionfile.length === 0)
             throw new HttpException(`No elements found to import!`, HttpStatus.BAD_REQUEST);
+
+        version = await this.parseRecursive(versionfile, version);
 
         this.updateVersionAsync(version);
 
@@ -65,20 +74,88 @@ export class VersionService {
         return true;
     }
 
-    async parseRecursive(versionfile: string, version: Version) {
-        const elementList = versionfile.split("####");
+    async parseRecursive(versionfile: string, version: Version): Promise<Version> {
+        if (version.elements && version.elements.length > 0)
+            throw new HttpException(`Version object already has element list!`, HttpStatus.BAD_REQUEST);
 
-        elementList.forEach(element => {
-            if (element) {
-                const parts = element.split('\t');
+        const parsedLevel = 0;
+        const elementList = versionfile.split("#####");
+
+        const elements = await this._parseRecursive(elementList, parsedLevel);
+
+        version.elements.concat(elements);
+
+        return version;
+    }
+
+    async _parseRecursive(elementList: string[], parsedLevel: number): Promise<Element[]> {
+        const elements = new Array<Element>();
+        let lastElement = null;
+        let parsedElement = null;
+
+        do {
+            parsedElement = elementList.shift();
+
+            if (parsedElement) {
+                const parts = parsedElement.split('\t');
 
                 if (parts.length === 6) {
-                    const id = parts[1];
-                    const type = parts[2];
-                    const level = parts[3];
-                    const text = parts[5];
+                    const id = parts[1].trim();
+                    const type = parts[2].trim();
+                    const level = +parts[3];
+                    const text = parts[5].trim();
+
+                    // add to element elements
+                    if (level === parsedLevel) {
+                        const newElement = new Element();
+                        newElement.elementId = id;
+                        newElement.type = await this.parseElementType(type);
+                        newElement.text = text;
+
+                        lastElement = newElement;
+                        elements.push(newElement);
+                    }
+                    // go into recursive parsing and add list of elements to lastElement
+                    else if (level > parsedLevel) {
+                        // push parsedElement again at first position
+                        elementList.unshift(parsedElement);
+
+                        const subElements = await this._parseRecursive(elementList, level);
+                        lastElement.elements.push(subElements);
+                    }
+                    // stop iteration of elementList and return elements
+                    else if (level < parsedLevel) {
+                        // push parsedElement again at first position
+                        elementList.unshift(parsedElement);
+
+                        return elements;
+                    }
                 }
             }
-        });
+        }
+        while (elementList.length > 0);
+
+        return elements;
+    }
+
+    async parseElementType(elementType: string): Promise<ElementType> {
+        switch (elementType) {
+            case "Header1":
+            case "Header2":
+            case "Header3":
+                return ElementType.Header;
+            case "Text":
+                return ElementType.Text;
+            case "Particle":
+                return ElementType.Particle;
+            case "Definition":
+                return ElementType.Definition;
+            case "Example":
+                return ElementType.Example;
+            case "Explanation":
+                return ElementType.Explanation;
+            default:
+                return ElementType.Unknown;
+        }
     }
 }
