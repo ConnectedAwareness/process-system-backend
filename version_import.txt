@@ -1,7 +1,265 @@
-﻿#####		Text	0		Vorwort
+﻿Marker	ID	Typ	Level	order	Text Version 1.1
+#####		Text	0		Vorwort
 #####		Header1	0		"Der einzelne Mensch
 und sein Bewusstsein über sich selbst"
 #####		Text	1		Einführung
 #####		Header2	1		Interaktion mit der Umwelt
 #####	I_ENVIRO_CONNECTED	Particle	2	1	Jeder Mensch ist mit seiner Umwelt verwoben.
 #####	I_ENVIRO_INTERDEP	Particle	2	2	Wir stehen stets in Wechselwirkung mit unserer Umwelt: Was wir tun, wirkt sich auf andere Menschen und alles andere in unserer Umwelt aus – was andere Menschen tun und auch sonst in unserer Umwelt geschieht, wirkt sich auf uns aus.
+#####		Header2	1		Bedürfnisse – Die Perspektive des Individuums
+#####	I_NEEDS_STRIVE4SATIS	Particle	2	1	Wir Menschen versuchen zu jedem Zeitpunkt unserer Existenz, über die Erfüllung unserer Bedürfnisse, persönliche Zufriedenheit zu erreichen.
+#####	I_NEEDS_FEELINGS	Particle	2	2	Unsere Gefühle sind die emotionale Verbindung zu unseren Bedürfnissen.
+#####	I_NEEDS_MOTIVBYNEEDS	Particle	2	3	Jegliche Handlung eines Menschen – ob bewusst oder unbewusst, ob in uns oder unserer Umwelt - sind versuchte Strategien zur Befriedigung eiengener Bedürfnisse.
+#####	I_NEEDS_DEEPESTMOTIV	Particle	2	4	Die tiefste Motivation eines jeden Menschen ist stets die Erfüllung von Bedürfnissen; nie die Schädigung anderer Menschen oder sonstiger Elemente seiner Umwelt.
+#####	I_NEEDS_STRATSOURCE	Particle	2	5	Wir können nur auf Handlungsstrategien zurückgreifen, die wir gesehen, erlebt, erlernt oder neu kombiniert haben. Jederzeit testen, verfeinern oder verwerfen wir unsere Handlungsstrategien - bewusst wie unbewusst.
+#####	I_NEEDS_1NEEDMANY	Particle	2	6	Es gibt stets eine Vielfalt an Handlungsstrategien, um uns ein bestimmtes Bedürfnis zu erfüllen. Unsere Kreativität ist der Zugang zu dieser Vielfalt.
+#####	I_NEEDS_PRIORITIES	Particle	2	7	Die Priorisierungen unserer Bedürfnisse kann von Mensch zu Mensch und von Zeitpunkt zu Zeitpunkt unterschiedlich sein.
+#####		Header2	1		Die Entwicklungsgeschichte des Individuums
+#####	I_DEVHIST_DIFFCOMP	Particle	2	1	Jeder Mensch hat seine individuell verschiedene Entwicklungsgeschichte.
+#####		Header3	2		Einfluss der Genetik
+#####	I_DEVHIST_GENESUNITE	Particle	3	1	"Im Moment der Befruchtung vereinen sich die Gene der Mutter mit denen des Vaters und bilden den Bauplan neuen menschlichen Lebens. Dieser Bauplan ist der einzigartige* genetische Code eines jeden von uns – das Genom bzw. Erbgut.
+
+*bis auf eineiige Zwillinge und Mehrlinge – diese haben identisches Erbgut."
+#####	I_DEVHIST_SPECIESCODE	Particle	3	2	Einige spezifische Eigenschaften, die über Gene im Erbgut kodiert sind, haben alle Menschen gemeinsam – wir alle atmen, haben Blut in unseren Adern, usw.
+#####	I_DEVHIST_EPIGEN	Particle	3	3	Die uns umgebenden Lebensumstände sowie unsere gewählte Lebensweise beeinflussen stets, ob und wie sich bestimmte Gensequenzen auf unser Leben auswirken. (Epigenetik)
+#####		Header3	2		Einfluss von Nahrung und anderen physischen Gegebenheiten
+#####	I_DEVHIST_FOODQUALITY	Particle	3	1	Die regelmäßige Aufnahme von Wasser und Nahrung ist eine biologische Notwendigkeit eines sich entwickelnden Menschen. Die Wasser- und Nahrungsmittelqualität beeinflussen unsere Gesundheit, Fitness und Krankheitsresistenz.
+#####	I_DEVHIST_PHYSDANGER	Particle	3	2	Umwelteinflüsse wie toxische Chemikalien, extreme Lautstärke, Temperatur oder Strahlung können die Entwicklung und Gesundheit unseres Organismus erheblich gefährden.
+#####		Header3	2		Einfluss von Sozialisation
+#####	I_DEVHIST_ADOPT	Particle	3	1	Wir nehmen das Verhalten unserer Mitmenschen wahr. Auf je weniger Erfahrung wir dabei zurückgreifen können, desto eher eignen wir uns Gedanken, Haltungen, Werte und Verhaltensmuster unserer Mitmenschen an (z.B. übernehmen Kinder tendenziell die Verhaltensmuster der Kultur, in der sie aufwachsen).
+#####	I_DEVHIST_CHILDREN	Particle	3	2	"Eltern, die Familie und generell das soziale Umfeld, in dem ein Kind aufwächst, haben einen erheblichen Einfluss auf dessen Blick auf die Welt sowie dessen Fertigkeiten, sich in der Welt zurecht zu finden.
+"
+#####	I_DEVHIST_SOCIALSHAPE	Particle	3	3	Unsere Werte, Haltungen und somit unsere Verhaltensmuster werden u.a. sowohl durch unsere Freundeskreise, Bildungssysteme und Arbeitsumfelder als auch gesellschaftliche Bewegungen, Institutionen, Traditionen und Gesetze beeinflusst
+#####	I_DEVHIST_FREEDOMSHAPE	Particle	3	4	Unsere Verhaltensmuster werden in großem Umfang davon beeinflusst, welche Entfaltungsmöglichkeiten uns die derzeitige Organisationsstruktur der Gesellschaft ermöglicht bzw. erlaubt.
+#####		Header3	2		Einfluss von Spiritualität
+#####	I_DEVHIST_SPIRIT	Particle	3	1	Spirituelle Erfahrungen können einen tiefgreifenden Einfluss auf unser Sein und unser Verhalten ausüben.
+#####		Explanation	3	2	Spiritualität ist ein großer, vielschichtiger, verschieden erklärter Begriff. Menschen setzen sich mit den verschiedensten Persönlichkeitstypen der Astrologie, des Enneagramms, verschiedensten Naturlehren, Traumdeutung, Mystik, Tarot, Religionen, Energien, Auren, Ahnungen, Vorstellungen über die Herkunft der Menschen oder das Leben nach dem Tod, Eingebungen, Erscheinungen und vielen anderen Formen von Spiritualität auseinander. Alle gemein haben spirituelle Themen, dass zwar wenig verstanden und schwer greifbar sind, aber eine in gleichem Maße faszinierende Wirkung ausüben und Menschen bereichern und beflügeln können.
+#####		Header3	2		Auswirkung von Lebenserfahrungen
+#####	I_DEVHIST_PERMANENT	Particle	3	1	Die Gesamtheit aller Umwelteinflüsse wirkt in all unseren Lebensphasen. Besonders sensibel reagieren wir Menschen auf Einflüsse in frühen Entwicklungsphasen, auch bereits während der Schwangerschaft.
+#####	I_DEVHIST_DEEPEXP	Particle	3	2	Das Leben bringt teils erkenntnisreiche, schmerzliche oder anderweitig prägende Erfahrungen mit sich, die unsere Wahrnehmung und unser Verhalten über unser gesamtes Leben hinweg beeinflussen.
+#####	I_DEVHIST_TRAUMA	Particle	3	3	Schmerzhafte oder existenziell bedrohliche Lebenserfahrungen können Traumata hervorrufen, welche besonders starke Auswirkungen auf unsere Gesundheit, persönliche Entwicklung und Potenzialentfaltung haben.
+#####		Header2	2		Wahrnehmung
+#####	I_SENSE_SENSES	Particle	3	1	Wir alle haben Sinne, mit deren Hilfe wir uns selbst und unsere Umwelt erfassen können.
+#####	I_SENSE_IMPRINT	Particle	3	2	"Durch Erfahrungen im Laufe unserer Entwicklungsgeschichte prägen sich unsere persönliche Realität und unsere persönliche Wahrheit (z.B. Haltungen, Meinungen und Überzeugungen).
+"
+#####	I_SENSE_ASSESSMENT	Particle	3	3	Unsere persönliche Wahrheit beeinflusst bewusst wie unbewusst unsere Wahrnehmung und trägt somit dazu bei, erfasste Signale für uns auf verschiedene Weise einzuordnen zwischen "gut" oder "schlecht", „heilsam“ oder „schädlich“, "vertrauenswürdig" oder "verdächtig" sowie "bekannt“ oder „fremd“.
+#####	I_SENSE_ABSTRUTH	Particle	3	4	Es passiert uns Menschen, die Annahmen unserer persönlichen Wahrheit als „absolute Wahrheit“ zu deklarieren. Manchmal vergessen wir, dass es Annahmen bleiben.
+#####	I_SENSE_DIFFPERCEPT	Particle	3	5	Jede*r von uns nimmt die gemeinsame Realität verschieden wahr, weshalb wir uns in ähnlichen Situationen und Umgebungen oft unterschiedlich verhalten.
+#####		Header2	1		Verhalten
+#####	I_BEHAV_STATE	Particle	2	1	Die verschiedenen Einflüsse im Laufe unserer Entwicklungsgeschichte führen zu unserem jeweiligen momentanen Seins-Zustand.
+#####	I_BEHAV_STATECHANGE	Particle	2	2	Unser Seins-Zustand verändert sich kontinuierlich.
+#####	I_BEHAV_ENVPLUSSTATE	Particle	2	3	Unser Verhalten ist die direkte Folge unseres momentanen Seins-Zustands im Zusammenspiel mit den momentanen Umwelteinflüssen.
+#####	I_BEHAV_DEVHISTKEY	Particle	2	4	Das Verhalten eines Menschen liegt in seiner Entwicklungsgeschichte begründet. Deshalb ist es notwendig, die Bedeutung und individuelle Auswirkung von Umwelteinflüssen zu verstehen, um das Verhalten von (Gruppen von) Menschen in einer bestimmten Situation nachvollziehen zu können.
+#####	I_BEHAV_CHANGE	Particle	2	5	Wir können unser Verhalten und unsere Wahrnehmung ändern, indem wir uns neuen Einflüssen aussetzen (z.B. neue Orte besuchen oder mit fremden Menschen sprechen). Dadurch machen wir neue Erfahrungen, und verändern somit unsere persönliche Realität wie auch unsere persönliche Wahrheit, die wiederum unsere Wahrnehmung und unser Verhalten beeinflusst.
+#####		Header2	1		Motivation von innen heraus
+#####	I_MOTIV_INNERMOVEMENT	Particle	2	1	Jede*n von uns beschäftigen Themen, die uns (emotional) bewegen. Diese Themen bewegen uns von innen heraus (intrinsisch).
+#####	I_MOTIV_FOLLOWINTRINSIC	Particle	2	2	Unsere intrinsisch motivierten Themen sind Wegweiser zu tiefgründiger Zufriedenheit.
+#####	I_MOTIV_PATHMOOD	Particle	2	3	Dem Weg unserer intrinsischen Motivation zu folgen, kann für uns sowohl inspirierend als auch beängstigend sein.
+#####	I_MOTIV_GUIDANCE	Particle	2	4	"Die Begleitung durch andere Menschen kann uns helfen, einen für uns stimmigen Weg zu finden, wie wir intrinsisch motivierte Themen angehen können.
+"
+#####	I_MOTIV_INTRINSICBENACT	Particle	2	5	Ein Entwicklungsziel der globalen Gesellschaft sollte die Etablierung von Kulturen und Systemen sein, in denen wir Menschen unser Sein und Handeln soweit wie möglich an unserer intrinsischen Motivation ausrichten können.
+#####	I_MOTIV_PARTIAL	Particle	2	6	Unsere Handlungen können Anteile intrinsischer und Anteile extrinsischer Motivation enthalten.
+#####	I_MOTIV_DISCONNECTION	Particle	2	7	Die systematische Anwendung von äußeren Anreizen bei gleichzeitigem Ignorieren der intrinsischen Motivation eines Menschen kann zum Verlust der emotionalen Verbindung des Menschen zu seinen Bedürfnissen und somit dem Verlust seiner intrinsischen Motivation führen. (Trennung von sich selbst).
+#####	I_MOTIV_INTRINSICISAKEY	Particle	2	8	Je authentischer Menschen ihrer intrinsischen Motivation folgen (können), desto näher kommen wir einer Gesellschaft, die für alle von uns funktioniert.
+#####		Header2	1		Selbstbestimmtes Lernen
+#####	I_LEARN_SAFESPACE	Particle	2	1	Jede*r von uns braucht geschützte Räume, in denen wir ganz wir selbst sein und eigenständig wachsen können.
+#####	I_LEARN_NEED4GUIDANCE	Particle	2	2	Empathische Begleitung – auch durch uns selbst - kann uns dabei helfen, uns unseren Themen zu nähern, damit sein zu können, sie in ihrer Ganzheit zu erfassen, sowie mögliche Wege zu gestalten.
+#####	I_LEARN_ABLE4EMPATHY	Particle	2	3	Jeder Mensch ist empathiefähig.
+#####	I_LEARN_EVERYBODY	Particle	2	4	Wir alle eigenen uns Wissen, Fertigkeiten und neue Handlungsstrategien an, um unsere Vorhaben zu realisieren und unseren Herausforderungen zu begegnen.
+#####	I_LEARN_INTRINSICBASE	Particle	2	5	Wir können vor allem dann effektiv lernen, wenn unser Interesse unserer inneren (intrinsischen) Motivation entspringt.
+#####	I_LEARN_LEARNANDGUIDE		2	6	Jeder Mensch kann sowohl lernen als auch begleiten.
+#####	I_LEARN_PROVIDEGUIDE	Particle	2	7	Ein Entwicklungsziel der globalen Gesellschaft sollte es sein, dass jeder Mensch über sein gesamtes Leben hinweg bei seinem Lernprozess Begleitung finden kann.
+#####	I_LEARN_SUPPORTINTRINSIC	Particle	2	8	Ein Schwerpunkt der Begleitung von Menschen bei ihrem eigenen Lernprozess sollte die Unterstützung intrinsischer Motivation und Neugier sein.
+#####	I_LEARN_CREATIVITY	Particle	2	9	Ein Schwerpunkt der Begleitung von Menschen bei ihrem eigenen Lernprozess sollte die Unterstützung ihrer Kreativität beim Überwinden von Herausforderungen sein.
+#####	I_LEARN_ACCESS	Particle	2	10	Ein Entwicklungsziel der globalen Gesellschaft sollte es sein, jedem Menschen Zugang zu Wissen, Informationen und Fertigkeiten zu ermöglichen.
+#####	I_LEARN_TRAVEL	Particle	2	11	Jedem Menschen sollte es möglich sein, die Welt zu bereisen, um andere Menschen, Kulturen und Lebenswelten erleben zu können.
+#####	I_LEARN_RESOURCES	Particle	2	12	Jeder Mensch sollte auf die aus dessen Sicht notwendigen Ressourcen (z.B. Orte zum Trainieren, Ausrüstung zum ausprobieren) Zugriff haben, um selbstbestimmt lernen zu können. Außerdem sollte jeder Mensch diese Ressourcen sowie jene, die sie im Lernen begleiten wollen, suchen und finden können.
+#####	I_LEARN_TEACHINTRINSIC	Particle	2	13	Viele Menschen begleiten andere Menschen gern und aus intrinsischer Motivation heraus. Sie haben Freude daran, ihr Wissen und ihre Fertigkeiten aktiv an andere Menschen weiterzugeben.
+#####	I_LEARN_SHOWINTERDEP	Particle	2	14	Zur ganzheitlichen Vermittlung von Wissen und Fertigkeiten sollten Verbindungen und Abhängigkeiten zwischen einzelnen Themengebieten aufgezeigt werden.
+#####		Header1	0		Menschen und ihre Verbindung zueinander
+#####		Text	1		Einführung
+#####		Header2	1		Gesellschaft
+#####	WE_SOCIO_CONNECTION	Particle	2	1	Jede*r von uns ist Teil der Umwelt eines jeden anderen Menschen. Daher steht jede*r von uns direkt oder indirekt mit jedem anderen Menschen auf der Erde in Verbindung.
+#####	WE_SOCIO_HUMANTOSYS	Particle	2	2	Jede*r von uns beeinflusst das Verhalten anderer Menschen und daher auch die Kulturen und Systeme in unserer globalen Gesellschaft.
+#####	WE_SOCIO_CONFLICT	Particle	2	3	Die Handlungsstrategien von einzelnen Menschen oder Gruppen (unsere Werte, Interessen, Lebensentwürfe und Ziele) können in Konflikt miteinander stehen – nicht Menschen selbst oder ihre Bedürfnisse.
+#####	WE_SOCIO_ESCALATION	Particle	2	4	Konflikte können eskalieren und zu Gewalt führen – auf allen Ebenen des Seins (z.B. körperlich, mental, emotional, usw.)
+#####	WE_SOCIO_WINWIN	Particle	2	7	Beziehungen, die für alle Beteiligten Vorteile bringen (Win-Win-Beziehungen), nutzen jedem einzelnen Menschen als auch der Gesellschaft im Ganzen.
+#####	WE_SOCIO_WINCULTURE	Particle	2	8	Ein Entwicklungsziel der globalen Gesellschaft sollte die Etablierung einer Kultur des Miteinander sein, die für alle Menschen Vorteile bringen.
+#####	WE_SOCIO_RESOLVE	Particle	2	9	Ein Entwicklungsziel der globalen Gesellschaft sollte die Unterstützung der Auflösung von Ziel-, Interessen- und Strategiekonflikten sein, damit sich jede*r von uns so frei wie möglich entfalten kann.
+#####	WE_SOCIO_RESOLVETOPEACE	Particle	2	10	Je effektiver jede*r von uns Konflikte durch entsprechende Fertigkeiten sowie durch Unterstützung von außen auflösen kann, desto eher ist die Kultur unserer globalen Gesellschaft von Synergie und Frieden geprägt.
+#####	WE_SOCIO_NOHARMONY	Particle	2	6	Nehmen wir Teile unserer Umwelt (z.B. andere Menschen) als nicht-unterstützend wahr, fällt es uns schwerer, Anlass zu sehen, unsere Verhaltensweisen mit diesen Teilen in Einklang zu bringen.
+#####	WE_SOCIO_VIOLENCE	Particle	2	5	Kommen wir in Not, weil wir die Erfüllung unserer Bedürfnisse durch Teile unserer Umwelt (z.B. andere Menschen) bedroht sehen, kann es uns passieren, dass wir diesen Teilen gewalttätig begegnen – im Großen wie im Kleinen
+#####		Header2	1		Bedürfnisorientierte Koordination
+#####	WE_COORD_RESBYNBC	Particle	2	1	Konflikte können durch die koordinierte Befriedigung von Bedürfnissen gelöst werden. (Bedürfnisorientierte Koordination)
+#####	WE_COORD_STRATASPECTS	Particle	2	2	Jede Handlungsstrategie eines Menschen enthält verschiedene für diesen Menschen wichtige Aspekte. Diese Aspekte können wiederum in dahinter liegende Bedürfnisse zerlegt werden, die ein Mensch zu erfüllen versucht.
+#####	WE_COORD_SHAREDESSENCE	Particle	2	3	Kollidierende Handlungsstrategien enthalten stets eine Essenz gemeinsamer Aspekte, die es allen Beteiligten und Betroffenen ermöglicht, eine Lösung zu entwickeln, die für alle von ihnen funktioniert.
+#####	WE_COORD_EXCHANGE	Particle	2	4	Bedürfnisorientierte Koordination braucht einen gemeinsamen Kommunikationsprozess (z.B. Austausch von Wahrnehmungen, Wissen, Perspektiven und Hintergründen), der gemeinsames Verständnis schafft.
+#####	WE_COORD_COOPBASE	Particle	2	5	Zur bedürfnisorientierten Koordination braucht es Kooperation aller Beteiligten und Betroffenen mit dem gemeinsamen Ziel, eine Lösung zu finden, die für alle von ihnen funktioniert
+#####	WE_COORD_SYSCONSENSUS	Particle	2	6	Eine Lösung, die für alle funktioniert, stößt bei keinem der Beteiligten oder Betroffenen auf Widerstände, Bedenken oder Sorgen. (Systemischer Konsens)
+#####	WE_COORD_WINWAY	Particle	2	7	Bedürfnisorientierte Koordination ist für alle Betroffenen und Beteiligten effektiver und nachhaltiger hinsichtlich der Erfüllung ihrer Bedürfnisse als andere Wege der Lösungsfindung.
+#####	WE_COORD_SOLUTIONSTEP	Particle	2	8	Bei Mangel an Ressourcen (z.B. Zeit, Kreativität, Informationen, Einflussmöglichkeiten) kann es scheinen, also ob eine Lösung, die für alle funktioniert, nicht gefunden werden kann. Allerdings ist es auch dann möglich, unter diesen Umständen eine Zwischenlösung zu finden, die in diesem Moment für alle funktioniert.
+#####	WE_COORD_PROTECT	Particle	2	9	Im Falle gewaltsamer Auseinandersetzungen benötigt eine Gesellschaft Strategien, Menschen voreinander zu schützen. Bedürfnisorientierte Koordination sollte dabei stets angestrebt werden.
+#####		Header2	1		Bedürfnisorientierte Kooperation
+#####	WE_COOP_FOSTER	Particle	2	1	Ein Entwicklungsziel der globalen Gesellschaft sollte die systematische Förderung von Kooperation sein.
+#####	WE_COOP_INFLUENCE	Particle	2	2	"Ein Entwicklungsziel der globalen Gesellschaft sollte darin bestehen, Menschen zu ermöglichen, Strukturen und Prozesse, an denen sie beteiligt oder von denen sie betroffen sind, den eigenen Bedürfnissen entsprechend anpassen zu können. Somit kann verhindert werden, dass Menschen mit starren Systemen in Konflikt geraten.
+
+"
+#####	WE_COOP_PRIVILEGE	Particle	2	3	"Authentische und effiziente Kooperation kann dadurch erschwert werden, dass Verhaltensweisen aufgrund von Merkmalen wie Geschlecht, Hautfarbe, usw. bewertet werden.
+Geschieht diese Bewertung über längere Zeit innerhalb einer Gesellschaft, können sich unbewusste Dominanzstrukturen manifestieren.
+"
+#####	WE_COOP_APPLYNBC	Particle	2	4	Ein Entwicklungsziel der globalen Gesellschaft sollte die konsequente Anwendung von Bedürfnisorientierter Koordination sein – in Entscheidungsprozessen sowie Konflikten.
+#####	WE_COOP_PEACE	Particle	2	5	Die Auflösung und Vermeidung gesellschaftlicher Konflikte durch Bedürfnisorientierte Koordination ist ein erfolgversprechender Ansatz, um Beziehungen, die für alle Vorteile bringen, und folglich eine globale Gesellschaft in Frieden zu ermöglichen.
+#####		Header2	1		Bedürfnisorientierte Kommunikation
+#####	WE_COMM_LISTENING	Particle	2	1	Es dient der Verständigung, wenn alle Beteiligten und Betroffenen ihre Sichtweisen vortragen können, während die jeweils anderen zuhören und zu verstehen versuchen.
+#####	WE_COMM_OBSERVATIONS	Particle	2	2	Es dient der Verständigung, wenn Situationen anhand von Beobachtungen anstatt Interpretationen geschildert werden.
+#####	WE_COMM_REFERENCE	Particle	2	3	Es dient der Verständigung, wenn Bezug auf die persönliche oder gemeinsame Realität genommen wird anstatt auf eine vermeintliche „absolute“ Realität.
+#####	WE_COMM_SEEINGISNOTAGREEING	Particle	2	4	Einen anderen Menschen empathisch zu verstehen bedeutet nicht, seinen Handlungsstrategien zuzustimmen oder seine persönliche Wahrheit zu teilen.
+#####	WE_COMM_HIDDENNEEDS	Particle	2	5	Gespräche, bei denen die Aspekte und Bedürfnisse der beteiligten Parteien hinter Vorwürfen und Rechtfertigungen verborgen bleiben, können langwierig und kräftezehrend sein und führen schließlich weder zu Verständigung noch zu nachhaltigen Lösungen.
+#####		Header1	0		Ressourcenreichhaltigkeit im Einklang mit den
+#####		Text	1		Ökosystemen der Erde
+#####		Header2	1		Knappheit und Reichhaltigkeit
+#####	ECO_RES_WORLDINSCARCITY	Particle	2	1	Ressourcenknappheit ist ein allgegenwärtiges Phänomen, das den Zugang zu tiefgründiger Zufriedenheit für einen Großteil der globalen Gesellschaft erschwert.
+#####	ECO_RES_DELIBABUNDANCE	Particle	2	2	Ein Entwicklungsziel der globalen Gesellschaft sollte die gezielte Schaffung von Ressourcenreichhaltigkeit sein.
+#####	ECO_RES_WAYSTOABUNDANCE	Particle	2	3	"Ressourcenreichhaltigkeit bzgl. einer bestimmten Ressource kann auf zwei Wegen erreicht werden:
+1) indem die Menge dieser Ressource vergrößert wird
+2) indem die Strategien zur Befriedung von Bedürfnissen so angepasst werden, dass sie weniger bzw. andere
+Ressourcen benötigen"
+#####	ECO_RES_SCARTECH	Particle	2	4	Konzepte wie Eigentum, Tauschhandel und Geld sind Technologien zum Umgang mit Knappheit.
+#####	ECO_RES_SCARASBASIS	Particle	2	5	Die Integration von Konzepten wie Eigentum, Tauschhandel und Geld als Basis gesellschaftlicher Entwicklung kann dazu führen, dass Menschen Knappheit als unveränderlichen Zustand annehmen.
+#####	ECO_RES_ACCESSREQUIRED	Particle	2	6	Erst der Zugang zu einer Ressource ermöglicht einem Menschen, diese Ressource zu nutzen.
+#####	ECO_RES_DELIBACCESSABUN	Particle	2	7	Ein Entwicklungsziel der globalen Gesellschaft sollte die gezielte Schaffung von Zugriffsreichhaltigkeit sein.
+#####	ECO_RES_NEEDSBASEDCOORD	Particle	2	8	"Den Umgang mit Ressourcen durch Bedürfnisorientierte Koordination zu organisieren, kann Knappheit zu einer gemeinsam getragenen Herausforderung für alle Beteiligten und Betroffenen machen und darüber hinaus zu Ressourcenreichhaltigkeit führen.
+"
+#####		Header2	1		Technologie
+#####	ECO_TECH_EVERYBODY	Particle	2	1	Jeder Mensch nutzt permanent Technologie. Jeder Mensch entwirft, entwickelt und verwendet kontinuierlich Methoden und Werkzeuge – bewusst und unbewusst.
+#####	neu in 1.1	Example	2		Die Buchstaben, die du in diesem Moment liest, sind Ausdruck von Technologie. Lesen selbst ist ein Stück Technologie. Das Display oder das Stück Papier, auf das du schaust, sind Technologie. Der Stuhl, auf dem du sitzt, und die Kleidung, die du trägst, sind Technologie. Jedes Bakterium, jede Pflanze und jedes Tier nutzt Methoden, um Vorhaben, wie Nahrungssuche oder Verteidigung gegen Feinde, umzusetzen. Wir Menschen entwickeln Rezepte, um Anweisungen festzuhalten, damit wir immer und immer wieder köstliche Mahlzeiten kreieren können. Wir nutzen Besprechungen als eine vieler Methoden, um uns auszutauschen und Strategien zu entwickeln..
+#####	ECO_TECH_IMPACT	Particle	2	2	Die Anwendung von Methoden und Werkzeugen kann einem Zweck dienlich sein und gleichzeitig die Vorhaben anderer Menschen beeinflussen.
+#####	ECO_TECH_AWAREDEV	Particle	2	3	Bei der Entwicklung von Technologie sollte ihr Zweck und Anwendungsbereich so tiefgründig und ganzheitlich wie möglich verstanden sowie angrenzende Fachdisziplinen miteinbezogen werden, um die Technologie mit der Umwelt zu harmonisieren.
+#####	ECO_TECH_APPLYNBC	Particle	2	4	Sollte ein Mensch mit einer Technologie in Konflikt geraten oder eine neue Idee einbringen, sollte diese Technologie durch Bedürfnisorientierte Koordination reflektiert und eine Lösung gefunden werden, die für alle funktioniert.
+#####	ECO_TECH_EASY2USE	Particle	2	5	Methoden und Werkzeuge sollten einfach zu benutzen sein.
+#####	ECO_TECH_CONFIGURABLE	Particle	2	6	Methoden und Werkzeuge sollten auf individuelle Bedürfnisse angepasst werden können.
+#####	ECO_TECH_EASY2LEARN	Particle	2	7	Wissen und Anleitungen zu Methoden und Werkzeugen sollten einfach zu verstehen sein.
+#####	ECO_TECH_RESSOURCELIMITS	Particle	2	8	Auf unserer Erde sind Material- und Energieressourcen in Menge und Regenerationsrate begrenzt.
+#####	ECO_TECH_EFFICIENCY	Particle	2	9	Methoden und Werkzeuge sollten in jeglicher Hinsicht ressourceneffizient sein – in Entwurf, Produktion, Anwendung und Wiederverwertung.
+#####	ECO_TECH_USERENEWABLES	Particle	2	10	Die globale Gesellschaft sollte hauptsächlich schnell-erneuerbare Ressourcen verwenden.
+#####	ECO_TECH_ENABLEREUSE	Particle	2	11	Langsam-erneuerbare und nicht-erneuerbare Ressourcen sollten in einer Art und Weise genutzt werden, die ihre Wiederverwendung ermöglicht.
+#####	ECO_TECH_CRADLE2C	Particle	2	12	Alle Materialien, die die globale Gesellschaft nutzt, sollten entweder mit natürlichen Ressourcenkreisläufen der Ökosysteme harmonieren oder in ökonomischen Ressourcenkreisläufen verbleiben.
+#####	ECO_TECH_SUSTAINCONS	Particle	2	13	Die Verbrauchsrate von Material und Energie sollte niedriger sein als deren Regenerationsrate.
+#####	ECO_TECH_LONGLIFE	Particle	2	14	Werkzeuge sollten so langlebig wie möglich sein.
+#####	ECO_TECH_REPAIRABLE	Particle	2	15	Werkzeuge sollten reparierbar sein.
+#####	ECO_TECH_UPDATABLE	Particle	2	16	Werkzeuge sollten aktualisierbar sein. Das bedeutet, es sollte möglich sein, defekte und veraltete Komponenten auszutauschen.
+#####	ECO_TECH_ENABLERECYC	Particle	2	17	Werkzeuge sollten für ihre Wiederverwertung entwickelt sein. Das bedeutet, dass die Materialien defekter oder veralteter Werkzeuge auf einfache Art und Weise extrahiert werden können.
+#####		Header2	1		Ressourcenreichhaltigkeit-Schaffende-Ökonomie
+#####		Header3	2		Kommunikationssysteme
+#####	ECO_SYS_COMM	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten Kommunikationssysteme sein, die es allen Menschen ermöglichen, zu jedem Zeitpunkt über den gesamten Globus hinweg zu kommunizieren.
+#####	ECO_SYS_COMMRELIPRIV	Particle	3	2	Die Kommunikationssysteme sollten schnell und zuverlässig sein sowie den Schutz der Privatsphäre so weit wie möglich garantieren.
+#####	ECO_SYS_COMMPREFER	Particle	3	3	Jeder Mensch sollte Kommunikationssysteme so nutzen können, wie es der persönlichen Vorliebe entspricht.
+#####	ECO_SYS_COMMEVERYTHING	Particle	3	4	"Jedem Menschen sollte es ermöglicht sein, Erfahrungen, Ideen, Sorgen, Bedarf an Ressourcen und generell alles kommunizieren zu können, was sie oder er
+kommunizieren möchte."
+#####	ECO_SYS_COMMEASY	Particle	3	5	Die Kommunikation zwischen Menschen und den verschiedenen ökonomischen Systemen sollte so intuitiv und angenehm wie möglich gestaltet sein.
+#####	ECO_SYS_COMMINTERACTION	Particle	3	6	Einzelne ökonomische Systeme sollten auf effektive Art und Weise miteinander kommunizieren und interagieren können.
+#####		Header3	2		Wissens- und Informationsplattformen
+#####	ECO_SYS_PLATFORMS	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten Wissens- und Informationsplattformen sein, damit jeder Mensch lernen kann.
+#####	ECO_SYS_PLATEASY	Particle	3	2	Wissens- und Informationsplattformen sollten so konzipiert sein, dass sie das einfache Auffinden und Verstehen von Inhalten ermöglichen, indem diese Inhalte anschaulich aufbereitet werden.
+#####	ECO_SYS_PLATCODEV	Particle	3	3	Wissens und Informationsplattformen sollten es ermöglichen, Inhalte kooperativ zu reflektieren, damit sie ergänzt, verfeinert, veranschaulicht oder in sonstiger Weise weiterentwickelt werden können.
+#####	ECO_SYS_PLATEXCHANGE	Particle	3	4	Wissens- und Informationsplattformen sollten es ermöglichen, zu erfahren, was andere Menschen hinsichtlich eines Themengebietes oder Wissensaspektes erlebt haben.
+#####	ECO_SYS_PLATCONTACT	Particle	3	5	Es sollte möglich sein, jene zu kontaktieren, die ihr Wissen teilen und andere beim Lernen unterstützen wollen.
+#####	ECO_SYS_PLATFURTHER	Particle	3	6	Es sollte möglich sein, einen Überblick über themenspezifische Materialien wie Bücher, Filme, Reportagen, Studien, Vorlesungen, Seminare, Workshops, Trainings und andere Möglichkeiten zur Verbesserung von Fertigkeiten sowie themenverwandte Methoden und Werkzeuge zu erhalten.
+#####		Header3	2		Personenverkehrssysteme
+#####	ECO_SYS_TRAVEL	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten verlässliche Personenverkehrssysteme sein, über die die Vielfalt der Welt durch Reisen erlebbar und der direkte Austausch mit anderen Menschen ermöglicht wird.
+#####	ECO_SYS_TRAVELCONVENIENT	Particle	3	2	Es sollte möglich sein, individuell, komfortabel und verlässlich zu reisen.
+#####		Header3	2		Nachfrageübersichtssysteme
+#####	ECO_SYS_DEMANDOVERVIEW	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten geeignete Systeme sein, um einen permanenten Überblick über die Nachfrage an Ressourcen zu erhalten.
+#####		Header3	2		Ressourcenübersichtssysteme
+#####	ECO_SYS_RESOVERVIEW	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten geeignete Systeme sein, die permanent Überblick über mögliche Ressourcen bieten.
+#####	ECO_SYS_RESWHICH	Particle	3	2	Ressourcenübersichtssysteme sollten Informationen darüber bereitstellen, welche Ressourcen verfügbar sind.
+#####	ECO_SYS_RESRERATE	Particle	3	3	Ressourcenübersichtssysteme sollten Informationen darüber bereitstellen, in welchem Maße sich Ressourcen regenerieren.
+#####	ECO_SYS_RESREGISTMAT	Particle	3	4	Ressourcenübersichtssysteme sollten Materialien erfassen, die in produzierten Werkzeugen enthalten sind.
+#####		Header3	2		Wiederverwendungs- und Wiederverwertungssysteme
+#####	ECO_SYS_CYCLE	Particle	3	1	"Ein Entwicklungsziel der globalen Gesellschaft sollten effektive Wiederverwendungs- und
+Wiederverwertungssysteme sein."
+#####	ECO_SYS_CYCLE2OPTIONS	Particle	3	2	"Die Wiederverwendungs- und
+Wiederverwertungssysteme sollten entscheiden, ob ein nicht mehr benötigtes Werkzeug an anderer Stelle weiterverwendet oder als Materialquelle freigegeben wird."
+#####		Header3	2		Entwurfs- und Konfigurationssysteme
+#####	ECO_SYS_DEVCONF	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten Entwurfs- und Konfigurationssysteme sein, die Menschen bei Gestaltung (Design) und Test von Werkzeugen unterstützen.
+#####	ECO_SYS_DEVCONFGUIDE	Particle	3	2	Entwurfs- und Konfigurationssysteme sollten Menschen dabei unterstützen, auf einfache Weise von einer Idee zu einem fertigen Werkzeug zu gelangen (z.B. durch Vorschläge und Hinweise bei Berechnungen, Konstruktion, durch Simulation, Materialauswahl, uvm.)
+#####	ECO_SYS_DEVCONFASSURE	Particle	3	3	Entwurfs- und Konfigurationssysteme sollten dafür sorgen, dass entwickelte Werkzeuge mit dem Ökosystem der Erde sowie gesellschaftlichen Kriterien harmonieren.
+#####	ECO_SYS_DEVCONFPROVIDE	Particle	3	4	Werkzeuge, die über Entwurfs- und Konfigurationssystemen fertiggestellt wurden, sollten umgehend zur Bestellung angeboten werden, um die Vielfalt an Werkzeugen zu erweitern.
+#####		Header3	2		Produktions- und Verteilungssysteme
+#####	ECO_SYS_PRODDISTRI	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten flexible Produktions- und Verteilungssysteme sein, durch die Materialien und Werkzeuge effizient und zeitnah dorthin gelangen, wo sie gebraucht werden.
+#####	ECO_SYS_PRODDEMBASED	Particle	3	2	Die Produktionssysteme sollten die Produktionsmenge auf Basis kontinuierlicher Analysen der Nachfragesituation bestimmen, um Reichhaltigkeit weitestgehend sicherzustellen.
+#####	ECO_SYS_PRODREGADVANCE	Particle	3	3	Die Produktionssysteme sollten regelmäßig nachgefragte Werkzeuge im Voraus produzieren.
+#####	ECO_SYS_PRODIRREGORDER	Particle	3	4	Die Produktionssysteme sollten unregelmäßig nachgefragte Werkzeuge auf Bestellung produzieren.
+#####	ECO_SYS_DISTRISHORTDELIV	Particle	3	5	Die Verteilungssysteme sollten die Zeit zwischen Bestellung und Lieferung so kurz wie möglich gestalten.
+#####	ECO_SYS_DISTRIFLEXCAP	Particle	3	6	Die Verteilungssysteme sollten ihre Kapazitäten über den gesamten Globus hinweg dynamisch der Nachfrage anpassen können.
+#####	ECO_SYS_DISTRIPRECISE	Particle	3	7	Die Verteilungssysteme sollten Materialien und Werkzeuge so individuell, schnell, akkurat, verlässlich und so sorgfältig wie möglich an ihre Bestimmungsorte bringen.
+#####	ECO_SYS_PRODDISTRISHORANGE	Particle	3	8	Produktions- und Verteilungssysteme sollten Materialien und Werkzeuge in möglichst kurzer Entfernung zu ihren Bestimmungsorten lagern und produzieren, um die Ressourceneffizienz zu erhöhen (Kurze-Wege-Strategie)
+#####		Example	3	9	"Ein Beispiel zur Produktion und Verteilung von Nahrungsmitteln: Die lokale Nahrungsmittelproduktion beliefert vorrangig die ortsansässigen Einwohner mit nährstoffreichen, gesunden Nahrungsmitteln. Nahrungsmittel, die nicht im regionalen Klima produziert werden können, werden in anderen Teilen der Welt produziert. Folglich kümmert sich die lokale Nahrungsmittelproduktion zusätzlich um die Produktion von Nahrungsmitteln, die aus anderen Regionen angefragt werden. Die
+Verteilungssysteme sorgen für eine schnelle und dem jeweiligen Nahrungsmittel angemessene Auslieferung, damit jede Art von Nahrung frisch und wohlschmeckend an jeden Ort der Welt geliefert werden kann.
+Wie genau die lokale Nahrungsmittelproduktion organisiert ist, kann von Region zu Region variieren. Dies könnten sowohl vollautomatische Produktionssysteme sein als auch das Ergebnis der Leidenschaft und Kreativität von Gärtnern, Bauern und anderen Freunden der Handarbeit. Wahrscheinlich ist eine Kombination aus beidem, die guter Koordination bedarf."
+#####		Header3	2		Energiesysteme
+#####	ECO_SYS_ENGYABUNDANCE	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten Energiesysteme sein, die Energie in Reichhaltigkeit bereitstellen..
+#####	ECO_SYS_ENGYRENEWABLE	Particle	3	2	Die Energiesysteme sollten Energie aus ausschließlich sauberen und schnell-erneuerbaren Energiequellen bereitstellen (z.B.: Sonne, Wind, Wasser, Erdwärme)
+#####	ECO_SYS_ENGYDYNAMIC	Particle	3	3	Die Energieerzeugungs- und -verteilungssysteme sollten so flexibel wie möglich funktionieren, um den Energiebedarf an jedem Ort und zu jedem Zeitpunkt decken zu können.
+#####	ECO_SYS_ENGYSHORANGE	Particle	3	4	Die Energiesysteme sollten Energie möglichst dort produzieren, wo sie gebraucht wird, um die Ressourceneffizienz des Gesamtsystems zu erhöhen. (Kurze-Wege-Strategie)
+#####		Example	3	5	Beispielsweise könnten die Oberflächen von Gebäuden so entworfen sein, dass sie Sonnenlicht und andere Energieformen einfangen und damit das Gebäude selbst mit Energie versorgen können. Jede Überproduktion an Energie könnte in das regionale und globale Energieverteilungssystem eingespeist werden. Zur Schaffung von Energiereichhaltigkeit wäre es sehr effektiv, wenn so viele Gebäude wie möglich mehr Energie erzeugen würden als sie verbrauchen.
+#####		Header3	2		Vernetzung aller ökonomischen Systeme
+#####	ECO_SYS_NET	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollte die Vernetzung der ökonomischen Systeme sein, damit sie sinnvoll miteinander interagieren können.
+#####	ECO_SYS_NETMEASURE	Particle	3	2	Durch die Informationen aus den Ressourcen- und Nachfrageübersichtssystemen kann der Grad an Reichhaltigkeit gemessen werden. Auf diese Weise kann das globale Wirtschaftssystem Ressourcenengpässe frühzeitig erkennen und entsprechend reagieren.
+#####		Header3	2		Optionale Automatisierung
+#####	ECO_SYS_OPTAUTO	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollten flexible Anpassungsmöglichkeiten des Automatisierungsgrades sein, damit Menschen entscheiden können, ob sie Tätigkeiten manuell oder automatisch ausführen möchten. (Optionale Automatisierung)
+#####		Header3	2		Transparenz
+#####	ECO_SYS_TRANSPARENCY	Particle	3	1	Ein Entwicklungsziel der globalen Gesellschaft sollte Transparenz auf allen Ebenen der Gesellschafts- und Wirtschaftssysteme sein, damit Menschen deren Strukturen und Abläufe intensiv beobachten, erleben, studieren und schließlich verbessern können.
+#####		Header2	1		Bevölkerungsgröße
+#####	ECO_POP_COMPLEXITY	Particle	2	1	Je mehr Menschen auf dem Planeten leben, desto mehr Anstrengungen müssen evtl. unternommen werden, um Ressourcenreichhaltigkeit zu schaffen.
+#####	ECO_POP_ACCEPTANCE	Particle	2	2	Ein Entwicklungsziel der globalen Gesellschaft sollte sein, eine zu einem Zeitpunkt gegebene Bevölkerungsgröße zu akzeptieren und künftige Entwicklungen bei der Organisation von Gesellschaftsstrukturen berücksichtigen zu können.
+#####	ECO_POP_UNDERSTAND	Particle	2	3	Ein Entwicklungsziel der globalen Gesellschaft sollte das Verständnis sein, welche Lebensumstände innerhalb einer Gesellschaft zum Wachsen bzw. zum Sinken der Bevölkerungsgröße führen.
+#####	ECO_POP_CHILDASSTRAT	Particle	2	4	Die Bevölkerungsgröße einer Gesellschaft, in der Menschen die Befriedigung ihrer Bedürfnisse besser bewerkstelligen können, indem sie viele Kinder haben, wird folglich wachsen.
+#####	ECO_POP_FREEDOM	Particle	2	5	Der Zugriff auf Freiheiten wie z.B. den Reichtum der Welt für sich zu entdecken, um ihn auszuschöpfen, sich selbst auszuprobieren, sich zu entfalten oder mehr Zeit für sich zu haben, kann einen Einfluss auf die Anzahl der eigenen Kinder haben.
+#####	ECO_POP_CONSCIOUS	Particle	2	6	Die globale Gesellschaft sollte ausführlich über Verhütungsmethoden informieren und freien Zugang zu Verhütungsmitteln ermöglichen, um Menschen eine bewusste Entscheidung für Kinder zu ermöglichen.
+#####	ECO_POP_FULLFOCUS	Particle	2	7	Wenn ein Mensch jedes seiner Kinder ganzheitlich begleiten, deren Aufwachsen erleben und die benötigte Zuwendung geben möchte, wird dieser Mensch vermutlich eher weniger als mehr Kinder haben.
+#####		Header0	0		Anhang
+#####		Header1	1		Definitionen
+#####	DEF_NEED	Definition	2	1	Ein Bedürfnis beschreibt das Verlangen nach einer bestimmten Qualität des Lebens. Ein Bedürfnis grenzt sich ab von konkreten Handlungen /Handlungsstrategien, ist stets lebensbejahend und jedem Menschen vertraut. Ein Bedürfnis kann erfüllt oder nicht erfüllt sein.
+#####		Example	2		Beispiele für Qualitäten des Lebens / Bedürfnisse: Frieden, Licht, Nähe, Nahrung, Raum, Kraft, Gemeinschaft, Handlungsfähigkeit, Abenteuer, Austausch, Lernen,
+#####	DEF_GUIDANCE	Definition	2	2	Einen anderen Menschen zu Begleiten bedeutet, einen schützenden Raum zu bieten und zu halten, in dem ein Mensch sich ganz zeigen, eigenständig wachsen und entwickeln kann. Darüber hinaus bedeutet es, Impulse für seine Orientierung zu geben, die dieser Mensch als unterstützend empfindet.
+#####	DEF_INFLUENCE	Definition	2	3	Ein Einfluss ist ein Signal, welches eine Auswirkung auf den Seins-Zustand eines Menschen erzeugt.
+#####	DEF_EMPATHY		2	4	"Empathie (Mitgefühl) ist die Fähigkeit, sich in die Lage eines Lebewesens hineinversetzen und deshalb nachempfinden und verstehen zu können. Selbstempathie ist dabei die Fähigkeit dieses Mitgefühl, Nachempfinden und Verständnis auch sich selbst entgegenzubringen.
+
+„(Selbst)Empathie geben“ grenzt sich ab von anderen Formen der Begleitung, wie z.B:
+- Ratschläge geben
+- Analysieren
+- Lösungen vorschlagen
+- Sympathisieren
+- Relativieren
+- Mitleiden"
+#####	DEF_EXPERIENCE	Definition	2	5	Eine Erfahrung ist eine durch ein Signal entstandene und durch den Wahrnehmungsprozess beeinflusste bewusste wie unbewusste Auswirkung im Organismus.
+#####	DEF_SKILL	Definition	2	6	Ein Mensch beherrscht eine Fertigkeit, wenn er eine erprobte und durch bewusste Erfahrung gestützte Methode, wiederholt erfolgsversprechend einsetzen kann.
+#####	DEF_SOCIETY	Definition	2	7	Eine Gesellschaft repräsentiert eine Gruppe von Individuen, die miteinander in Verbindung stehen.
+#####	DEF_CONFLICT	Definition	2	8	Ein Konflikt ist die Kollision von Handlungsstrategien, durch die sich mindestens ein Mensch in seinen Vorhaben eingeschränkt sieht.
+#####	DEF_NEEDBASCOORD	Definition	2	9	Bedürfnisorientierte Koordination bedeutet, gemeinsam Handlungsstrategien zu entwickeln, die die Bedürfnisse aller Betroffenen und Beteiligten integrieren.
+#####	DEF_COOPERATION	Definition	2	10	Kooperation bedeutet, ein gemeinsames Ziel anzustreben.
+#####	DEF_LEARN	Definition	2	11	Lernen ist ein Prozess, den jeder Mensch durchläuft, um durch die Aneignung von Wissen und Fertigkeiten eigene Bedürfnisse besser befriedigen zu können.
+#####	DEF_TECHMETHOD	Definition	2	12	Eine Methode ist eine Art und Weise, etwas zu tun, um einen Zweck zu erfüllen.
+#####	DEF_EXTMOTIV	Definition	2	13	Extrinsische Motivation ist der Drang etwas zu tun, um eine versprochene Belohnung zu erhalten, anderen Menschen zu gefallen bzw. um nicht von anderen Menschen verurteilt zu werden oder eine angedrohte Strafe zu erfahren.
+#####	DEF_INTMOTIV	Definition	2	14	Intrinsische Motivation ist ein innerer Antrieb, der einen Menschen dazu veranlasst, dem nachzugehen, was ihn interessiert, seine Neugier weckt, ihn inspiriert oder ihn vor Herausforderungen stellt. Der Mensch geht einer Tätigkeit nach, ohne irgendeine Belohnung von außen dafür zu erwarten bzw. eine Strafe zu fürchten, weil die Aufgabe selbst oder die erzielten Ergebnisse unmittelbar zur Befriedigung der Bedürfnisse dieses Menschen beitragen.
+#####	DEF_PERSREALITY	Definition	2	15	Die Persönliche Realität eines Menschen ist die Gesamtheit aller von ihm erfassten Signale (Beobachtungen). Dazu gehört auch die Gesamtheit an möglichen Strategien, welche diesem Menschen aus dessen Sicht zur Bedürfniserfüllung zur Verfügung stehen.
+#####	DEF_PERSTRUTH	Definition	2	16	Die Persönliche Wahrheit eines Menschen ist die Bewertung seiner Beobachtungen. Diese Bewertung dient seiner Orientierung, um zu entscheiden, welche Handlungsstrategien erfolgreicher als andere zur Erfüllung seiner Bedürfnisse beitragen. Dies umschließt seine Haltungen, Meinungen und Überzeugungen sowie die Einordnung in Kategorien wie z.B. "gut" oder "schlecht", „heilsam“ oder „schädlich“, "vertrauenswürdig" oder "verdächtig" sowie "richtig“ oder „falsch“.
+#####	DEF_ABUCREECO	Definition	2	17	Reichhaltigkeit-Schaffende Ökonomie ist ein Wirtschaftssystem, welches gezielt Ressourcen- und Zugriffsreichhaltigkeit etabliert.
+#####	DEF_RES	Definition	2	18	Eine Ressource ist etwas, das ein Lebewesen nutzt, um Bedürfnisse zu befriedigen. Ressourcen sind dabei Teil von Handlungsstrategien.
+#####		Example	2		Beispiele von Ressourcen sind: Materialien, Energie, Werkzeuge, Lebensraum, Information, Wissen, Fertigkeiten, Zeit. Erfüllte Qualitäten des Lebens /Bedürfnisse können ebenfalls Ressourcen sein: Kreativität, Kraft, Leichtigkeit, …
+#####	DEF_RESFASTRENEW	Definition	2	19	Schnell-erneuerbare Ressourcen sind Ressourcen, die sich in eher kurzer Zeitdauer regenerieren – wie z.B. Sonnenlicht, Holz, Hanf.
+#####	DEF_RESSLOWRENEW	Definition	2	20	Langsam-erneuerbare Ressourcen sind Ressourcen, die sich in eher langer Zeitdauer regenerieren – wie z.B. fossile Brennstoffe und Diamanten.
+#####	DEF_RESNORENEW	Definition	2	21	Nicht-erneuerbare Ressourcen sind Ressourcen, die keine signifikante Regenerationsrate aufweisen – wie z.B. Metalle.
+#####	DEF_SCARCITY	Definition	2	22	Ressourcenknappheit bedeutet, dass eine Ressource nicht in ausreichenden Mengen verfügbar ist, um bzgl. einer bestimmten Strategie Bedürfnisse zu befriedigen.
+#####		Example	2		Knappheit ist offensichtlich, wenn jemand zu wenig zu essen oder zu wenig Platz zum Wohnen hat. Knappheit ist sichtbar, wenn eine Bibliothek unzureichende Informationen bietet oder Ärztinnen und Krankenpfleger in einem Krankenhaus kontinuierlich unter hohem Stress stehen und entkräftet sind. Auch das Gefühl mangelnder Inspiration, Zeit oder mangelndem Einfallsreichtum kann als Knappheit von Ressourcen angesehen werden.
+#####	DEF_ABUNDANCE	Definition	2	23	Ressourcenreichhaltigkeit heißt, dass mehr als genug einer bestimmten Ressource zur Verfügung steht, um bzgl. einer Handlungsstrategie Bedürfnisse zu befriedigen.
+#####	DEF_SOCIALISATION	Definition	2	24	Sozialisation beschreibt den aktiven und passiven Transfer von gesellschaftlichen Werten, Haltungen, Weltsichten, Erfahrungen, Konzepten, Wissen, Fertigkeiten und schließlich Verhaltensmustern von Mensch zu Mensch.
+#####	DEF_TECH	Definition	2	25	Technologie ist die zweckbestimmte Kombination von Ressourcen – Entwurf, Entwicklung und Nutzung von Methoden und Werkzeugen -, um Bedürfnisse angenehmer (effizienter, schöner, einfacher, usw.) zu befriedigen.
+#####	DEF_ENV	Definition	2	26	Umwelt ist alles, was einen Menschen umgibt - physisch, sozial, mental, spirituell usw.
+#####	DEF_BEHAVIOR	Definition	2	27	Menschliches Verhalten ist ein Synonym für die Gesamtheit menschlicher Aktivität. Menschliches Verhalten steht immer im Bezug zu einer das Individuum umgebenden Umwelt.
+#####	DEF_PERCEPTION	Definition	2	28	Wahrnehmung ist die Aufnahme von Signalen durch unsere Sinne sowie der Prozess unseres Organismus, diese Signale zu filtern und zu kategorisieren, um sie in ein aus Sicht des Organismus sinnvolles Gesamtbild einzufügen.
+#####	DEF_TECHTOOL	Definition	2	29	Ein Werkzeug ist eine Sache, mit der man etwas tun kann, um einen Zweck zu erfüllen.
+#####	DEF_KNOWLEDGE		2	30	Wissen ist die Gesamtheit von bewussten Erfahrungen, Informationen und verfügbaren Handlungsstrategien eines Menschen.
+#####	DEF_SATISFACTION	Definition	2	31	Zufriedenheit ist ein angenehmer Seins-Zustand und erzeugt angenehme Gefühle. Ein Mangel an Zufriedenheit erzeugt hingegen unangenehme Gefühle.
+#####	DEF_ACCABUNDANCE	Definition	2	32	Zugriffsreichhaltigkeit beschreibt die Situation, in der ein Individuum dann sofortigen Zugriff auf Ressourcen hat, wenn sie oder er diese Ressource benötigt.
