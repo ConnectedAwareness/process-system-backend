@@ -2,7 +2,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import { Version } from '../models/version.representation';
-import { Element, ElementType } from '../models/element.representation';
+import { Element, ElementType, IElement } from '../models/element.representation';
 import { VersionSchema } from '../schemas/version.schema';
 
 import * as fs from 'fs';
@@ -10,7 +10,8 @@ import * as fs from 'fs';
 @Injectable()
 export class VersionService {
 
-    constructor(@Inject('VersionModelToken') private readonly versionModel: Model<Version>) { }
+    constructor(@Inject('VersionModelToken') private readonly versionModel: Model<IVersion>,
+                @Inject('ElementModelToken') private readonly elementModel: Model<IElement>) { }
 
     // CRUD
 

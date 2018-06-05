@@ -7,14 +7,14 @@ export interface IOrg {
     comments: Array<IComment>;
 }
 
-export class Org implements IOrg {
+export class Org {
   constructor() {
     this.organisationId = null;
-    this.comments = new Array<IComment>();
+    this.comments = new Array<Comment>();
   }
 
   @ApiModelProperty({type: String, required: true})
   readonly organisationId: string;
   @ApiModelProperty({type: Object, isArray: true, required: false })
-  readonly comments: Array<IComment>;
+  readonly comments: Array<Comment>;
 }

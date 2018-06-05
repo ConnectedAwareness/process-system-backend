@@ -20,13 +20,13 @@ export interface IElement {
     organisations: Array<IOrg>;
 }
 
-export class Element implements IElement {
+export class Element {
   constructor() {
     this.type = null;
     this.elementId = null;
     this.text = null;
-    this.elements = new Array<IElement>();
-    this.organisations = new Array<IOrg>();
+    this.elements = new Array<Element>();
+    this.organisations = new Array<Org>();
   }
 
   @ApiModelProperty({type: ElementType, required: true})
@@ -36,7 +36,7 @@ export class Element implements IElement {
   @ApiModelProperty({type: String, required: false})
   public text: string;
   @ApiModelProperty({type: Object, isArray: true, required: false })
-  public elements: Array<IElement>;
+  public elements: Array<Element>;
   @ApiModelProperty({type: Object, isArray: true, required: false })
-  public organisations: Array<IOrg>;
+  public organisations: Array<Org>;
 }

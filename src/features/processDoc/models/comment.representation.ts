@@ -6,7 +6,7 @@ export interface IComment {
     vote: number;
 }
 
-export class Comment implements IComment {
+export class Comment {
   constructor() {
     this.userid = null;
     this.comment = null;

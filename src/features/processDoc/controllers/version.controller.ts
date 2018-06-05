@@ -45,12 +45,13 @@ export class VersionController {
   // END CRUD
 
   @Put('/import/:versionid')
-  // @ApiOperation({ title: 'import version from file' })
-  // @ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
-  // @ApiImplicitBody({ name: 'versionFile', required: true, description: 'version object' })
-  // @ApiResponse({ status: 200, description: 'Import successful', type: Version, isArray: false })
-  async import(@Param('versionid') versionId: string, @Body('versionFile') versionFile: string) : Promise<boolean> {
-      return this.versionService.importElementsRecursiveAsync(versionId, versionFile);
+  @ApiOperation({ title: 'import version from file' })
+  @ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
+  @ApiImplicitBody({ name: 'versionFile', required: true, description: 'version object', type: Version })
+  @ApiResponse({ status: 200, description: 'Import successful', type: Version, isArray: false })
+  async import(@Param('versionid') versionId: string, @Body('versionFile') versionFile: Version) : Promise<boolean> {
+    return true;
+      // return this.versionService.importElementsRecursiveAsync(versionId, versionFile);
   }
 
 //   @Post('/import/:versionid')

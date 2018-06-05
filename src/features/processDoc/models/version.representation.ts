@@ -2,11 +2,11 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 import { Element, IElement } from './element.representation';
 
-// export interface IVersion {
-//     versionId: string;
-//     published: boolean;
-//     elements: Array<Element>;
-// }
+export interface IVersion {
+    versionId: string;
+    published: boolean;
+    elements: Array<Element>;
+}
 
 export class Version {
   constructor() {
