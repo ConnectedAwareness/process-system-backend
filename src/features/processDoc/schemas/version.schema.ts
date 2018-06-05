@@ -9,3 +9,5 @@ export const VersionSchema = new mongoose.Schema({
 }
 , {collection: 'versions' }
 );
+
+// export const VersionSchemaFeature = { name: 'Version', schema: VersionSchema };
