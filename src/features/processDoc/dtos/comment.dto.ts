@@ -1,12 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export interface IComment {
-    userid: string;
-    comment: string;
-    vote: number;
-}
-
-export class Comment {
+export class CommentDto {
   constructor() {
     this.userid = null;
     this.comment = null;

@@ -1,11 +1,12 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
-
-import { Version } from '../models/version.representation';
-import { Element, ElementType, IElement } from '../models/element.representation';
-import { VersionSchema } from '../schemas/version.schema';
-
 import * as fs from 'fs';
+
+import { VersionDto } from '../dtos/version.dto';
+import { ElementDto } from '../dtos/element.dto';
+import { VersionSchema } from '../schemas/version.schema';
+import { IVersion } from '../interfaces/version.interface';
+import { IElement, ElementType } from '../interfaces/element.interface';
 
 @Injectable()
 export class VersionService {
@@ -15,18 +16,18 @@ export class VersionService {
 
     // CRUD
 
-    async getVersionAsync(versionId: string): Promise<Version> {
+    async getVersionAsync(versionId: string): Promise<VersionDto> {
         const query = { versionId: versionId };
 
         const version = await this.versionModel.findOne(query);
 
         if (version == null)
-            throw new HttpException(`Version with Id: ${versionId} not found`, HttpStatus.BAD_REQUEST);
+            throw new HttpException(`VersionDto with Id: ${versionId} not found`, HttpStatus.BAD_REQUEST);
 
         return version;
     }
 
-    async createVersionAsync(version: Version): Promise<Version> {
+    async createVersionAsync(version: VersionDto): Promise<VersionDto> {
         if (!version.versionId || version.versionId.length === 0)
             throw new HttpException("Can't create new version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
@@ -34,13 +35,13 @@ export class VersionService {
 
         const res = await model.save();
 
-        console.log(`new Version ${version.versionId} saved`);
+        console.log(`new VersionDto ${version.versionId} saved`);
         console.log(res);
 
         return version;
     }
 
-    async updateVersionAsync(version: Version): Promise<boolean> {
+    async updateVersionAsync(version: VersionDto): Promise<boolean> {
         if (!version.versionId || version.versionId.length === 0)
             throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
@@ -75,9 +76,9 @@ export class VersionService {
         return true;
     }
 
-    async parseRecursive(versionfile: string, version: Version): Promise<Version> {
+    async parseRecursive(versionfile: string, version: VersionDto): Promise<VersionDto> {
         if (version.elements && version.elements.length > 0)
-            throw new HttpException(`Version object already has element list!`, HttpStatus.BAD_REQUEST);
+            throw new HttpException(`VersionDto object already has element list!`, HttpStatus.BAD_REQUEST);
 
         const parsedLevel = 0;
         const elementList = versionfile.split("#####");
@@ -89,8 +90,8 @@ export class VersionService {
         return version;
     }
 
-    async _parseRecursive(elementList: string[], parsedLevel: number): Promise<Element[]> {
-        const elements = new Array<Element>();
+    async _parseRecursive(elementList: string[], parsedLevel: number): Promise<ElementDto[]> {
+        const elements = new Array<ElementDto>();
         let lastElement = null;
         let parsedElement = null;
 
@@ -108,7 +109,7 @@ export class VersionService {
 
                     // add to element elements
                     if (level === parsedLevel) {
-                        const newElement = new Element();
+                        const newElement = new ElementDto();
                         newElement.elementId = id;
                         newElement.type = await this.parseElementType(type);
                         newElement.text = text;

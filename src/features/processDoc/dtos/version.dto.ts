@@ -1,18 +1,12 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { Element, IElement } from './element.representation';
+import { ElementDto } from './element.dto';
 
-export interface IVersion {
-    versionId: string;
-    published: boolean;
-    elements: Array<Element>;
-}
-
-export class Version {
+export class VersionDto {
   constructor() {
     this.versionId = null;
     this.published = null;
-    this.elements = new Array<Element>();
+    this.elements = new Array<ElementDto>();
   }
 
   @ApiModelProperty({type: String, required: true})
@@ -20,7 +14,7 @@ export class Version {
   @ApiModelProperty({type: Boolean, required: true})
   readonly published: boolean;
   @ApiModelProperty({type: Object, isArray: true, required: false })
-  readonly elements: Array<Element>;
+  readonly elements: Array<ElementDto>;
 }
 
 export class ImportVersion {

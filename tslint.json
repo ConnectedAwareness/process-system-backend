@@ -12,6 +12,7 @@
         "trailing-comma": [false],
         "ban-types": [false],
         "typedef-whitespace": [false],
+        "object-literal-shorthand": [false],
         "quotemark": [
           false,
           "single"

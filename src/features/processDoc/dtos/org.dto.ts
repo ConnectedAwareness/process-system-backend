@@ -1,20 +1,15 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { IComment, Comment } from './comment.representation';
+import { CommentDto } from './comment.dto';
 
-export interface IOrg {
-    organisationId: string;
-    comments: Array<IComment>;
-}
-
-export class Org {
+export class OrgDto {
   constructor() {
     this.organisationId = null;
-    this.comments = new Array<Comment>();
+    this.comments = new Array<CommentDto>();
   }
 
   @ApiModelProperty({type: String, required: true})
   readonly organisationId: string;
   @ApiModelProperty({type: Object, isArray: true, required: false })
-  readonly comments: Array<Comment>;
+  readonly comments: Array<CommentDto>;
 }

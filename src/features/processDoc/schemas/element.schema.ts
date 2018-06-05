@@ -2,13 +2,13 @@ import * as mongoose from 'mongoose';
 
 import { OrgSchema } from './org.schema';
 
-export const ElementSchemaX = new mongoose.Schema();
-ElementSchemaX.add({
+export const ElementSchema = new mongoose.Schema({
     type: { type: String, required: true },
-    elements: [ElementSchemaX],
     organisations: [OrgSchema],
 }, {collection: 'elements'});
 
-export const ElementSchema = ElementSchemaX;
+ElementSchema.add({
+  elements: [ElementSchema]
+});
 
 // export const VersionSchemaFeature = { name: 'Element', schema: ElementSchema };
