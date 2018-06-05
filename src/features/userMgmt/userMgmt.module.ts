@@ -6,10 +6,12 @@ import { DatabaseModule } from '../../main/database/database.module';
 import { OrganisationController } from './controllers/organisation.controller';
 import { OrganisationService } from './services/organisation.service';
 import { organisationProviders } from './providers/organisation.providers';
+import { UserService } from './services/user.service';
+import { userProviders } from './providers/user.providers';
 
 @Module({
     imports: [DatabaseModule],
     controllers: [OrganisationController],
-    providers: [OrganisationService, ...organisationProviders],
+    providers: [OrganisationService, UserService, ...organisationProviders, ...userProviders],
 })
 export class UserMgmtModule {}

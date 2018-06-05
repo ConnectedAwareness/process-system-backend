@@ -4,6 +4,8 @@ import { OrgSchema } from './org.schema';
 
 export const ElementSchema = new mongoose.Schema({
     type: { type: String, required: true },
+    elementId: { type: String, required: false },
+    text: { type: String, required: true },
     organisations: [OrgSchema],
 }, {collection: 'elements'});
 

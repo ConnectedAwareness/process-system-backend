@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode
 import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
 
 import { VersionService } from '../services/version.service';
-import { VersionDto, ImportVersion } from '../dtos/version.dto';
+import { VersionDto, ImportVersion } from '../models/dtos/version.dto';
 
 @ApiUseTags('versions')
 @Controller('versions')
@@ -18,11 +18,11 @@ export class VersionController {
 
   // CRUD
 
-  @Get(':versionid')
+  @Get(':versionId')
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getVersion(@Param('versionid') versionId: string) : Promise<VersionDto> {
+  async getVersion(@Param('versionId') versionId: string) : Promise<VersionDto> {
     return this.versionService.getVersionAsync(versionId);
   }
 
@@ -50,8 +50,7 @@ export class VersionController {
   @ApiImplicitBody({ name: 'versionFile', required: true, description: 'version object', type: VersionDto })
   @ApiResponse({ status: 200, description: 'Import successful', type: VersionDto, isArray: false })
   async import(@Param('versionid') versionId: string, @Body('versionFile') versionFile: VersionDto) : Promise<boolean> {
-    return true;
-      // return this.versionService.importElementsRecursiveAsync(versionId, versionFile);
+    return this.versionService.importElementsRecursiveAsync(versionId, null);
   }
 
 //   @Post('/import/:versionid')
