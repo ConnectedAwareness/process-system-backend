@@ -28,4 +28,21 @@ export class UserService {
 
         return result;
     }
+
+    async getUserByEmail(email: string): Promise<UserDto> {
+        try {
+            const query = { 'email': email };
+
+            const res = await this.userModel.findOne(query);
+
+            if (res == null)
+                return null;
+
+            return of(UserFactory.create(res)).toPromise();
+        } catch (error) {
+
+        }
+
+        return null;
+    }
 }

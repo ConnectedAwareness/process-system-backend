@@ -11,6 +11,7 @@ import { OrganisationFactory } from '../models/factories/organisation.factory';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { UserDto } from '../models/dtos/user.dto';
 import { UserService } from './user.service';
+import { UserFactory } from '../models/factories/user.factory';
 
 @Injectable()
 export class OrganisationService {
@@ -85,14 +86,28 @@ export class OrganisationService {
         throw new HttpException(`Error deleting organisation with Id: ${organisationId}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    async addUserAsync(organisationId: string, user: UserDto): Promise<boolean> {
+    async addUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
         if (!organisationId || organisationId.length === 0)
             throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
 
+        if (!user.email)
+            throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
+
+        if (user.userId)
+            throw new HttpException("User already has an userId set!", HttpStatus.BAD_REQUEST);
+
+        const foundUser = await this.userService.getUserByEmail(user.email);
+
+        if (foundUser)
+            throw new HttpException(`User with email ${user.email} already exists!`, HttpStatus.BAD_REQUEST);
+
         const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
 
+        if (!organisation)
+            throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
+
         if (_.some(organisation.users, (u) => u.email === user.email))
-            throw new HttpException('User already added', HttpStatus.BAD_REQUEST);
+            throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
 
         const userModel = await this.userService.getModel(user);
 
@@ -102,10 +117,39 @@ export class OrganisationService {
         try {
             const res = await organisation.save();
 
-            return Promise.resolve(true);
+            return of(UserFactory.create(userModel)).toPromise();
         }
         catch (ex) {
-            throw new HttpException('Internal Server Error adding user', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    async removeUserFromOrganisationAsync(organisationId: string, userId: string): Promise<boolean> {
+        if (!organisationId || organisationId.length === 0)
+            throw new HttpException(`Can't find organisation with Id ${organisationId}!`, HttpStatus.BAD_REQUEST);
+
+        if (!userId || userId.length === 0)
+            throw new HttpException("No userId is set to delete user!", HttpStatus.BAD_REQUEST);
+
+        const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
+
+        if (!organisation)
+            throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
+
+        if (_.some(organisation.users, (u) => u.userId === userId)) {
+
+            if (_.remove(organisation.users, (u) => u.userId === userId)) {
+                const res = await organisation.save();
+
+                return Promise.resolve(true);
+            }
+            else
+                throw new HttpException(`Internal error removing user with userId ${userId} from organisation ${organisation.name}`,
+                    HttpStatus.BAD_REQUEST);
+
+        }
+        else
+            throw new HttpException(`No user with userId ${userId} found on organisation ${organisation.name}`, HttpStatus.BAD_REQUEST);
     }
 }

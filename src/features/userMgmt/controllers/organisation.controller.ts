@@ -3,6 +3,7 @@ import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQue
 
 import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
+import { UserDto } from '../models/dtos/user.dto';
 
 @ApiUseTags('organisation')
 @Controller('organisation')
@@ -26,7 +27,7 @@ export class OrganisationController {
 
   @Post()
   @ApiOperation({ title: 'create an organisation' })
-  @ApiResponse({ status: 201, description: 'Get All successful' })
+  @ApiResponse({ status: 201, description: 'Create organisation successful' })
   async createOrganisation(@Body() organisation: OrganisationDto) : Promise<OrganisationDto> {
       return await this.organisationService.createOrganisationAsync(organisation);
   }
@@ -46,5 +47,22 @@ export class OrganisationController {
   @ApiResponse({ status: 202, description: 'Delete successful' })
   async deleteOrganisation(@Param('organisationId') organisationId: string) : Promise<boolean> {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
+  }
+
+  @Put('adduser/:organisationId')
+  @ApiOperation({ title: 'Add an user to an organisation' })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiResponse({ status: 200, description: 'Create user successful' })
+  async addUserToOrganisationAsync(@Param('organisationId') id: string, @Body() user: UserDto) : Promise<UserDto> {
+      return await this.organisationService.addUserToOrganisationAsync(id, user);
+  }
+
+  @Put('removeuser/:organisationId/userId')
+  @ApiOperation({ title: 'Add an user to an organisation' })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
+  @ApiResponse({ status: 200, description: 'Create user successful' })
+  async removeUserFromOrganisationAsync(@Param('organisationId') id: string, @Param('userId') userId: string) : Promise<UserDto> {
+      return await this.organisationService.removeUserFromOrganisationAsync(id, userId);
   }
 }
