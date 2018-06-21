@@ -43,7 +43,7 @@ export class OrganisationController {
   @Delete(':organisationId')
   @HttpCode(202)
   @ApiOperation({ title: 'delete an organisation' })
-  @ApiImplicitParam({ name: 'id', required: true, description: 'Id of the tenant to delete' })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 202, description: 'Delete successful' })
   async deleteOrganisation(@Param('organisationId') organisationId: string) : Promise<boolean> {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
@@ -54,7 +54,7 @@ export class OrganisationController {
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
   async addUserToOrganisationAsync(@Param('organisationId') id: string, @Body() user: UserDto) : Promise<UserDto> {
-      return await this.organisationService.addUserToOrganisationAsync(id, user);
+      return await this.organisationService.addOrUpdateUserToOrganisationAsync(id, user);
   }
 
   @Put('removeuser/:organisationId/userId')
@@ -62,7 +62,15 @@ export class OrganisationController {
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async removeUserFromOrganisationAsync(@Param('organisationId') id: string, @Param('userId') userId: string) : Promise<UserDto> {
+  async removeUserFromOrganisationAsync(@Param('organisationId') id: string, @Param('userId') userId: string) : Promise<boolean> {
       return await this.organisationService.removeUserFromOrganisationAsync(id, userId);
+  }
+
+  @Put('updateuser/:organisationId')
+  @ApiOperation({ title: 'Add an user to an organisation' })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiResponse({ status: 200, description: 'Create user successful' })@ApiResponse({ status: 200, description: 'Create user successful' })
+  async updateUserFromOrganisationAsync(@Param('organisationId') id: string, @Body() user: UserDto) : Promise<UserDto> {
+    return await this.organisationService.addOrUpdateUserToOrganisationAsync(id, user);
   }
 }

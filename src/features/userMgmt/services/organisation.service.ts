@@ -6,17 +6,19 @@ import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
 
 import { OrganisationDto } from '../models/dtos/organisation.dto';
-import { OrganisationSchema } from '../schemas/organisation.schema';
-import { OrganisationFactory } from '../models/factories/organisation.factory';
-import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { UserDto } from '../models/dtos/user.dto';
+import { OrganisationSchema } from '../schemas/organisation.schema';
+import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { IUser } from '../models/interfaces/user.interface';
 import { UserService } from './user.service';
+import { OrganisationFactory } from '../models/factories/organisation.factory';
 import { UserFactory } from '../models/factories/user.factory';
 
 @Injectable()
 export class OrganisationService {
     constructor(@Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>,
-                private userService: UserService) { }
+        @Inject('UserModelToken') private readonly userModel: Model<IUser>,
+        private userService: UserService) { }
 
     async getAllOrganisationsAsync(): Promise<OrganisationDto[]> {
         const res = await this.organisationModel.find();
@@ -78,50 +80,80 @@ export class OrganisationService {
         if (!organisationId || organisationId.length === 0)
             throw new HttpException("Can't delete organisation, no organisationId supplied", HttpStatus.BAD_REQUEST);
 
-        const res = await this.organisationModel.findByIdAndRemove(organisationId);
+        const query = { organisationId: organisationId };
 
-        if (res.isDeleted())
-            return Promise.resolve(true);
+        const res = await this.organisationModel.findOneAndRemove(query, function (err, result) {
+            if (err) {
+                console.error(err);
+                throw new HttpException(`Error deleting organisation with Id: ${organisationId}`,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
-        throw new HttpException(`Error deleting organisation with Id: ${organisationId}`, HttpStatus.INTERNAL_SERVER_ERROR);
+            if (result)
+                return Promise.resolve(true);
+
+        });
+
+        return Promise.resolve(false);
     }
 
-    async addUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
+    async addOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
+        let newUser: boolean;
+
         if (!organisationId || organisationId.length === 0)
             throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
 
         if (!user.email)
             throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
 
-        if (user.userId)
-            throw new HttpException("User already has an userId set!", HttpStatus.BAD_REQUEST);
+        if (!user.userId)
+            newUser = true;
 
         const foundUser = await this.userService.getUserByEmail(user.email);
 
         if (foundUser)
-            throw new HttpException(`User with email ${user.email} already exists!`, HttpStatus.BAD_REQUEST);
+            newUser = false;
 
         const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
 
         if (!organisation)
             throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
 
-        if (_.some(organisation.users, (u) => u.email === user.email))
-            throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
+        // if (_.some(organisation.users, (u) => u.email === user.email))
+        //     throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
 
-        const userModel = await this.userService.getModel(user);
+        if (newUser) {
+            const dbUser = await this.userService.getModel(user);
+            
+            dbUser.userId = UserFactory.getId();
+            organisation.users.push(dbUser);
+            console.log(organisation);
 
-        organisation.users.push(userModel);
-        console.log(organisation);
+            try {
+                const res = await organisation.save();
 
-        try {
-            const res = await organisation.save();
-
-            return of(UserFactory.create(userModel)).toPromise();
+                return of(UserFactory.create(dbUser)).toPromise();
+            }
+            catch (ex) {
+                throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
-        catch (ex) {
-            throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        else {
+            const query = { userId: user.userId };
+
+            const res = this.userModel.findOneAndUpdate(query, user, function (err, result) {
+                if (err) {
+                    console.error(err);
+                    throw new HttpException(`Internal Server Error updating user ${user.email} to organisation ${organisation.name}`,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+
+                if (result)
+                    return of(UserFactory.create(result)).toPromise();
+                else 
+                    return null; 
+            });
         }
     }
 

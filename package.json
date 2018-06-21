@@ -17,7 +17,7 @@
     "@nestjs/common": "^5.0.0",
     "@nestjs/core": "^5.0.0",
     "@nestjs/microservices": "^5.0.0",
-    "@nestjs/mongoose": "^4.0.0",
+    "@nestjs/mongoose": "^5.0.0",
     "@nestjs/passport": "^1.0.10",
     "@nestjs/swagger": "^2.0.0",
     "@nestjs/testing": "^5.0.0",
