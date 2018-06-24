@@ -10,6 +10,6 @@ export class OrgDto {
 
   @ApiModelProperty({type: String, required: true})
   readonly organisationId: string;
-  @ApiModelProperty({type: Object, isArray: true, required: false })
+  @ApiModelProperty({type: CommentDto, isArray: true, required: false })
   readonly comments: Array<CommentDto>;
 }

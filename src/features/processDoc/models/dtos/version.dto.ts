@@ -13,7 +13,7 @@ export class VersionDto {
   versionId: string;
   @ApiModelProperty({ type: Boolean, required: true })
   published: boolean;
-  @ApiModelProperty({ type: Object, isArray: true, required: false })
+  @ApiModelProperty({ type: ElementDto, isArray: true, required: false })
   elements: Array<ElementDto>;
 }
 

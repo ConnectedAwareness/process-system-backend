@@ -20,6 +20,6 @@ export class ElementDto {
   public text: string;
   @ApiModelProperty({type: Object, isArray: true, required: false })
   public elements: Array<ElementDto>;
-  @ApiModelProperty({type: Object, isArray: true, required: false })
+  @ApiModelProperty({type: OrgDto, isArray: true, required: false })
   public organisations: Array<OrgDto>;
 }

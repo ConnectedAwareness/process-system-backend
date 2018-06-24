@@ -22,6 +22,6 @@ export class OrganisationDto {
   readonly version: string;
   @ApiModelProperty({ type: [Number], required: false })
   readonly users_in_version: [number];
-  @ApiModelProperty({ type: Object, isArray: true, required: false })
+  @ApiModelProperty({ type: UserDto, isArray: true, required: false })
   readonly users: Array<UserDto>;
 }

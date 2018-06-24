@@ -4,8 +4,8 @@ import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQue
 import { VersionService } from '../services/version.service';
 import { VersionDto, ImportVersion } from '../models/dtos/version.dto';
 
-@ApiUseTags('versions')
-@Controller('versions')
+@ApiUseTags('version')
+@Controller('version')
 export class VersionController {
   constructor(private versionService: VersionService) {}
 
@@ -20,7 +20,7 @@ export class VersionController {
 
   @Get(':versionId')
   @ApiOperation({ title: 'get a specific version by id' })
-  @ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
+  @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiResponse({ status: 200, description: 'Get successful' })
   async getVersion(@Param('versionId') versionId: string) : Promise<VersionDto> {
     return this.versionService.getVersionAsync(versionId);
@@ -34,28 +34,28 @@ export class VersionController {
       return await this.versionService.createVersionAsync(version);
   }
 
-  @Put()
+  @Put(':versionId')
   @ApiOperation({ title: 'update a version' })
   @ApiImplicitBody({ name: 'version', required: true, description: 'The version to update', type: VersionDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto, isArray: false })
-  async updateVersion(@Body() version: VersionDto) : Promise<boolean> {
+  async updateVersion(@Param('versionId') versionId: string, @Body() version: VersionDto) : Promise<boolean> {
       return this.versionService.updateVersionAsync(version);
   }
 
   // END CRUD
 
-  @Put('/import/:versionid')
+  @Put(':versionId/import')
   @ApiOperation({ title: 'import version from file' })
-  @ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
+  @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiImplicitBody({ name: 'versionFile', required: true, description: 'version object', type: VersionDto })
   @ApiResponse({ status: 200, description: 'Import successful', type: VersionDto, isArray: false })
-  async import(@Param('versionid') versionId: string, @Body('versionFile') versionFile: VersionDto) : Promise<boolean> {
+  async import(@Param('versionId') versionId: string, @Body('versionFile') versionFile: VersionDto) : Promise<boolean> {
     return this.versionService.importElementsRecursiveAsync(versionId, null);
   }
 
-//   @Post('/import/:versionid')
+//   @Post('/import/:versionId')
 //   @ApiOperation({ title: 'import version from file' })
-//   //@ApiImplicitParam({ name: 'versionid', required: true, description: 'id of version' })
+//   //@ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
 //   //@ApiImplicitParam({ name: 'versionFile', required: true, type: String, description: 'version object' })
 //   @ApiResponse({ status: 201, description: 'Import successful', type: VersionDto, isArray: false })
 //   async import(@Body() versionFile: string) : Promise<boolean> {

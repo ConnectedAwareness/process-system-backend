@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode, Query } from '@nestjs/common';
 import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
 
 import { OrganisationService } from '../services/organisation.service';
@@ -13,13 +13,13 @@ export class OrganisationController {
   @Get()
   @ApiOperation({ title: 'get all organisations' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllOrganisations() : Promise<OrganisationDto[]> {
+  async getAllOrganisations(@Query('skip') skip: string, @Query('limit') limit: number) : Promise<OrganisationDto[]> {
     return await this.organisationService.getAllOrganisationsAsync();
   }
 
   @Get(':organisationId')
   @ApiOperation({ title: 'get organisation by Id' })
-  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'id of organisation' })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiResponse({ status: 200, description: 'Get successful' })
   async getOrganisationById(@Param('organisationId') organisationId: string) : Promise<OrganisationDto> {
     return await this.organisationService.getOrganisationByIdAsync(organisationId);
@@ -32,11 +32,11 @@ export class OrganisationController {
       return await this.organisationService.createOrganisationAsync(organisation);
   }
 
-  @Put()
+  @Put(':organisationId')
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to update', type: OrganisationDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
-  async updateOrganisation(@Body() organisation: OrganisationDto) : Promise<boolean> {
+  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: OrganisationDto) : Promise<boolean> {
     return await this.organisationService.updateOrganisationAsync(organisation);
   }
 
@@ -49,28 +49,29 @@ export class OrganisationController {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
   }
 
-  @Put('adduser/:organisationId')
+  @Post(':organisationId/user')
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') id: string, @Body() user: UserDto) : Promise<UserDto> {
-      return await this.organisationService.addOrUpdateUserToOrganisationAsync(id, user);
+  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: UserDto) : Promise<UserDto> {
+      return await this.organisationService.addOrUpdateUserToOrganisationAsync(organisationId, user);
   }
 
-  @Put('removeuser/:organisationId/userId')
-  @ApiOperation({ title: 'Add an user to an organisation' })
+  @Delete(':organisationId/user/:userId')
+  @ApiOperation({ title: 'Remove an user from an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async removeUserFromOrganisationAsync(@Param('organisationId') id: string, @Param('userId') userId: string) : Promise<boolean> {
-      return await this.organisationService.removeUserFromOrganisationAsync(id, userId);
+  async removeUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string) : Promise<boolean> {
+      return await this.organisationService.removeUserFromOrganisationAsync(organisationId, userId);
   }
 
-  @Put('updateuser/:organisationId')
+  @Put(':organisationId/user/:userId')
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
   @ApiResponse({ status: 200, description: 'Create user successful' })@ApiResponse({ status: 200, description: 'Create user successful' })
-  async updateUserFromOrganisationAsync(@Param('organisationId') id: string, @Body() user: UserDto) : Promise<UserDto> {
-    return await this.organisationService.addOrUpdateUserToOrganisationAsync(id, user);
+  async updateUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string, @Body() user: UserDto) : Promise<UserDto> {
+    return await this.organisationService.addOrUpdateUserToOrganisationAsync(userId, user);
   }
 }
