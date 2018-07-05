@@ -12,3 +12,5 @@ export const UserSchema = new mongoose.Schema({
 }
 , {collection: 'users' }
 );
+
+UserSchema.index({ email: -1 }, { unique: true } );

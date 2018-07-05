@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 
 import { Observable, of } from 'rxjs';
 
+import * as fs from 'fs';
+
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
 import { OrganisationSchema } from '../schemas/organisation.schema';
@@ -40,25 +42,74 @@ export class OrganisationService {
         return of(OrganisationFactory.create(res)).toPromise();
     }
 
+    async getOrganisationByNameAsync(name: string): Promise<OrganisationDto> {
+        const query = { name: name };
+
+        const res = await this.organisationModel.findOne(query);
+
+        if (res == null)
+            return res;
+
+        return of(OrganisationFactory.create(res)).toPromise();
+    }
+
+    async searchOrganisationsAsync(search?: string): Promise<OrganisationDto[]> {
+        if (search && search.length > 0) {
+            const regex = new RegExp(search, 'i');
+            const res = await this.organisationModel.find().or([
+                { name: { $regex: regex } } ]);
+
+            return of(res.map(t => OrganisationFactory.create(t))).toPromise();
+        }
+        else
+            return this.getAllOrganisationsAsync();
+    }
+
     async createOrganisationAsync(organisation: OrganisationDto): Promise<OrganisationDto> {
         try {
-            if (organisation.organisationId)
-                throw new HttpException("Can't create new organisation, organisationId is set", HttpStatus.BAD_REQUEST);
+            if (organisation.organisationId && organisation.organisationId.length)
+                throw new HttpException("Can't create new organisation, organisation has already a organisationId", HttpStatus.BAD_REQUEST);
+
+            if (!organisation.name || organisation.name == null)
+                throw new HttpException("Can't create Organisation! NO Name supplied", HttpStatus.BAD_REQUEST);
+
+            const searchedOrganisation = await this.getOrganisationByNameAsync(organisation.name).catch(err => console.error(err));
+
+            if (searchedOrganisation) {
+                throw new HttpException("Organisation with same name already exists", HttpStatus.BAD_REQUEST);
+            }
+
+            organisation.organisationId = OrganisationFactory.getId();
 
             const model = new this.organisationModel(organisation);
-            model.organisationId = OrganisationFactory.getId();
 
-            const res = await model.save();
+            let refetch = false;
 
-            console.log(`new Organisation ${organisation.name} saved`);
-            console.log(res);
+            const res = await model.save().catch(async err => {
+                if (err) {
+                    // check on index error (duplicate key)
+                    if (err.code === 11000)
+                        refetch = true;
+                    else {
+                        const msg = `Error creating organisation ${organisation.name}`;
+                        console.error(msg, err);
+                        throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                }
+            });
 
-            return of(OrganisationFactory.create(res)).toPromise();
+            if (refetch)
+                return await this.getOrganisationByNameAsync(organisation.name);
+
+            if (!res)
+                console.error(`Could not create organisation ${organisation.organisationId}`);
+            else
+                return of(OrganisationFactory.create(res)).toPromise();
         } catch (error) {
             console.log(error);
         }
 
-        return null;
+        return Promise.resolve(null);
     }
 
     async updateOrganisationAsync(organisation: OrganisationDto): Promise<boolean> {
@@ -98,63 +149,102 @@ export class OrganisationService {
         return Promise.resolve(false);
     }
 
-    async addOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
-        let newUser: boolean;
+    // async XaddOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
+    //     let newUser: boolean;
 
+    //     if (!organisationId || organisationId.length === 0)
+    //         throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
+
+    //     if (!user.email)
+    //         throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
+
+    //     if (!user.userId)
+    //         newUser = true;
+
+    //     const foundUser = await this.userService.getUserByEmail(user.email);
+
+    //     if (foundUser)
+    //         newUser = false;
+
+    //     const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
+
+    //     if (!organisation)
+    //         throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
+
+    //     // if (_.some(organisation.users, (u) => u.email === user.email))
+    //     //     throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
+
+    //     if (newUser) {
+    //         const dbUser = await this.userService.getModel(user);
+
+    //         dbUser.userId = UserFactory.getId();
+    //         organisation.users.push(dbUser);
+    //         console.log(organisation);
+
+    //         try {
+    //             const res = await organisation.save();
+
+    //             return of(UserFactory.create(dbUser)).toPromise();
+    //         }
+    //         catch (ex) {
+    //             throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
+    //                 HttpStatus.INTERNAL_SERVER_ERROR);
+    //         }
+    //     }
+    //     else {
+    //         const query = { userId: user.userId };
+
+    //         const res = this.userModel.findOneAndUpdate(query, user, function(err, result) {
+    //             if (err) {
+    //                 console.error(err);
+    //                 throw new HttpException(`Internal Server Error updating user ${user.email} to organisation ${organisation.name}`,
+    //                     HttpStatus.INTERNAL_SERVER_ERROR);
+    //             }
+
+    //             if (result)
+    //                 return of(UserFactory.create(result)).toPromise();
+    //             else
+    //                 return null;
+    //         });
+    //     }
+    // }
+
+    async addOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
         if (!organisationId || organisationId.length === 0)
-            throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Can't add user to Organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
+
+        if (!user)
+            throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
 
         if (!user.email)
             throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
 
-        if (!user.userId)
-            newUser = true;
+        try {
+            const res = await this.organisationModel.update(
+                { 'organisationId': organisationId, 'users.email': { $ne: user.email } },
+                { $push: { users: user } },
+            );
 
-        const foundUser = await this.userService.getUserByEmail(user.email);
+            // if user was not assigned to organisation, return
+            if (!res || res.ok !== 1 || res.nModified !== 1)
+                return Promise.resolve(null);
 
-        if (foundUser)
-            newUser = false;
+            const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
 
-        const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
+            user = organisation.users.find(a => a.email === user.email);
 
-        if (!organisation)
-            throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
+            if (!user)
+                throw new HttpException(`Could not add User with Email ${user.email}` +
+                    ` to organisation ${organisationId}`, HttpStatus.INTERNAL_SERVER_ERROR);
 
-        // if (_.some(organisation.users, (u) => u.email === user.email))
-        //     throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
+            console.log(`User ${user.email} assigned for organisation ${organisation.name}`);
 
-        if (newUser) {
-            const dbUser = await this.userService.getModel(user);
-
-            dbUser.userId = UserFactory.getId();
-            organisation.users.push(dbUser);
-            console.log(organisation);
-
-            try {
-                const res = await organisation.save();
-
-                return of(UserFactory.create(dbUser)).toPromise();
-            }
-            catch (ex) {
-                throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            return Promise.resolve(user);
         }
-        else {
-            const query = { userId: user.userId };
-
-            const res = this.userModel.findOneAndUpdate(query, user, function(err, result) {
-                if (err) {
-                    console.error(err);
-                    throw new HttpException(`Internal Server Error updating user ${user.email} to organisation ${organisation.name}`,
-                        HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-
-                if (result)
-                    return of(UserFactory.create(result)).toPromise();
-                else
-                    return null;
-            });
+        catch (ex) {
+            const msg = `Error assigning user with Email ${user.email} to organisation with Id ${organisationId}`;
+            console.error(msg, ex);
+            throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -184,5 +274,33 @@ export class OrganisationService {
         }
         else
             throw new HttpException(`No user with userId ${userId} found on organisation ${organisation.name}`, HttpStatus.BAD_REQUEST);
+    }
+
+    // INITIAL IMPORT
+
+    async importOrgsAndUserAsync(): Promise<void> {
+        const importDataJson = fs.readFileSync('importInitData.json');
+        const importData = JSON.parse(importDataJson.toString());
+
+        if (importData.length > 0) {
+            for (const o of importData) {
+                const org = OrganisationFactory.generateFromJson(o);
+
+                if (org == null)
+                    continue;
+
+                const users = org.users.splice(0, org.users.length);
+                org.users = new Array<UserDto>();
+
+                const orgDto = await this.createOrganisationAsync(org).catch(err => console.error(err));
+
+                if (orgDto) {
+                    // add users to org
+                    users.forEach(async user => {
+                        await this.addOrUpdateUserToOrganisationAsync(orgDto.organisationId, user).catch(err => console.error(err));
+                    });
+                }
+            }
+        }
     }
 }

@@ -13,15 +13,15 @@ export class OrganisationDto {
   }
 
   @ApiModelProperty({type: String, required: false })
-  readonly organisationId: string;
+  organisationId: string;
   @ApiModelProperty({ type: String, required: true })
-  readonly name: string;
+  name: string;
   @ApiModelProperty({ type: Number, required: false })
-  readonly coordinator_id: number;
+  coordinator_id: number;
   @ApiModelProperty({ type: String, required: false })
-  readonly version: string;
+  version: string;
   @ApiModelProperty({ type: [Number], required: false })
-  readonly users_in_version: [number];
+  users_in_version: [number];
   @ApiModelProperty({ type: UserDto, isArray: true, required: false })
-  readonly users: Array<UserDto>;
+  users: Array<UserDto>;
 }

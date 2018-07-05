@@ -8,11 +8,12 @@ import { OrganisationService } from './services/organisation.service';
 import { organisationProviders } from './providers/organisation.providers';
 import { UserService } from './services/user.service';
 import { userProviders } from './providers/user.providers';
+import { initialisationPovider, InitialisationService } from './services/initialisation.service';
 
 @Module({
     imports: [DatabaseModule],
     controllers: [OrganisationController],
-    providers: [OrganisationService, UserService, ...organisationProviders, ...userProviders],
+    providers: [OrganisationService, UserService, InitialisationService, ...organisationProviders, ...userProviders, initialisationPovider],
     exports: [OrganisationService, UserService]
 })
 export class UserMgmtModule {}

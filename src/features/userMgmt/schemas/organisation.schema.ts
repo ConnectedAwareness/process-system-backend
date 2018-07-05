@@ -12,3 +12,5 @@ export const OrganisationSchema = new mongoose.Schema({
 }
 , {collection: 'organisations' }
 );
+
+OrganisationSchema.index({ name: -1 }, { unique: true } );
