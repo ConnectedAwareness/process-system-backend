@@ -3,15 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../userMgmt/services/user.service';
 import { UserDto } from '../../userMgmt/models/dtos/user.dto';
-import { Config } from 'environments/environments';
+import { Config } from '../../../environments/environments';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) { }
 
-  async createToken() {
+  async createToken(email: string) {
     const user: JwtPayload = {
-      email: 'admin@connectedawareness.org'
+      email: email
     };
 
     return jwt.sign(user, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
