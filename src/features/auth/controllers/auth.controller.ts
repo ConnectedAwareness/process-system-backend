@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
+
+import { AuthService } from '../services/auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +15,6 @@ export class AuthController {
   @Get('data')
   @UseGuards(AuthGuard('jwt'))
   findAll() {
-      return {};
-    // this route is restricted
+      return "Hello World, you are authenticated!";
   }
 }

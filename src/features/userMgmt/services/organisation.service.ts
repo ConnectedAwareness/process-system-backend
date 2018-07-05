@@ -16,7 +16,8 @@ import { UserFactory } from '../models/factories/user.factory';
 
 @Injectable()
 export class OrganisationService {
-    constructor(@Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>,
+    constructor(
+        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>,
         @Inject('UserModelToken') private readonly userModel: Model<IUser>,
         private userService: UserService) { }
 
@@ -82,7 +83,7 @@ export class OrganisationService {
 
         const query = { organisationId: organisationId };
 
-        const res = await this.organisationModel.findOneAndRemove(query, function (err, result) {
+        const res = await this.organisationModel.findOneAndRemove(query, function(err, result) {
             if (err) {
                 console.error(err);
                 throw new HttpException(`Error deleting organisation with Id: ${organisationId}`,
@@ -124,7 +125,7 @@ export class OrganisationService {
 
         if (newUser) {
             const dbUser = await this.userService.getModel(user);
-            
+
             dbUser.userId = UserFactory.getId();
             organisation.users.push(dbUser);
             console.log(organisation);
@@ -142,7 +143,7 @@ export class OrganisationService {
         else {
             const query = { userId: user.userId };
 
-            const res = this.userModel.findOneAndUpdate(query, user, function (err, result) {
+            const res = this.userModel.findOneAndUpdate(query, user, function(err, result) {
                 if (err) {
                     console.error(err);
                     throw new HttpException(`Internal Server Error updating user ${user.email} to organisation ${organisation.name}`,
@@ -151,8 +152,8 @@ export class OrganisationService {
 
                 if (result)
                     return of(UserFactory.create(result)).toPromise();
-                else 
-                    return null; 
+                else
+                    return null;
             });
         }
     }

@@ -12,6 +12,7 @@ export class SwaggerConfiguration {
             .setVersion('v0.1')
             .addTag('versions', 'Api for versions')
             .addTag('organisation', 'Api for UserManagement')
+            .addTag('auth', 'Api for Authentication')
             //.setBasePath('')
             .build();
 

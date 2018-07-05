@@ -31,14 +31,20 @@ export class UserService {
 
     async getUserByEmail(email: string): Promise<UserDto> {
         try {
-            const query = { 'email': email };
+            const query = {'users.email': email};
 
-            const res = await this.userModel.findOne(query);
+            const res = await this.organisationModel.findOne(query, {'users.$': 1},
+                function (err, org) {
+                    if (org) {
+                        console.log(org.users[0]);
+                    }
+                }
+            );
 
-            if (res == null)
+            if (res == null || res.users == null || res.users.length !== 1)
                 return null;
 
-            return of(UserFactory.create(res)).toPromise();
+            return of(UserFactory.create(res.users[0])).toPromise();
         } catch (error) {
 
         }

@@ -13,5 +13,6 @@ import { userProviders } from './providers/user.providers';
     imports: [DatabaseModule],
     controllers: [OrganisationController],
     providers: [OrganisationService, UserService, ...organisationProviders, ...userProviders],
+    exports: [OrganisationService, UserService]
 })
 export class UserMgmtModule {}

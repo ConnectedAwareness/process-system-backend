@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 import { VersionService } from '../services/version.service';
 import { VersionDto, ImportVersion } from '../models/dtos/version.dto';
@@ -10,6 +11,7 @@ export class VersionController {
   constructor(private versionService: VersionService) {}
 
   @Get()
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all versions' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
   async getAllVersions() : Promise<VersionDto[]> {
@@ -19,6 +21,7 @@ export class VersionController {
   // CRUD
 
   @Get(':versionId')
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiResponse({ status: 200, description: 'Get successful' })
@@ -27,6 +30,7 @@ export class VersionController {
   }
 
   @Post()
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Create a version' })
   @ApiResponse({ status: 201, description: 'Creation successful' })
   async createVersion(@Body() version: VersionDto) : Promise<VersionDto> {
@@ -35,6 +39,7 @@ export class VersionController {
   }
 
   @Put(':versionId')
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update a version' })
   @ApiImplicitBody({ name: 'version', required: true, description: 'The version to update', type: VersionDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto, isArray: false })
@@ -45,6 +50,7 @@ export class VersionController {
   // END CRUD
 
   @Put(':versionId/import')
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'import version from file' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiImplicitBody({ name: 'versionFile', required: true, description: 'version object', type: VersionDto })
