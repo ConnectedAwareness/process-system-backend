@@ -1,14 +1,14 @@
 import * as mongoose from 'mongoose';
 
-import { DBConfig } from '../../environments/environments.dev';
+import { Config } from '../../environments/environments';
 
 export function dbConnection() {
   let res;
-  if (DBConfig.DB_USER && DBConfig.DB_PW){
-    res = `mongodb://${DBConfig.DB_USER}:${DBConfig.DB_PW}@${DBConfig.DB_HOST}:${DBConfig.DB_PORT}/${DBConfig.DB_NAME}`;
+  if (Config.DB_USER && Config.DB_PW){
+    res = `mongodb://${Config.DB_USER}:${Config.DB_PW}@${Config.DB_HOST}:${Config.DB_PORT}/${Config.DB_NAME}`;
   }
   else{
-    res = `mongodb://${DBConfig.DB_HOST}:${DBConfig.DB_PORT}/${DBConfig.DB_NAME}`;
+    res = `mongodb://${Config.DB_HOST}:${Config.DB_PORT}/${Config.DB_NAME}`;
   }
   console.info(`configured DB: ${res}`);
   return res;
