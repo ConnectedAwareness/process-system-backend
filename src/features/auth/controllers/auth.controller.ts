@@ -1,5 +1,5 @@
-import { Controller, Get, UseGuards, Param } from '@nestjs/common';
-import { ApiOperation, ApiImplicitParam, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, UseGuards, Param, Body, Post } from '@nestjs/common';
+import { ApiOperation, ApiImplicitParam, ApiResponse, ApiImplicitBody } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from '../services/auth.service';
@@ -12,8 +12,17 @@ export class AuthController {
   @ApiOperation({ title: 'get token by email' })
   @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async createToken(@Param('email') email: string): Promise<any> {
-    return await this.authService.createToken(email);
+  async createTokenAsync(@Param('email') email: string): Promise<any> {
+    return await this.authService.createTokenAsync(email);
+  }
+
+  @Post('login')
+  @ApiOperation({ title: 'login' })
+  @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
+  @ApiImplicitParam({ name: 'password', required: true, description: 'password of user' })
+  @ApiResponse({ status: 200, description: 'Get successful' })
+  async loginAsync(@Param('email') email: string, @Param('email') password: string): Promise<any> {
+    return await this.authService.loginAsync(email, password);
   }
 
   @Get('data')

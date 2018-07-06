@@ -4,7 +4,6 @@ export class UserDto {
     constructor() {
         this.userId = null;
         this.email = null;
-        this.password = null;
         this.alias = null;
         this.first_name = null;
         this.last_name = null;
@@ -16,8 +15,6 @@ export class UserDto {
     readonly userId: string;
     @ApiModelProperty({ type: String, required: true })
     readonly email: string;
-    @ApiModelProperty({ type: String, required: true })
-    readonly password: string;
     @ApiModelProperty({ type: String, required: false })
     readonly alias: string;
     @ApiModelProperty({ type: String, required: false })

@@ -33,13 +33,7 @@ export class UserService {
         try {
             const query = {'users.email': email};
 
-            const res = await this.organisationModel.findOne(query, {'users.$': 1},
-                (err, org) => {
-                    if (org) {
-                        console.log(org.users[0]);
-                    }
-                }
-            );
+            const res = await this.organisationModel.findOne(query, {'users.$': 1});
 
             if (res == null || res.users == null || res.users.length !== 1)
                 return null;
@@ -47,6 +41,22 @@ export class UserService {
             return of(UserFactory.create(res.users[0])).toPromise();
         } catch (error) {
 
+        }
+
+        return null;
+    }
+
+    async validateUserAsync(email: string, password: string): Promise<UserDto> {
+        try {
+            const query = {'users.email': email};
+
+            const res = await this.organisationModel.findOne(query, {'users.$': 1});
+
+            if (res != null && res.users != null && res.users.length === 1 && res.users[0].password === password)
+                return of(UserFactory.create(res.users[0])).toPromise();
+        }
+        catch (err) {
+            console.error(`Error validating user with email ${email}`, err);
         }
 
         return null;
