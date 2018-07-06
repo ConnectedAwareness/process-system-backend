@@ -3,18 +3,16 @@ import { Model } from 'mongoose';
 
 import * as _ from 'lodash';
 
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import * as fs from 'fs';
 
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
-import { OrganisationSchema } from '../schemas/organisation.schema';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { IUser } from '../models/interfaces/user.interface';
 import { UserService } from './user.service';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
-import { UserFactory } from '../models/factories/user.factory';
 
 @Injectable()
 export class OrganisationService {
@@ -75,9 +73,8 @@ export class OrganisationService {
 
             const searchedOrganisation = await this.getOrganisationByNameAsync(organisation.name).catch(err => console.error(err));
 
-            if (searchedOrganisation) {
-                throw new HttpException("Organisation with same name already exists", HttpStatus.BAD_REQUEST);
-            }
+            if (searchedOrganisation)
+                return searchedOrganisation;
 
             organisation.organisationId = OrganisationFactory.getId();
 
@@ -134,7 +131,7 @@ export class OrganisationService {
 
         const query = { organisationId: organisationId };
 
-        const res = await this.organisationModel.findOneAndRemove(query, function(err, result) {
+        const res = await this.organisationModel.findOneAndRemove(query, (err, result) => {
             if (err) {
                 console.error(err);
                 throw new HttpException(`Error deleting organisation with Id: ${organisationId}`,
@@ -148,66 +145,6 @@ export class OrganisationService {
 
         return Promise.resolve(false);
     }
-
-    // async XaddOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
-    //     let newUser: boolean;
-
-    //     if (!organisationId || organisationId.length === 0)
-    //         throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
-
-    //     if (!user.email)
-    //         throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
-
-    //     if (!user.userId)
-    //         newUser = true;
-
-    //     const foundUser = await this.userService.getUserByEmail(user.email);
-
-    //     if (foundUser)
-    //         newUser = false;
-
-    //     const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
-
-    //     if (!organisation)
-    //         throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
-
-    //     // if (_.some(organisation.users, (u) => u.email === user.email))
-    //     //     throw new HttpException('User already added to organisation', HttpStatus.BAD_REQUEST);
-
-    //     if (newUser) {
-    //         const dbUser = await this.userService.getModel(user);
-
-    //         dbUser.userId = UserFactory.getId();
-    //         organisation.users.push(dbUser);
-    //         console.log(organisation);
-
-    //         try {
-    //             const res = await organisation.save();
-
-    //             return of(UserFactory.create(dbUser)).toPromise();
-    //         }
-    //         catch (ex) {
-    //             throw new HttpException(`Internal Server Error adding user ${user.email} to organisation ${organisation.name}`,
-    //                 HttpStatus.INTERNAL_SERVER_ERROR);
-    //         }
-    //     }
-    //     else {
-    //         const query = { userId: user.userId };
-
-    //         const res = this.userModel.findOneAndUpdate(query, user, function(err, result) {
-    //             if (err) {
-    //                 console.error(err);
-    //                 throw new HttpException(`Internal Server Error updating user ${user.email} to organisation ${organisation.name}`,
-    //                     HttpStatus.INTERNAL_SERVER_ERROR);
-    //             }
-
-    //             if (result)
-    //                 return of(UserFactory.create(result)).toPromise();
-    //             else
-    //                 return null;
-    //         });
-    //     }
-    // }
 
     async addOrUpdateUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<UserDto> {
         if (!organisationId || organisationId.length === 0)

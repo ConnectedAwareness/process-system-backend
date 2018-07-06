@@ -6,7 +6,7 @@
     "users": [
       {
         "roles": [],
-        "email": "admin@connectedawareness.org",
+        "email": "admin@email.com",
         "password": "tester",
         "alias": "admin",
         "first_name": "Admin",

@@ -34,7 +34,7 @@ export class UserService {
             const query = {'users.email': email};
 
             const res = await this.organisationModel.findOne(query, {'users.$': 1},
-                function (err, org) {
+                (err, org) => {
                     if (org) {
                         console.log(org.users[0]);
                     }
