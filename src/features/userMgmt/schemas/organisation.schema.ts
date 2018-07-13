@@ -1,14 +1,12 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-import { UserSchema } from './user.schema';
-
-export const OrganisationSchema = new mongoose.Schema({
+export const OrganisationSchema = new Schema({
   organisationId: { type: String, required: true },
   name: { type: String, required: true },
-  coordinator_id: { type: Number, required: false },
+  processCoordinator: { type: Schema.Types.ObjectId, required: false, ref: 'User' },
   version: { type: String, required: false },
-  users_in_version: { type: [Number], required: false },
-  users: [UserSchema],
+  usersInVersion: { type: [Number], required: false },
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 }
 , {collection: 'organisations' }
 );

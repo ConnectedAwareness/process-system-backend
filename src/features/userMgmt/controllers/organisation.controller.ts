@@ -6,8 +6,8 @@ import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
 
-@ApiUseTags('organisation')
-@Controller('organisation')
+@ApiUseTags('organisations')
+@Controller('organisations')
 export class OrganisationController {
   constructor(private organisationService: OrganisationService) {}
 
@@ -61,8 +61,8 @@ export class OrganisationController {
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: UserDto) : Promise<UserDto> {
-      return await this.organisationService.addOrUpdateUserToOrganisationAsync(organisationId, user);
+  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: UserDto) : Promise<boolean> {
+      return await this.organisationService.addUserToOrganisationAsync(organisationId, user);
   }
 
   @Delete(':organisationId/user/:userId')
@@ -73,15 +73,5 @@ export class OrganisationController {
   @ApiResponse({ status: 200, description: 'Create user successful' })
   async removeUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string) : Promise<boolean> {
       return await this.organisationService.removeUserFromOrganisationAsync(organisationId, userId);
-  }
-
-  @Put(':organisationId/user/:userId')
-  // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ title: 'Add an user to an organisation' })
-  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
-  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
-  @ApiResponse({ status: 200, description: 'Create user successful' })@ApiResponse({ status: 200, description: 'Create user successful' })
-  async updateUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string, @Body() user: UserDto) : Promise<UserDto> {
-    return await this.organisationService.addOrUpdateUserToOrganisationAsync(userId, user);
   }
 }

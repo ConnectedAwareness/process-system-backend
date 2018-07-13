@@ -5,8 +5,8 @@ import { IUser } from "./user.interface";
 export interface IOrganisation extends Document {
   organisationId: string;
   name: string;
-  coordinator_id: number;
+  processCoordinator: IUser;
   version: string;
-  users_in_version: [number];
+  usersInVersion: [number];
   users: Array<IUser>;
 }

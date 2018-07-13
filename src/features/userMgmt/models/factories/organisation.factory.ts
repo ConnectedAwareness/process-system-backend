@@ -3,9 +3,13 @@ import { v4 } from 'uuid';
 import { OrganisationDto } from '../dtos/organisation.dto';
 import { IOrganisation } from '../interfaces/organisation.interface';
 import { mapDto } from '../../../../main/util/util';
+import { IUser } from '../interfaces/user.interface';
 
 export class OrganisationFactory {
-    public static create(model: IOrganisation) {
+    public static create(model: IOrganisation, includeUser: boolean) {
+        if (!includeUser)
+            model.users = new Array<IUser>();
+
         return mapDto(model, OrganisationDto);
     }
 
