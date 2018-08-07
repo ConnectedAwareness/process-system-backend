@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import { IOrg } from './org.interface';
+import { IOrgSchema } from './org.schema.interface';
 
 export enum ElementType {
   Text = "Text",
@@ -12,10 +12,10 @@ export enum ElementType {
   Unknown = "Unknown"
 }
 
-export interface IElement extends Document {
+export interface IElementSchema extends Document {
     readonly type: ElementType;
     readonly elementId: string;
     readonly text: string;
-    readonly elements: Array<IElement>;
-    readonly organisations: Array<IOrg>;
+    readonly elements: Array<IElementSchema>;
+    readonly organisations: Array<IOrgSchema>;
 }

@@ -7,21 +7,21 @@ import { of } from 'rxjs';
 
 import * as fs from 'fs';
 
-import { OrganisationDto } from '../models/dtos/organisation.dto';
-import { UserDto } from '../models/dtos/user.dto';
-import { IOrganisation } from '../models/interfaces/organisation.interface';
-import { IUser } from '../models/interfaces/user.interface';
+import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
+import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserService } from './user.service';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
+import { IUser } from '../models/interfaces/user.interface';
+import { IOrganisation } from '../models/interfaces/organisation.interface';
 
 @Injectable()
 export class OrganisationService {
     constructor(
-        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>,
-        @Inject('UserModelToken') private readonly userModel: Model<IUser>,
+        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
+        @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
         private userService: UserService) { }
 
-    async getAllOrganisationsAsync(): Promise<OrganisationDto[]> {
+    async getAllOrganisationsAsync(): Promise<IOrganisation[]> {
         const res = await this.organisationModel.find();
 
         if (res == null)
@@ -30,17 +30,17 @@ export class OrganisationService {
         return of(res.map(o => OrganisationFactory.create(o, false))).toPromise();
     }
 
-    async getOrganisationByIdAsync(organisationId: string): Promise<OrganisationDto> {
+    async getOrganisationByIdAsync(organisationId: string): Promise<IOrganisation> {
         const query = { organisationId: organisationId };
         const res = await this.organisationModel.findOne(query);
 
         if (res == null)
-            throw new HttpException(`OrganisationDto with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
+            throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
 
         return of(OrganisationFactory.create(res, true)).toPromise();
     }
 
-    async getOrganisationByNameAsync(name: string): Promise<OrganisationDto> {
+    async getOrganisationByNameAsync(name: string): Promise<IOrganisation> {
         const query = { name: name };
 
         const res = await this.organisationModel.findOne(query);
@@ -51,7 +51,7 @@ export class OrganisationService {
         return of(OrganisationFactory.create(res, true)).toPromise();
     }
 
-    async searchOrganisationsAsync(search?: string): Promise<OrganisationDto[]> {
+    async searchOrganisationsAsync(search?: string): Promise<IOrganisation[]> {
         if (search && search.length > 0) {
             const regex = new RegExp(search, 'i');
             const res = await this.organisationModel.find().or([
@@ -63,7 +63,7 @@ export class OrganisationService {
             return this.getAllOrganisationsAsync();
     }
 
-    async createOrganisationAsync(organisation: OrganisationDto): Promise<OrganisationDto> {
+    async createOrganisationAsync(organisation: IOrganisation): Promise<IOrganisation> {
         try {
             if (organisation.organisationId && organisation.organisationId.length)
                 throw new HttpException("Can't create new organisation, organisation has already a organisationId", HttpStatus.BAD_REQUEST);
@@ -109,7 +109,7 @@ export class OrganisationService {
         return Promise.resolve(null);
     }
 
-    async updateOrganisationAsync(organisation: OrganisationDto): Promise<boolean> {
+    async updateOrganisationAsync(organisation: IOrganisation): Promise<boolean> {
         if (!organisation.organisationId || organisation.organisationId.length === 0)
             throw new HttpException("Can't update organisation, no organisationId supplied", HttpStatus.BAD_REQUEST);
 
@@ -146,7 +146,7 @@ export class OrganisationService {
         return Promise.resolve(false);
     }
 
-    async addUserToOrganisationAsync(organisationId: string, user: UserDto): Promise<boolean> {
+    async addUserToOrganisationAsync(organisationId: string, user: IUser): Promise<boolean> {
         if (!organisationId || organisationId.length === 0)
             throw new HttpException("Can't add user to Organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
 
@@ -233,7 +233,7 @@ export class OrganisationService {
                     continue;
 
                 const users = org.users.splice(0, org.users.length);
-                org.users = new Array<UserDto>();
+                org.users = new Array<IUser>();
 
                 const orgDto = await this.createOrganisationAsync(org).catch(err => console.error(err));
 

@@ -7,17 +7,15 @@ import { Observable, of } from 'rxjs';
 
 import { VersionDto } from '../models/dtos/version.dto';
 import { ElementDto } from '../models/dtos/element.dto';
-import { VersionSchema } from '../schemas/version.schema';
 import { VersionFactory } from '../models/factories/version.factory';
-import { IVersion } from '../models/interfaces/version.interface';
-import { IElement, ElementType } from '../models/interfaces/element.interface';
-import { IComment } from '../models/interfaces/comment.interface';
+import { IVersionSchema } from '../database/interfaces/version.schema.interface';
+import { IElementSchema, ElementType } from '../database/interfaces/element.schema.interface';
 
 @Injectable()
 export class VersionService {
 
-    constructor(@Inject('VersionModelToken') private readonly versionModel: Model<IVersion>,
-                @Inject('ElementModelToken') private readonly elementModel: Model<IElement>) { }
+    constructor(@Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
+                @Inject('ElementModelToken') private readonly elementModel: Model<IElementSchema>) { }
 
     // CRUD
 

@@ -4,23 +4,23 @@ import { Model } from 'mongoose';
 
 import { of } from 'rxjs';
 
-import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 
-import { UserDto } from '../models/dtos/user.dto';
-import { IUser } from '../models/interfaces/user.interface';
+import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
+import { IUser } from '../models/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUser>,
-                @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisation>) { }
+    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
+                @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
 
-    getModel(user: UserDto): IUser {
+    getModel(user: IUser): IUserSchema {
         const model = new this.userModel(user);
         return model;
     }
 
-    async getUserByIdAsync(userId: string): Promise<UserDto> {
+    async getUserByIdAsync(userId: string): Promise<IUser> {
         try {
             const query = { userId: userId };
 
@@ -39,7 +39,7 @@ export class UserService {
         return null;
     }
 
-    async getUserByEmailAsync(email: string): Promise<UserDto> {
+    async getUserByEmailAsync(email: string): Promise<IUser> {
         try {
             const query = { email: email };
 
@@ -58,17 +58,17 @@ export class UserService {
         return null;
     }
 
-    async createUserAsync(user: UserDto): Promise<UserDto> {
+    async createUserAsync(user: IUser): Promise<IUser> {
         const res = await this.createOrUpdateUserAsync(user);
         return of(UserFactory.create(res)).toPromise();
     }
 
-    async updateUserAsync(userId: string, user: UserDto): Promise<UserDto> {
+    async updateUserAsync(userId: string, user: IUser): Promise<IUser> {
         const res = await this.createOrUpdateUserAsync(user);
         return of(UserFactory.create(res)).toPromise();
     }
 
-    async createOrUpdateUserAsync(user: UserDto): Promise<IUser> {
+    async createOrUpdateUserAsync(user: IUser): Promise<IUserSchema> {
         try {
             if (!user)
                 throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
@@ -128,7 +128,7 @@ export class UserService {
         return false;
     }
 
-    async validateUserAsync(email: string, password: string): Promise<UserDto> {
+    async validateUserAsync(email: string, password: string): Promise<IUser> {
         try {
             const query = { email: email };
 

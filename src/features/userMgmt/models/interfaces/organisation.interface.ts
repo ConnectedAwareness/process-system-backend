@@ -1,12 +1,10 @@
-import { Document } from 'mongoose';
+import { IUser } from "../interfaces/user.interface";
 
-import { IUser } from "./user.interface";
-
-export interface IOrganisation extends Document {
+export class IOrganisation {
   organisationId: string;
   name: string;
-  processCoordinator: IUser;
+  coordinator_id: number;
   version: string;
-  usersInVersion: [number];
+  users_in_version: [number];
   users: Array<IUser>;
 }

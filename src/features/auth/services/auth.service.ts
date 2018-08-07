@@ -2,8 +2,8 @@ import * as jwt from 'jsonwebtoken';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../userMgmt/services/user.service';
-import { UserDto } from '../../userMgmt/models/dtos/user.dto';
 import { Config } from '../../../environments/environments';
+import { IUser } from '../../userMgmt/models/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +32,7 @@ export class AuthService {
     return jwt.sign(token, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
   }
 
-  async validateUser(payload: JwtPayload): Promise<UserDto> {
+  async validateUser(payload: JwtPayload): Promise<IUser> {
     return await this.userService.getUserByEmailAsync(payload.email);
   }
 }

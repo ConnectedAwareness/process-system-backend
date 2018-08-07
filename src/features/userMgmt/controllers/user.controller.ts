@@ -4,6 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { UserService } from '../services/user.service';
 import { UserDto } from '../models/dtos/user.dto';
+import { IUser } from '../models/interfaces/user.interface';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -15,7 +16,7 @@ export class UserController {
   @ApiOperation({ title: 'get user by Id' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'userId of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getUserById(@Param('userId') userId: string): Promise<UserDto> {
+  async getUserById(@Param('userId') userId: string): Promise<IUser> {
     return await this.userService.getUserByIdAsync(userId);
   }
 
@@ -24,7 +25,7 @@ export class UserController {
   @ApiOperation({ title: 'get user by email' })
   @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getUserByEmail(@Param('email') email: string): Promise<UserDto> {
+  async getUserByEmail(@Param('email') email: string): Promise<IUser> {
     return await this.userService.getUserByEmailAsync(email);
   }
 
@@ -32,7 +33,7 @@ export class UserController {
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an user' })
   @ApiResponse({ status: 201, description: 'Create user successful' })
-  async createUser(@Body() user: UserDto): Promise<UserDto> {
+  async createUser(@Body() user: IUser): Promise<IUser> {
     return await this.userService.createUserAsync(user);
   }
 
@@ -42,7 +43,7 @@ export class UserController {
   @ApiOperation({ title: 'update an user' })
   @ApiImplicitBody({ name: 'user', required: true, description: 'The user to update', type: UserDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: UserDto, isArray: false })
-  async updateUser(@Param('userId') userId: string, @Body() user: UserDto): Promise<UserDto> {
+  async updateUser(@Param('userId') userId: string, @Body() user: IUser): Promise<IUser> {
     return await this.userService.updateUserAsync(userId, user);
   }
 

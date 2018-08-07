@@ -13,12 +13,12 @@ export class SwaggerConfiguration {
             .addTag('versions', 'Api for versions')
             .addTag('organisation', 'Api for UserManagement')
             .addTag('auth', 'Api for Authentication')
-            //.setBasePath('')
+            .setBasePath('/')
             .build();
 
         const document = SwaggerModule.createDocument(app, options);
 
-        SwaggerModule.setup('/api', app, document);
+        SwaggerModule.setup('api/swagger', app, document);
 
         console.log("swagger documentation configured unter '/api'");
 

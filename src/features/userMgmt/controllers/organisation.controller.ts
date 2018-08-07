@@ -4,7 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
-import { UserDto } from '../models/dtos/user.dto';
+import { IUser } from '../models/interfaces/user.interface';
+import { IOrganisation } from '../models/interfaces/organisation.interface';
 
 @ApiUseTags('organisations')
 @Controller('organisations')
@@ -15,7 +16,7 @@ export class OrganisationController {
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all organisations' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllOrganisations(@Query('skip') skip: string, @Query('limit') limit: number) : Promise<OrganisationDto[]> {
+  async getAllOrganisations(@Query('skip') skip: string, @Query('limit') limit: number) : Promise<IOrganisation[]> {
     return await this.organisationService.getAllOrganisationsAsync();
   }
 
@@ -24,7 +25,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'get organisation by Id' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getOrganisationById(@Param('organisationId') organisationId: string) : Promise<OrganisationDto> {
+  async getOrganisationById(@Param('organisationId') organisationId: string) : Promise<IOrganisation> {
     return await this.organisationService.getOrganisationByIdAsync(organisationId);
   }
 
@@ -32,7 +33,7 @@ export class OrganisationController {
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
-  async createOrganisation(@Body() organisation: OrganisationDto) : Promise<OrganisationDto> {
+  async createOrganisation(@Body() organisation: IOrganisation) : Promise<IOrganisation> {
       return await this.organisationService.createOrganisationAsync(organisation);
   }
 
@@ -42,7 +43,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to update', type: OrganisationDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
-  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: OrganisationDto) : Promise<boolean> {
+  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: IOrganisation) : Promise<boolean> {
     return await this.organisationService.updateOrganisationAsync(organisation);
   }
 
@@ -61,7 +62,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: UserDto) : Promise<boolean> {
+  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: IUser) : Promise<boolean> {
       return await this.organisationService.addUserToOrganisationAsync(organisationId, user);
   }
 

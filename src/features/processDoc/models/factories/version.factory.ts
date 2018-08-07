@@ -1,11 +1,9 @@
 import { VersionDto } from '../dtos/version.dto';
-import { IVersion } from '../interfaces/version.interface';
-import { ElementDto } from '../dtos/element.dto';
-import { IElement } from '../interfaces/element.interface';
+import { IVersionSchema } from '../../database/interfaces/version.schema.interface';
 import { mapDto } from '../../../../main/util/util';
 
 export class VersionFactory {
-    public static create(model: IVersion) {
+    public static create(model: IVersionSchema) {
         return mapDto(model, VersionDto);
     }
 

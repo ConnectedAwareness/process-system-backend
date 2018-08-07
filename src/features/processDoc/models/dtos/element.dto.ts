@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
 import { OrgDto } from './org.dto';
-import { ElementType } from '../interfaces/element.interface';
+import { ElementType } from '../../database/interfaces/element.schema.interface';
 
 export class ElementDto {
   constructor() {

@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { OrganisationDto } from './organisation.dto';
+import { IUser } from '../interfaces/user.interface';
 
-export class UserDto {
+export class UserDto implements IUser {
     constructor() {
         this.userId = null;
         this.email = null;
