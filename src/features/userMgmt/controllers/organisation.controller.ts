@@ -6,6 +6,7 @@ import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { IUser } from '../models/interfaces/user.interface';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { UserDto } from '../models/dtos/user.dto';
 
 @ApiUseTags('organisations')
 @Controller('organisations')
@@ -61,8 +62,9 @@ export class OrganisationController {
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiImplicitBody({ name: 'user', required: true, description: 'The user to add', type: UserDto })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body() user: IUser) : Promise<boolean> {
+  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body('user') user: IUser) : Promise<boolean> {
       return await this.organisationService.addUserToOrganisationAsync(organisationId, user);
   }
 

@@ -11,16 +11,18 @@ export class SwaggerConfiguration {
             .setDescription('backend service for process system')
             .setVersion('v0.1')
             .addTag('versions', 'Api for versions')
-            .addTag('organisation', 'Api for UserManagement')
-            .addTag('auth', 'Api for Authentication')
+            .addTag('organisations', 'Api for organisation management')
+            .addTag('users', 'Api for user management')
+            .addTag('auth', 'Api for authentication')
             .setBasePath('/')
             .build();
 
         const document = SwaggerModule.createDocument(app, options);
+        const swaggerApiUrl = 'api/swagger';
 
-        SwaggerModule.setup('api/swagger', app, document);
+        SwaggerModule.setup(swaggerApiUrl, app, document);
 
-        console.log("swagger documentation configured unter '/api'");
+        console.log(`swagger documentation configured under ${swaggerApiUrl}`);
 
         return app;
     }

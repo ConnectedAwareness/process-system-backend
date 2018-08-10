@@ -162,7 +162,7 @@ export class OrganisationService {
             if (!userModel)
                 throw new InternalServerErrorException("Could not create or update User");
 
-            let organisation = await this.organisationModel.findOne({ organisationId: organisationId });
+            const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
 
             if (!organisation)
                 throw new InternalServerErrorException("Could not find organisation to add User");

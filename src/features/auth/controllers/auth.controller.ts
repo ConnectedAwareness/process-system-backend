@@ -1,9 +1,10 @@
 import { Controller, Get, UseGuards, Param, Body, Post } from '@nestjs/common';
-import { ApiOperation, ApiImplicitParam, ApiResponse, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from '../services/auth.service';
 
+@ApiUseTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

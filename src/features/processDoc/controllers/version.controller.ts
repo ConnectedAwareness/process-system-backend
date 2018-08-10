@@ -5,8 +5,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { VersionService } from '../services/version.service';
 import { VersionDto, ImportVersion } from '../models/dtos/version.dto';
 
-@ApiUseTags('version')
-@Controller('version')
+@ApiUseTags('versions')
+@Controller('versions')
 export class VersionController {
   constructor(private versionService: VersionService) {}
 
