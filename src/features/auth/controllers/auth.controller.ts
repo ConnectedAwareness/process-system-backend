@@ -17,12 +17,18 @@ export class AuthController {
     return await this.authService.createTokenAsync(email);
   }
 
-  @Post('login')
+  // we got no reason to Post, do we?
+  @Get('login/:email/:password')
   @ApiOperation({ title: 'login' })
+  // NOTE OpenAPI "in:" parameter type is one of (path, query, header, cookie), see https://swagger.io/docs/specification/describing-parameters/
+  // nestjs/swagger sets OpenAPI "in:" parameter type dependent on which ApiImplicit* we choose; @ApiImplicitParam gets "in:path"
+  // see https://github.com/nestjs/swagger/blob/master/lib/decorators/api-implicit-param.decorator.ts
+  // additionally, "Implicit" seems not to be expressive enough, they have to be made explicit in @Get/@Post annotation
   @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
   @ApiImplicitParam({ name: 'password', required: true, description: 'password of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async loginAsync(@Param('email') email: string, @Param('email') password: string): Promise<any> {
+  async loginAsync(@Param('email') email: string, @Param('password') password: string): Promise<any> {
+    // console.log("Got login request with email " + email);
     return await this.authService.loginAsync(email, password);
   }
 
