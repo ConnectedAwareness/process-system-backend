@@ -226,6 +226,9 @@ export class OrganisationService {
         const importData = JSON.parse(importDataJson.toString());
 
         if (importData.length > 0) {
+            this.organisationModel.collection.drop();
+            this.userModel.collection.drop();
+
             for (const o of importData) {
                 const org = OrganisationFactory.generateFromJson(o);
 
