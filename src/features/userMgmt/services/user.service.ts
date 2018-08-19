@@ -87,7 +87,7 @@ export class UserService {
                 res = await model.save();
             }
             else
-                res = await this.userModel.findOneAndRemove(user);
+                res = await res.update(user);
 
             return res;
         }
