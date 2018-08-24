@@ -1,104 +1,148 @@
-[
-  {
-    "name": "Connected Awareness",
-    "version": "v1.0",
-    "usersInVersion": [],
-    "users": [
-      {
-        "roles": [],
-        "email": "admin@email.com",
-        "password": "tester",
-        "alias": "admin",
-        "firstName": "Admin",
-        "lastName": "Tester"
-      },
-      {
-        "roles": [],
-        "email": "jens@email.com",
-        "password": "tester",
-        "alias": "jens",
-        "firstName": "Jens",
-        "lastName": "Tester"
-      },
-      {
-        "roles": [],
-        "email": "ammon@email.com",
-        "password": "tester",
-        "alias": "ammon",
-        "firstName": "Ammon",
-        "lastName": "Tester"
-      },
-      {
-        "roles": [],
-        "email": "florian@email.com",
-        "password": "tester",
-        "alias": "flo",
-        "firstName": "Florian",
-        "lastName": "Tester"
-      },
-      {
-        "roles": [],
-        "email": "frieder@email.com",
-        "password": "tester",
-        "alias": "frieder",
-        "firstName": "Frieder",
-        "lastName": "Tester"
-      },
-      {
-        "roles": [],
-        "email": "jana@email.com",
-        "password": "tester",
-        "alias": "jana",
-        "firstName": "Jana",
-        "lastName": "Testerin"
-      }
-    ]
-  },
-  {
-    "name": "Greenpeace Deutschland",
-    "version": "v1.0",
-    "usersInVersion": [],
-    "users": [
-      {
-        "roles": [],
-        "email": "admin@greenpeace.de",
-        "password": "tester",
-        "alias": "admin",
-        "firstName": "Admin",
-        "lastName": "Greenpeace"
-      },
-      {
-        "roles": [],
-        "email": "melanie@greenpeace.de",
-        "password": "tester",
-        "alias": "melanie",
-        "firstName": "Melanie",
-        "lastName": "Greenpeace"
-      },
-      {
-        "roles": [],
-        "email": "klaus@greenpeace.de",
-        "password": "tester",
-        "alias": "klaus",
-        "firstName": "Klaus",
-        "lastName": "Greenpeace"
-      },
-      {
-        "roles": [],
-        "email": "torsten@greenpeace.de",
-        "password": "tester",
-        "alias": "torsten",
-        "firstName": "Torsten",
-        "lastName": "Greenpeace"
-      },
-      {
-        "roles": [],
-        "email": "britta@greenpeace.de",
-        "password": "tester",
-        "alias": "britta",
-        "firstName": "Britta",
-        "lastName": "Greenpeace"
-      }
-    ]
-  }
-]
+{
+  "organisations": [
+    {
+      "name": "Connected Awareness",
+      "version": "v1.0"
+    },
+    {
+      "name": "Greenpeace Deutschland",
+      "version": "v1.0"
+    }
+  ],
+  "users": [
+    {
+      "email": "admin@email.com",
+      "password": "tester",
+      "alias": "admin",
+      "firstName": "Admin",
+      "lastName": "Tester",
+      "capabilities": [
+        "ITAdmin"
+      ]
+    },
+    {
+      "email": "jens@email.com",
+      "password": "tester",
+      "alias": "jens",
+      "firstName": "Jens",
+      "lastName": "Tester",
+      "capabilities": [
+        "ITAdmin"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Connected Awareness"
+      }]
+    },
+    {
+      "email": "ammon@email.com",
+      "password": "tester",
+      "alias": "ammon",
+      "firstName": "Ammon",
+      "lastName": "Tester",
+      "capabilities": [
+        "ITAdmin"
+      ]
+    },
+    {
+      "email": "frieder@email.com",
+      "password": "tester",
+      "alias": "frieder",
+      "firstName": "Frieder",
+      "lastName": "Tester",
+      "capabilities": [
+        "ITAdmin"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Connected Awareness"
+      }]
+    },
+    {
+      "email": "florian@email.com",
+      "password": "tester",
+      "alias": "flo",
+      "firstName": "Florian",
+      "lastName": "Tester",
+      "capabilities": [
+        "Connector", "AwarenessIntegrator"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["Connectee", "ProcessCoordinator"],
+        "organisationName": "Connected Awareness"
+      }]
+    },
+    {
+      "email": "jana@email.com",
+      "password": "tester",
+      "alias": "jana",
+      "firstName": "Jana",
+      "lastName": "Testerin",
+      "capabilities": [
+        "Connector", "AwarenessIntegrator"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Connected Awareness"
+      }]
+    },
+    {
+      "email": "admin@greenpeace.de",
+      "password": "tester",
+      "alias": "admin",
+      "firstName": "Admin",
+      "lastName": "Greenpeace",
+      "capabilities": [
+        "ProcessCoordinator"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["ProcessCoordinator"],
+        "organisationName": "Greenpeace Deutschland"
+      }]
+    },
+    {
+      "email": "melanie@greenpeace.de",
+      "password": "tester",
+      "alias": "melanie",
+      "firstName": "Melanie",
+      "lastName": "Greenpeace",
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Greenpeace Deutschland"
+      }]
+    },
+    {
+      "email": "klaus@greenpeace.de",
+      "password": "tester",
+      "alias": "klaus",
+      "firstName": "Klaus",
+      "lastName": "Greenpeace",
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Greenpeace Deutschland"
+      }]
+    },
+    {
+      "email": "torsten@greenpeace.de",
+      "password": "tester",
+      "alias": "torsten",
+      "firstName": "Torsten",
+      "lastName": "Greenpeace",
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Greenpeace Deutschland"
+      }]
+    },
+    {
+      "email": "britta@greenpeace.de",
+      "password": "tester",
+      "alias": "britta",
+      "firstName": "Britta",
+      "lastName": "Greenpeace",
+      "rolesInOrganisations": [{
+        "roles": ["Connectee"],
+        "organisationName": "Greenpeace Deutschland"
+      }]
+    }
+  ]
+}

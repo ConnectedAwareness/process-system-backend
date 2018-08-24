@@ -58,14 +58,16 @@ export class OrganisationController {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
   }
 
-  @Post(':organisationId/user')
+  @Post(':organisationId/user/:roles')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  @ApiImplicitParam({ name: 'roles', required: true, description: 'roles of the user' })
   @ApiImplicitBody({ name: 'user', required: true, description: 'The user to add', type: UserDto })
   @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Body('user') user: IUser) : Promise<boolean> {
-      return await this.organisationService.addUserToOrganisationAsync(organisationId, user);
+  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Param('roles') roles: string[],
+                                   @Body('user') user: IUser) : Promise<boolean> {
+      return await this.organisationService.addUserToOrganisationAsync(organisationId, roles, user);
   }
 
   @Delete(':organisationId/user/:userId')

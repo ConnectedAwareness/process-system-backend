@@ -1,12 +1,7 @@
-import { Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
-import { IUserSchema } from "./user.schema.interface";
+import { IOrganisation } from "../../models/interfaces/organisation.interface";
 
-export interface IOrganisationSchema extends Document {
-  organisationId: string;
-  name: string;
-  processCoordinator: IUserSchema;
-  version: string;
-  usersInVersion: [number];
-  users: Array<IUserSchema>;
+export interface IOrganisationSchema extends Document, IOrganisation {
+    _id: Schema.Types.ObjectId;
 }

@@ -1,13 +1,7 @@
-import { Document } from 'mongoose';
-import { IOrganisationSchema } from './organisation.schema.interface';
+import { Document, Schema } from 'mongoose';
+import { IUser } from '../../models/interfaces/user.interface';
 
-export interface IUserSchema extends Document {
-    userId: string;
-    email: string;
+export interface IUserSchema extends Document, IUser {
+    _id: Schema.Types.ObjectId;
     password: string;
-    alias: string;
-    firstName: string;
-    lastName: string;
-    roles: [string];
-    organisation: IOrganisationSchema;
 }

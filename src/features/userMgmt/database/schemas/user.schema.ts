@@ -1,14 +1,16 @@
 import { Schema } from 'mongoose';
+import { UserCapability } from '../../models/interfaces/user.interface';
+import { RoleInOrganisationSchema } from './roleinorganisation.schema';
 
 export const UserSchema = new Schema({
     userId: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    alias: { type: String, required: false },
     firstName: { type: String, required: false },
     lastName: { type: String, required: false },
-    roles: { type: [String], required: false },
-    organisation: { type: Schema.Types.ObjectId, ref: 'Organisation' }
+    capabilities: { type: [String], required: false, enum: [ UserCapability.Connector, UserCapability.ITAdmin,
+        UserCapability.ProcessCoordinator, UserCapability.AwarenessIntegrator ] },
+    rolesInOrganisations: { type: [RoleInOrganisationSchema], required: false }
 }
 , {collection: 'users' }
 );

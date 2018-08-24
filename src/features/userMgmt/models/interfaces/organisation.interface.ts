@@ -1,10 +1,8 @@
-import { IUser } from "../interfaces/user.interface";
+import { IRoleOfUser } from "./roleofuser.interface";
 
 export class IOrganisation {
   organisationId: string;
   name: string;
-  coordinator_id: number;
   version: string;
-  users_in_version: [number];
-  users: Array<IUser>;
+  rolesOfUsers: IRoleOfUser[];
 }

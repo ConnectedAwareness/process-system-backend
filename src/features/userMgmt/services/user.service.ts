@@ -30,7 +30,7 @@ export class UserService {
             if (res == null)
                 return null;
 
-            return of(UserFactory.create(res)).toPromise();
+            return of(UserFactory.createUser(res)).toPromise();
         }
         catch (err) {
             console.error(err);
@@ -49,7 +49,7 @@ export class UserService {
             if (res == null)
                 return null;
 
-            return of(UserFactory.create(res)).toPromise();
+            return of(UserFactory.createUser(res)).toPromise();
         }
         catch (err) {
             console.error(err);
@@ -59,13 +59,19 @@ export class UserService {
     }
 
     async createUserAsync(user: IUser): Promise<IUser> {
+        if (user.userId && user.userId.length)
+            throw new HttpException("Can't create new user, user has already a userId", HttpStatus.BAD_REQUEST);
+
         const res = await this.createOrUpdateUserAsync(user);
-        return of(UserFactory.create(res)).toPromise();
+        return of(UserFactory.createUser(res)).toPromise();
     }
 
     async updateUserAsync(userId: string, user: IUser): Promise<IUser> {
+        if (user.userId && user.userId.length && user.userId !== userId)
+            throw new HttpException("Can't update existing user, userIds don't match", HttpStatus.BAD_REQUEST);
+
         const res = await this.createOrUpdateUserAsync(user);
-        return of(UserFactory.create(res)).toPromise();
+        return of(UserFactory.createUser(res)).toPromise();
     }
 
     async createOrUpdateUserAsync(user: IUser): Promise<IUserSchema> {
@@ -78,18 +84,19 @@ export class UserService {
 
             const query = { email: user.email };
 
-            let res = await this.userModel.findOne(query);
+            const userModel = await this.userModel.findOne(query);
 
-            if (!res) {
+            if (!userModel) {
                 const model = new this.userModel(user);
                 model.userId = UserFactory.getId();
 
-                res = await model.save();
+                return model.save();
             }
             else
-                res = await res.update(user);
+                await userModel.update(user); // does not return IUserSchema, in opposite to .save
 
-            return res;
+            // return of(userModel).toPromise(); // does not work either
+            return this.userModel.findOne(query);
         }
         catch (err) {
             console.error(err);
@@ -107,7 +114,7 @@ export class UserService {
         if (!user)
             return true;
 
-        if (user.organisation) {
+        if (user.rolesInOrganisations.length > 0) {
             const msg = `Cannot delete user with email ${user.email}, user is still assigned to an organisation!`;
             console.error(msg);
             // throw new InternalServerErrorException(msg);
@@ -135,7 +142,7 @@ export class UserService {
             const res = await this.userModel.findOne(query);
 
             if (res != null && res.password === password)
-                return of(UserFactory.create(res)).toPromise();
+                return of(UserFactory.createUser(res)).toPromise();
         }
         catch (err) {
             console.error(`Error validating user with email ${email}`, err);

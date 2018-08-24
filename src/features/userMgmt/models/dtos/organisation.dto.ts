@@ -1,28 +1,23 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { UserDto } from "./user.dto";
 import { IOrganisation } from '../interfaces/organisation.interface';
+import { RoleOfUserDto } from './roleofuser.dto';
+import { IRoleOfUser } from '../interfaces/roleofuser.interface';
 
 export class OrganisationDto implements IOrganisation {
   constructor() {
     this.organisationId = null;
     this.name = null;
-    this.coordinator_id = null;
     this.version = null;
-    this.users_in_version = null;
-    this.users = new Array<UserDto>();
+    this.rolesOfUsers = new Array<IRoleOfUser>();
   }
 
   @ApiModelProperty({type: String, required: false })
-  organisationId: string;
+  readonly organisationId: string;
   @ApiModelProperty({ type: String, required: true })
-  name: string;
-  @ApiModelProperty({ type: Number, required: false })
-  coordinator_id: number;
+  readonly name: string;
   @ApiModelProperty({ type: String, required: false })
-  version: string;
-  @ApiModelProperty({ type: [Number], required: false })
-  users_in_version: [number];
-  @ApiModelProperty({ type: UserDto, isArray: true, required: false })
-  users: Array<UserDto>;
+  readonly version: string;
+  @ApiModelProperty({ type: RoleOfUserDto, isArray: true, required: false })
+  readonly rolesOfUsers: IRoleOfUser[];
 }

@@ -5,20 +5,24 @@ import * as _ from 'lodash';
 
 import { of } from 'rxjs';
 
-import * as fs from 'fs';
-
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserService } from './user.service';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
-import { IUser } from '../models/interfaces/user.interface';
+import { IUser, UserRole } from '../models/interfaces/user.interface';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { RoleInOrganisationDto } from '../models/dtos/roleinorganisation.dto';
+import { IRoleInOrganisation } from '../models/interfaces/roleinorganisation.interface';
+import { IRoleOfUser } from '../models/interfaces/roleofuser.interface';
+import { RoleOfUserDto } from '../models/dtos/roleofuser.dto';
+import { OrganisationDto } from '../models/dtos/organisation.dto';
 
 @Injectable()
 export class OrganisationService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
-        @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
+        // NOTE next line causes UnknownDependenciesException in injector.js:129
+        // @Inject('RoleOfUserModelToken') private readonly roleOfUserModel: Model<IRoleOfUserSchema>,
+        // @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
         private userService: UserService) { }
 
     async getAllOrganisationsAsync(): Promise<IOrganisation[]> {
@@ -27,7 +31,7 @@ export class OrganisationService {
         if (res == null)
             return null;
 
-        return of(res.map(o => OrganisationFactory.create(o, false))).toPromise();
+        return of(res.map(o => OrganisationFactory.createOrganisation(o, false))).toPromise();
     }
 
     async getOrganisationByIdAsync(organisationId: string): Promise<IOrganisation> {
@@ -37,7 +41,7 @@ export class OrganisationService {
         if (res == null)
             throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
 
-        return of(OrganisationFactory.create(res, true)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
     }
 
     async getOrganisationByNameAsync(name: string): Promise<IOrganisation> {
@@ -48,7 +52,7 @@ export class OrganisationService {
         if (res == null)
             return null;
 
-        return of(OrganisationFactory.create(res, true)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
     }
 
     async searchOrganisationsAsync(search?: string): Promise<IOrganisation[]> {
@@ -57,61 +61,88 @@ export class OrganisationService {
             const res = await this.organisationModel.find().or([
                 { name: { $regex: regex } }]);
 
-            return of(res.map(t => OrganisationFactory.create(t, true))).toPromise();
+            return of(res.map(t => OrganisationFactory.createOrganisation(t, true))).toPromise();
         }
         else
             return this.getAllOrganisationsAsync();
     }
 
-    async createOrganisationAsync(organisation: IOrganisation): Promise<IOrganisation> {
+    // NOTE old method, using local createOrUpdate
+    // async createOrganisationAsync(organisation: IOrganisation): Promise<IOrganisation> {
+    //     if (organisation.organisationId && organisation.organisationId.length)
+    //         throw new HttpException("Can't create new organisation, organisation has already a organisationId", HttpStatus.BAD_REQUEST);
+
+    //     const res = await this.createOrUpdateOrganisationAsync(organisation);
+    //     return of(OrganisationFactory.create(res, true)).toPromise();
+    // }
+
+    async createOrganisationAsync(organisation: IOrganisation): Promise<OrganisationDto> {
         try {
             if (organisation.organisationId && organisation.organisationId.length)
-                throw new HttpException("Can't create new organisation, organisation has already a organisationId", HttpStatus.BAD_REQUEST);
-
-            if (!organisation.name || organisation.name == null)
-                throw new HttpException("Can't create Organisation! NO Name supplied", HttpStatus.BAD_REQUEST);
-
-            const searchedOrganisation = await this.getOrganisationByNameAsync(organisation.name).catch(err => console.error(err));
-
-            if (searchedOrganisation)
-                return searchedOrganisation;
-
-            organisation.organisationId = OrganisationFactory.getId();
+                throw new HttpException("Can't create new organisation, already has organisationId", HttpStatus.BAD_REQUEST);
 
             const model = new this.organisationModel(organisation);
+            model.organisationId = OrganisationFactory.getId();
 
-            let refetch = false;
+            const res = await model.save();
 
-            const res = await model.save().catch(async err => {
-                if (err) {
-                    // check on index error (duplicate key)
-                    if (err.code === 11000)
-                        refetch = true;
-                    else {
-                        const msg = `Error creating organisation ${organisation.name}`;
-                        console.error(msg, err);
-                        throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                }
-            });
+            console.log(`new OrganisationDto ${organisation.organisationId} saved`);
+            console.log(res);
 
-            if (refetch)
-                return await this.getOrganisationByNameAsync(organisation.name);
+            return of(OrganisationFactory.createOrganisation(res)).toPromise();
 
-            if (!res)
-                console.error(`Could not create organisation ${organisation.organisationId}`);
-            else
-                return of(OrganisationFactory.create(res, true)).toPromise();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async createOrUpdateOrganisationAsync(organisation: IOrganisation): Promise<IOrganisationSchema> {
+        try {
+            if (!organisation)
+                throw new HttpException("Cannot update organisation, no object provided", HttpStatus.BAD_REQUEST);
+
+            if (!organisation.name || organisation.name == null)
+                throw new HttpException("Cannot update or create organisation, no name provided", HttpStatus.BAD_REQUEST);
+
+            const nameQuery = { name: organisation.name };
+            const idQuery = { organisationId: organisation.organisationId };
+
+            if (!organisation.organisationId || organisation.organisationId.length === 0) {
+                // create
+                const existingOrg = await this.organisationModel.findOne(nameQuery);
+                if (existingOrg)
+                    throw new HttpException("Cannot create organisation, organisation with name ${organisation.name} already exists",
+                                            HttpStatus.BAD_REQUEST);
+
+                const model = new this.organisationModel(organisation);
+                organisation.organisationId = OrganisationFactory.getId();
+                const res = await model.save();
+            } else {
+                // update
+                const existingOrg = await this.organisationModel.findOne(idQuery);
+                const res = await existingOrg.update(organisation);
+            }
+
+            // return of(userModel).toPromise(); // does not work either
+            return this.organisationModel.findOne(nameQuery);
         } catch (error) {
             console.log(error);
         }
 
-        return Promise.resolve(null);
+        return null;
     }
 
+    // NOTE old method, uses local createOrUpdate
+    // async updateOrganisationAsync(organisation: IOrganisation): Promise<IOrganisation> {
+    //     // TODO use organisationId as additional identifying parameter as in userService.updateUser? or drop it there instead?
+    //     if (!organisation.organisationId || organisation.organisationId.length === 0)
+    //         throw new HttpException("Can't update organisation, no organisationId supplied", HttpStatus.BAD_REQUEST);
+
+    //     const res = await this.createOrUpdateOrganisationAsync(organisation);
+    //     return of(OrganisationFactory.create(res, true)).toPromise();
+    // }
+
     async updateOrganisationAsync(organisation: IOrganisation): Promise<boolean> {
-        if (!organisation.organisationId || organisation.organisationId.length === 0)
-            throw new HttpException("Can't update organisation, no organisationId supplied", HttpStatus.BAD_REQUEST);
 
         const query = { organisationId: organisation.organisationId };
 
@@ -146,20 +177,20 @@ export class OrganisationService {
         return Promise.resolve(false);
     }
 
-    async addUserToOrganisationAsync(organisationId: string, user: IUser): Promise<boolean> {
+    async addUserToOrganisationAsync(organisationId: string, roles: string[], userToAdd: IUser): Promise<boolean> {
         if (!organisationId || organisationId.length === 0)
             throw new HttpException("Can't add user to Organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
 
-        if (!user)
+        if (!userToAdd)
             throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
 
-        if (!user.email)
+        if (!userToAdd.email)
             throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
 
         try {
-            let userModel = await this.userService.createOrUpdateUserAsync(user);
+            let user = await this.userService.createOrUpdateUserAsync(userToAdd).catch(err => console.error(err));
 
-            if (!userModel)
+            if (!user)
                 throw new InternalServerErrorException("Could not create or update User");
 
             const organisation = await this.organisationModel.findOne({ organisationId: organisationId });
@@ -167,25 +198,71 @@ export class OrganisationService {
             if (!organisation)
                 throw new InternalServerErrorException("Could not find organisation to add User");
 
-            userModel.organisation = organisation;
+            // first update user model
 
-            userModel = await userModel.save();
-
-            organisation.users.push(userModel);
-            const res = await organisation.save();
-
-            // if user was not assigned to organisation, return
-            if (!res) {
-                throw new HttpException(`Could not add User with Email ${user.email}` +
-                    ` to organisation ${organisationId}`, HttpStatus.INTERNAL_SERVER_ERROR);
+            // get or create roleInOrg object for current org
+            let roleInOrg = user.rolesInOrganisations.find((r) => r.organisationId === organisationId);
+            if (!roleInOrg) {
+                roleInOrg = Object.create(RoleInOrganisationDto.prototype) as IRoleInOrganisation;
+                roleInOrg.organisationId = organisation.organisationId;
+                roleInOrg.organisationName = organisation.name;
+                user.rolesInOrganisations.push(roleInOrg);
             }
+            roleInOrg.roles = roles.map((r) => UserRole[r]);
 
-            console.log(`User ${user.email} assigned for organisation ${organisation.name}`);
+            user = await user.save().catch(err => console.error(err));
+            // TODO/NOTE is getting user (above, including its non-null-test below) really necessary for call to updateOrganisationWithUserAsync?
+            if (!user)
+                throw new InternalServerErrorException("Could not create or update User");
+
+            // then update org model
+            this.updateOrganisationWithUserAsync(organisation, roleInOrg, user);
 
             return Promise.resolve(true);
         }
         catch (ex) {
-            const msg = `Error assigning user with Email ${user.email} to organisation with Id ${organisationId}`;
+            const msg = `Error assigning user with Email ${userToAdd.email} to organisation with Id ${organisationId}`;
+            console.error(msg, ex);
+            throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async updateOrganisationWithUserAsync(organisation: IOrganisation, role: IRoleInOrganisation, userToAdd: IUser): Promise<boolean> {
+        if (!organisation)
+            throw new HttpException(`Supplied organisation is not set`, HttpStatus.BAD_REQUEST);
+        if (!role)
+            throw new HttpException(`Supplied role is not set`, HttpStatus.BAD_REQUEST);
+        if (!userToAdd)
+            throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
+        if (!userToAdd.email)
+            throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
+
+        try {
+            // update org model
+            const organisationModel = await this.organisationModel.findOne({ organisationId: organisation.organisationId });
+
+            let roleOfUser = organisation.rolesOfUsers.find((r) => r.userId === userToAdd.userId);
+            if (!roleOfUser) {
+                roleOfUser = Object.create(RoleOfUserDto.prototype) as IRoleOfUser;
+                roleOfUser.userId = userToAdd.userId;
+                roleOfUser.userEmail = userToAdd.email;
+                organisation.rolesOfUsers.push(roleOfUser);
+            }
+            roleOfUser.roles = role.roles.map((r) => UserRole[r]);
+
+            const res = await organisationModel.save().catch(err => console.error(err));
+            // TODO do we need this res-testing or could this exception be raised in save().catch?
+            if (!res) {
+                throw new HttpException(`Could not add User with Email ${userToAdd.email}` +
+                    ` to organisation ${organisation.organisationId}`, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            console.log(`User ${userToAdd.email} assigned for organisation ${organisation.name}`);
+
+            return Promise.resolve(true);
+        }
+        catch (ex) {
+            const msg = `Error assigning user with Email ${userToAdd.email} to organisation with Id ${organisation.organisationId}`;
             console.error(msg, ex);
             throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -204,49 +281,36 @@ export class OrganisationService {
         if (!organisation)
             throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);
 
-        if (_.some(organisation.users, (u) => u.userId === userId)) {
+        // first update user model
 
-            if (_.remove(organisation.users, (u) => u.userId === userId)) {
-                const res = await organisation.save();
+        const userDto = await this.userService.getUserByIdAsync(userId).catch(err => console.error(err));
 
-                return Promise.resolve(true);
-            }
-            else
-                throw new HttpException(`Internal error removing user with userId ${userId} from organisation ${organisation.name}`,
-                    HttpStatus.BAD_REQUEST);
+        if (!userDto)
+            throw new InternalServerErrorException("Could not create or update User");
+
+        let user = await this.userService.createOrUpdateUserAsync(userDto); // .catch(err => console.error(err));
+
+        // remove roleInOrg object for current org
+        const roleInOrg = user.rolesInOrganisations.find((r) => r.organisationId === organisationId);
+        if (roleInOrg) { // NOTE TODO remove test, just remove right along
+            // user.rolesInOrganisations = user.rolesInOrganisations.filter((r) => r.organisationId !== organisationId);
+            if (!_.remove(user.rolesInOrganisations, (r) => r.organisationId === organisationId))
+            throw new HttpException(`Internal error removing organisation ${organisation.name} from user with userId ${userId}`,
+                HttpStatus.BAD_REQUEST);
         }
-        else
+
+        user = await user.save();
+
+        // then update org model
+        if (!_.some(organisation.rolesOfUsers, (u) => u.userId === userId))
             throw new HttpException(`No user with userId ${userId} found on organisation ${organisation.name}`, HttpStatus.BAD_REQUEST);
-    }
 
-    // INITIAL IMPORT
+        if (!_.remove(organisation.rolesOfUsers, (u) => u.userId === userId))
+            throw new HttpException(`Internal error removing user with userId ${userId} from organisation ${organisation.name}`,
+                HttpStatus.BAD_REQUEST);
 
-    async importOrgsAndUserAsync(): Promise<void> {
-        const importDataJson = fs.readFileSync('importInitData.json');
-        const importData = JSON.parse(importDataJson.toString());
+        const res = await organisation.save().catch(err => console.error(err));
 
-        if (importData.length > 0) {
-            this.organisationModel.collection.drop();
-            this.userModel.collection.drop();
-
-            for (const o of importData) {
-                const org = OrganisationFactory.generateFromJson(o);
-
-                if (org == null)
-                    continue;
-
-                const users = org.users.splice(0, org.users.length);
-                org.users = new Array<IUser>();
-
-                const orgDto = await this.createOrganisationAsync(org).catch(err => console.error(err));
-
-                if (orgDto) {
-                    // add users to org
-                    users.forEach(async user => {
-                        await this.addUserToOrganisationAsync(orgDto.organisationId, user).catch(err => console.error(err));
-                    });
-                }
-            }
-        }
+        return Promise.resolve(true);
     }
 }

@@ -3,21 +3,22 @@ import { v4 } from 'uuid';
 import { OrganisationDto } from '../dtos/organisation.dto';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
 import { mapDto } from '../../../../main/util/util';
-import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 import { IOrganisation } from '../interfaces/organisation.interface';
+import { IRoleOfUser } from '../interfaces/roleofuser.interface';
 
 export class OrganisationFactory {
-    public static create(model: IOrganisationSchema, includeUser: boolean) {
-        if (!includeUser)
-            model.users = new Array<IUserSchema>();
+    public static createOrganisation(model: IOrganisationSchema, includeUser: boolean = true) {
+        if (!includeUser) { // TODO remove this; or copy this special handling to UserFactory
+            model.rolesOfUsers = new Array<IRoleOfUser>();
+        }
 
         return mapDto(model, OrganisationDto);
     }
 
-    public static generateFromJson(data) : IOrganisation {
+    public static generateOrganisationFromJson(data) : IOrganisation {
         //data.organisationId = v4();
-        let organisation = Object.create(OrganisationDto.prototype) as IOrganisation;
-        organisation =  Object.assign(data, JSON, {});
+        const organisation = new OrganisationDto();
+        Object.assign(organisation, data);
 
         return organisation;
     }
