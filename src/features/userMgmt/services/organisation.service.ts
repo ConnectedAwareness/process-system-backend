@@ -201,11 +201,10 @@ export class OrganisationService {
             // first update user model
 
             // get or create roleInOrg object for current org
-            let roleInOrg = user.rolesInOrganisations.find((r) => r.organisationId === organisationId);
+            let roleInOrg = user.rolesInOrganisations.find((r) => r.organisation.organisationId === organisationId);
             if (!roleInOrg) {
                 roleInOrg = Object.create(RoleInOrganisationDto.prototype) as IRoleInOrganisation;
-                roleInOrg.organisationId = organisation.organisationId;
-                roleInOrg.organisationName = organisation.name;
+                roleInOrg.organisation = organisation;
                 user.rolesInOrganisations.push(roleInOrg);
             }
             roleInOrg.userRoles = roles.map((r) => UserRole[r]);
@@ -241,11 +240,10 @@ export class OrganisationService {
             // update org model
             const organisationModel = await this.organisationModel.findOne({ organisationId: organisation.organisationId });
 
-            let roleOfUser = organisation.rolesOfUsers.find((r) => r.userId === userToAdd.userId);
+            let roleOfUser = organisation.rolesOfUsers.find((r) => r.user.userId === userToAdd.userId);
             if (!roleOfUser) {
                 roleOfUser = Object.create(RoleOfUserDto.prototype) as IRoleOfUser;
-                roleOfUser.userId = userToAdd.userId;
-                roleOfUser.userEmail = userToAdd.email;
+                roleOfUser.user = userToAdd;
                 organisation.rolesOfUsers.push(roleOfUser);
             }
             roleOfUser.userRoles = role.userRoles.map((r) => UserRole[r]);
@@ -291,10 +289,10 @@ export class OrganisationService {
         let user = await this.userService.createOrUpdateUserAsync(userDto); // .catch(err => console.error(err));
 
         // remove roleInOrg object for current org
-        const roleInOrg = user.rolesInOrganisations.find((r) => r.organisationId === organisationId);
+        const roleInOrg = user.rolesInOrganisations.find((r) => r.organisation.organisationId === organisationId);
         if (roleInOrg) { // NOTE TODO remove test, just remove right along
             // user.rolesInOrganisations = user.rolesInOrganisations.filter((r) => r.organisationId !== organisationId);
-            if (!_.remove(user.rolesInOrganisations, (r) => r.organisationId === organisationId))
+            if (!_.remove(user.rolesInOrganisations, (r) => r.organisation.organisationId === organisationId))
             throw new HttpException(`Internal error removing organisation ${organisation.name} from user with userId ${userId}`,
                 HttpStatus.BAD_REQUEST);
         }
@@ -302,10 +300,10 @@ export class OrganisationService {
         user = await user.save();
 
         // then update org model
-        if (!_.some(organisation.rolesOfUsers, (u) => u.userId === userId))
+        if (!_.some(organisation.rolesOfUsers, (u) => u.user.userId === userId))
             throw new HttpException(`No user with userId ${userId} found on organisation ${organisation.name}`, HttpStatus.BAD_REQUEST);
 
-        if (!_.remove(organisation.rolesOfUsers, (u) => u.userId === userId))
+        if (!_.remove(organisation.rolesOfUsers, (u) => u.user.userId === userId))
             throw new HttpException(`Internal error removing user with userId ${userId} from organisation ${organisation.name}`,
                 HttpStatus.BAD_REQUEST);
 

@@ -9,7 +9,8 @@ export const UserSchema = new Schema({
     firstName: { type: String, required: false },
     lastName: { type: String, required: false },
     capabilities: { type: [String], required: false, enum: [ UserCapability.Connector, UserCapability.ITAdmin,
-        UserCapability.ProcessCoordinator, UserCapability.AwarenessIntegrator ] },
+        // UserCapability.ProcessCoordinator,
+        UserCapability.AwarenessIntegrator ] },
     rolesInOrganisations: { type: [RoleInOrganisationSchema], required: false }
 }
 , {collection: 'users' }

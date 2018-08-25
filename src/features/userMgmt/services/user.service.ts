@@ -140,6 +140,27 @@ export class UserService {
         return false;
     }
 
+    async updateUserPasswordAsync(userId: string, password: string): Promise<boolean> {
+        const query = { userId: userId };
+
+        const user = await this.userModel.findOne(query);
+
+        if (!user)
+            return true;
+
+        try {
+            user.password = password;
+            user.save();
+
+            return true;
+        }
+        catch (err) {
+            console.error(err);
+        }
+
+        return false;
+    }
+
     async validateUserAsync(email: string, password: string): Promise<IUser> {
         try {
             const query = { email: email };

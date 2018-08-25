@@ -1,8 +1,7 @@
-import { UserRole } from "./user.interface";
+import { UserRole, IUser } from "./user.interface";
 
 export class IRoleOfUser {
-  userId: string;
-  userEmail: string;
-  userAlias: string;
-  userRoles: UserRole[];
+  user: IUser;
+  userAlias: string; // redundance: copied from IRoleInOrganisation
+  userRoles: UserRole[]; // redundance: copied from IRoleInOrganisation
 }

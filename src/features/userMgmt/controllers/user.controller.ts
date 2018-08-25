@@ -65,4 +65,14 @@ export class UserController {
   async deleteUser(@Param('userId') userId: string): Promise<boolean> {
     return await this.userService.deleteUserAsync(userId);
   }
+
+  @Post()
+  // @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ title: 'update an user\'s password' })
+  @ApiImplicitParam({ name: 'userId', required: true, description: 'id of user' })
+  @ApiImplicitParam({ name: 'password', required: true, description: 'new password' })
+  @ApiResponse({ status: 200, description: 'Update password successful' })
+  async updateUserPassword(@Param('userId') userId: string, @Param('password') password: string): Promise<boolean> {
+    return await this.userService.updateUserPasswordAsync(userId, password);
+  }
 }
