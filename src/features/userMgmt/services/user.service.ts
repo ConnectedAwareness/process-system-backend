@@ -13,7 +13,7 @@ import { IUser } from '../models/interfaces/user.interface';
 @Injectable()
 export class UserService {
     constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-                @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
+        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
 
     // not used, we'll use this.userModel directly (?)
     // getModel(user: IUser): IUserSchema {
@@ -171,7 +171,8 @@ export class UserService {
         try {
             const query = { email: email };
 
-            const res = await this.userModel.findOne(query);
+            const res = await this.userModel.findOne(query)
+                .populate('rolesInOrganisations.organisation');
 
             if (res != null && res.password === password)
                 return of(UserFactory.createUser(res)).toPromise();

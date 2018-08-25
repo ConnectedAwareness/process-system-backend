@@ -1,38 +1,60 @@
 import * as jwt from 'jsonwebtoken';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { IJwtPayload, IRolesInOrganisation } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../userMgmt/services/user.service';
 import { Config } from '../../../environments/environments';
 import { IUser } from '../../userMgmt/models/interfaces/user.interface';
+import { TokenResponseDto } from '../models/tokenResponse.dto';
+import { AuthRequestDto } from '../models/authRequest.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) { }
 
-  async createTokenAsync(email: string) : Promise<any> {
-    const user: JwtPayload = {
-      email: email,
-      roles: ['Connectee']
-    };
+  async loginAsync(authRequest: AuthRequestDto): Promise<TokenResponseDto> {
+    const response = new TokenResponseDto();
 
-    return jwt.sign(user, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
+    if (!authRequest) {
+      response.message = "No login data supplied";
+      throw new HttpException(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    try {
+      const user = await this.userService.validateUserAsync(authRequest.email, authRequest.password);
+
+      if (!user) {
+        response.message = "Can't validate user";
+        throw new HttpException(response, HttpStatus.UNAUTHORIZED);
+      }
+
+      const payload: IJwtPayload = {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        capabilities: user.capabilities,
+        rolesInOrganisations: new Array<IRolesInOrganisation>()
+      };
+
+      if (user.rolesInOrganisations && user.rolesInOrganisations.length)
+        user.rolesInOrganisations.forEach(rio => {
+          payload.rolesInOrganisations.push({
+            userAlias: rio.userAlias,
+            userRoles: rio.userRoles,
+            organisationName: rio.organisation.name
+          } as IRolesInOrganisation);
+        }
+        );
+
+      response.token = jwt.sign(payload, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
+
+    } catch (err) {
+      response.message = "Error validating User";
+    }
+
+    return response;
   }
 
-  async loginAsync(email: string, password: string) {
-    const user = await this.userService.validateUserAsync(email, password);
-
-    if (!user)
-      throw new HttpException("Can't validate user", HttpStatus.UNAUTHORIZED);
-
-    const token: JwtPayload = {
-      email: user.email,
-      roles: ['Connectee']
-    };
-
-    return jwt.sign(token, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
-  }
-
-  async validateUser(payload: JwtPayload): Promise<IUser> {
+  async validateUser(payload: IJwtPayload): Promise<IUser> {
     return await this.userService.getUserByEmailAsync(payload.email);
   }
 }

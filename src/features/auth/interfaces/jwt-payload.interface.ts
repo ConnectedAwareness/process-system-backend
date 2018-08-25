@@ -1,4 +1,13 @@
-export interface JwtPayload {
-    email: string;
-    roles: string[];
-  }
+export interface IJwtPayload {
+  email: string;
+  firstName: string;
+  lastName: string;
+  rolesInOrganisations: IRolesInOrganisation[];
+  capabilities: string[];
+}
+
+export class IRolesInOrganisation {
+  userAlias: string; // redundance: copied to IRoleOfUser
+  userRoles: string[]; // redundance: copied to IRoleOfUser
+  organisationName: string;
+}
