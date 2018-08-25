@@ -85,7 +85,7 @@ export class InitialisationService {
                     const rio = UserFactory.generateRoleInOrganisationFromJson(r);
 
                     if (!r.roles) throw new Error("Initialisation data must provide UserRole for each roleInOrganisation");
-                    rio.roles = r.roles.map((rs) => UserRole[rs]); // TODO is this mapping String=>Enum even necessary?
+                    rio.userRoles = r.roles.map((rs) => UserRole[rs]); // TODO is this mapping String=>Enum even necessary?
 
                     return rio;
                 });
@@ -116,7 +116,7 @@ export class InitialisationService {
                 const roleOfUser = Object.create(RoleOfUserDto.prototype) as IRoleOfUser;
                 roleOfUser.userId = u.userId;
                 roleOfUser.userEmail = u.email;
-                roleOfUser.roles = r.roles; // TODO test if this is sufficient to create a copy
+                roleOfUser.userRoles = r.userRoles; // TODO test if this is sufficient to create a copy
                 org.rolesOfUsers.push(roleOfUser);
             }
         }
@@ -186,7 +186,7 @@ export class InitialisationService {
                     const organisation = await this.organisationService.getOrganisationByNameAsync(role.organisationName);
                     role.organisationId = organisation.organisationId;
                     // await this.organisationService.updateOrganisationWithUserAsync(organisation, role, usrDto).catch(err => console.error(err));
-                    await this.organisationService.addUserToOrganisationAsync(organisation.organisationId, role.roles, usrDto)
+                    await this.organisationService.addUserToOrganisationAsync(organisation.organisationId, role.userRoles, usrDto)
                             .catch(err => console.error(err));
                 });
             }

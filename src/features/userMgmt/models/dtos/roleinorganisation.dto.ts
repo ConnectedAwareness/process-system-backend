@@ -4,16 +4,16 @@ import { UserRole } from '../interfaces/user.interface';
 
 export class RoleInOrganisationDto implements IRoleInOrganisation {
     constructor() {
-        this.localUserAlias = null;
-        this.roles = new Array<UserRole>();
+        this.userAlias = null;
+        this.userRoles = new Array<UserRole>();
         this.organisationId = null;
         this.organisationName = null;
     }
 
     @ApiModelProperty({type: String, required: false })
-    readonly localUserAlias: string;
+    readonly userAlias: string;
     @ApiModelProperty({ type: UserRole, isArray: true, required: true })
-    readonly roles: UserRole[];
+    readonly userRoles: UserRole[];
     @ApiModelProperty({type: String, required: false })
     readonly organisationId: string;
     @ApiModelProperty({type: String, required: false })

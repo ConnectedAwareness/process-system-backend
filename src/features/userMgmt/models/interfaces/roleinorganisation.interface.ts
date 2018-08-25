@@ -1,8 +1,8 @@
 import { UserRole } from "./user.interface";
 
 export class IRoleInOrganisation {
-  localUserAlias: string;
-  roles: UserRole[];
+  userAlias: string;
+  userRoles: UserRole[];
   organisationId: string;
   organisationName: string;
 }

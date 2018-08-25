@@ -208,7 +208,7 @@ export class OrganisationService {
                 roleInOrg.organisationName = organisation.name;
                 user.rolesInOrganisations.push(roleInOrg);
             }
-            roleInOrg.roles = roles.map((r) => UserRole[r]);
+            roleInOrg.userRoles = roles.map((r) => UserRole[r]);
 
             user = await user.save().catch(err => console.error(err));
             // TODO/NOTE is getting user (above, including its non-null-test below) really necessary for call to updateOrganisationWithUserAsync?
@@ -248,7 +248,7 @@ export class OrganisationService {
                 roleOfUser.userEmail = userToAdd.email;
                 organisation.rolesOfUsers.push(roleOfUser);
             }
-            roleOfUser.roles = role.roles.map((r) => UserRole[r]);
+            roleOfUser.userRoles = role.userRoles.map((r) => UserRole[r]);
 
             const res = await organisationModel.save().catch(err => console.error(err));
             // TODO do we need this res-testing or could this exception be raised in save().catch?
