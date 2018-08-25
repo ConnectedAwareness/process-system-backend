@@ -15,17 +15,17 @@ export class UserService {
     constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
                 @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
 
-    getModel(user: IUser): IUserSchema {
-        const model = new this.userModel(user);
-        return model;
-    }
+    // not used, we'll use this.userModel directly (?)
+    // getModel(user: IUser): IUserSchema {
+    //     const model = new this.userModel(user);
+    //     return model;
+    // }
 
     async getUserByIdAsync(userId: string): Promise<IUser> {
         try {
             const query = { userId: userId };
 
-            const res = await this.userModel.findOne(query)
-                .populate({ path: 'organisation' });
+            const res = await this.userModel.findOne(query);
 
             if (res == null)
                 return null;
@@ -43,8 +43,7 @@ export class UserService {
         try {
             const query = { email: email };
 
-            const res = await this.userModel.findOne(query)
-                .populate({ path: 'organisation' });
+            const res = await this.userModel.findOne(query);
 
             if (res == null)
                 return null;
@@ -108,8 +107,7 @@ export class UserService {
     async deleteUserAsync(userId: string): Promise<boolean> {
         const query = { userId: userId };
 
-        const user = await this.userModel.findOne(query)
-            .populate({ path: 'organisation' });
+        const user = await this.userModel.findOne(query);
 
         if (!user)
             return true;
@@ -122,9 +120,7 @@ export class UserService {
         }
 
         try {
-            const model = this.getModel(user);
-
-            model.remove();
+            user.remove();
 
             return true;
         }
