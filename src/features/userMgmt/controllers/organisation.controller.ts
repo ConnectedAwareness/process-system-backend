@@ -7,6 +7,7 @@ import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { IUser } from '../models/interfaces/user.interface';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { UserDto } from '../models/dtos/user.dto';
+import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
 
 @ApiUseTags('organisations')
 @Controller('organisations')
@@ -30,7 +31,7 @@ export class OrganisationController {
     return await this.organisationService.getOrganisationByIdAsync(organisationId);
   }
 
-  @Post()
+  @Post('create')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
@@ -38,15 +39,16 @@ export class OrganisationController {
       return await this.organisationService.createOrganisationAsync(organisation);
   }
 
-  @Put()
-  @Put(':organisationId')
-  // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ title: 'update an organisation' })
-  @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to update', type: OrganisationDto })
-  @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
-  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: IOrganisation) : Promise<boolean> {
-    return await this.organisationService.updateOrganisationAsync(organisation);
-  }
+  // TODO see service
+  // @Put()
+  // @Put(':organisationId')
+  // // @UseGuards(AuthGuard('jwt'))
+  // @ApiOperation({ title: 'update an organisation' })
+  // @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to update', type: OrganisationDto })
+  // @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
+  // async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: IOrganisation) : Promise<boolean> {
+  //   return await this.organisationService.updateOrganisationAsync(organisation);
+  // }
 
   @Delete(':organisationId')
   // @UseGuards(AuthGuard('jwt'))
@@ -58,25 +60,26 @@ export class OrganisationController {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
   }
 
-  @Post(':organisationId/user/:roles')
+  @Post('adduser')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
-  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
-  @ApiImplicitParam({ name: 'roles', required: true, description: 'roles of the user' })
-  @ApiImplicitBody({ name: 'user', required: true, description: 'The user to add', type: UserDto })
-  @ApiResponse({ status: 200, description: 'Create user successful' })
-  async addUserToOrganisationAsync(@Param('organisationId') organisationId: string, @Param('roles') roles: string[],
-                                   @Body('user') user: IUser) : Promise<boolean> {
-      return await this.organisationService.addUserToOrganisationAsync(organisationId, roles, user);
+  @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: UserInOrganisationDto })
+  @ApiResponse({ status: 200, description: 'Add user to organisation successful' })
+  async addUserToOrganisationAsync(@Body('userInorganisation') userInorganisation: UserInOrganisationDto) : Promise<boolean> {
+      return await this.organisationService.addUserToOrganisationAsync(userInorganisation);
   }
 
-  @Delete(':organisationId/user/:userId')
-  // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ title: 'Remove an user from an organisation' })
-  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
-  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
-  @ApiResponse({ status: 200, description: 'Create user successful' })
-  async removeUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string) : Promise<boolean> {
-      return await this.organisationService.removeUserFromOrganisationAsync(organisationId, userId);
-  }
+  // NOTE there is an updateUserInOrganisationAsync in service, but under review
+  // then, add it to the controller, too
+
+  // NOTE not in controller, as service code is under review
+  // @Delete(':organisationId/user/:userId')
+  // // @UseGuards(AuthGuard('jwt'))
+  // @ApiOperation({ title: 'Remove an user from an organisation' })
+  // @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation' })
+  // @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user' })
+  // @ApiResponse({ status: 200, description: 'Create user successful' })
+  // async removeUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string) : Promise<boolean> {
+  //     return await this.organisationService.removeUserFromOrganisationAsync(organisationId, userId);
+  // }
 }

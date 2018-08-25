@@ -12,6 +12,7 @@ import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { ImportData } from '../models/dtos/importdata.dto';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
+import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
 
 class ImportedUserData {
     constructor() {
@@ -46,7 +47,9 @@ export class InitialisationService {
                 const importDataJson = fs.readFileSync('importInitData.json');
                 const importData = JSON.parse(importDataJson.toString()) as ImportData;
 
-                this.loadUserAndOrganisationData(importData);
+                await this.loadUserAndOrganisationData(importData);
+
+                console.log("Import of initialisation data successful");
             } catch (e) {
                 console.error(e);
             }
@@ -78,7 +81,7 @@ export class InitialisationService {
                 email: iu.email,
                 firstName: iu.firstName,
                 lastName: iu.lastName,
-                capabilities: iu.capabilities.map(c => UserCapability[c]),
+                capabilities: iu.capabilities ? iu.capabilities.map(c => UserCapability[c]) : null,
                 rolesInOrganisations: []
             };
             const us = await this.userService.createUserAsync(u);
@@ -87,11 +90,17 @@ export class InitialisationService {
             await this.userService.updateUserPasswordAsync(us.userId, iu.password);
 
             // fourth, add user to organisation
-            iu.rolesInOrganisations.forEach(async r => {
-                const org = organisations.find(o => o.name === r.organisationName);
-                const roles = r.roles.map(rs => UserRole[rs]);
-                await this.organisationService.addUserToOrganisationAsync(org.organisationId, roles, us);
-            });
+            if (iu.rolesInOrganisations)
+                iu.rolesInOrganisations.forEach(async r => {
+                    const org = organisations.find(o => o.name === r.organisationName);
+                    const roles = r.roles.map(rs => UserRole[rs]);
+                    await this.organisationService.addUserToOrganisationAsync({
+                        organisationId: org.organisationId,
+                        userId: us.userId,
+                        alias: null,
+                        roles: roles
+                    } as UserInOrganisationDto);
+                });
         }
     }
 }

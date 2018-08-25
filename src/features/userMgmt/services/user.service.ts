@@ -66,14 +66,19 @@ export class UserService {
         return null;
     }
 
+    // TODO refactor: don't call createOrUpdate
     async createUserAsync(user: IUser): Promise<IUser> {
         if (user.userId && user.userId.length)
             throw new HttpException("Can't create new user, user has already a userId", HttpStatus.BAD_REQUEST);
 
         const res = await this.createOrUpdateUserAsync(user);
+
+        console.log(`new User ${res.userId} saved`);
+
         return of(UserFactory.createUser(res)).toPromise();
     }
 
+    // TODO refactor: don't call createOrUpdate, return boolean (like org.service)
     async updateUserAsync(userId: string, user: IUser): Promise<IUser> {
         if (user.userId && user.userId.length && user.userId !== userId)
             throw new HttpException("Can't update existing user, userIds don't match", HttpStatus.BAD_REQUEST);
@@ -82,6 +87,7 @@ export class UserService {
         return of(UserFactory.createUser(res)).toPromise();
     }
 
+    // TODO get rid of it
     async createOrUpdateUserAsync(user: IUser): Promise<IUserSchema> {
         try {
             if (!user)
@@ -100,7 +106,7 @@ export class UserService {
 
                 return model.save();
             }
-            else
+            else // TODO take care of rolesInOrganisation, e.g. "rescue" them (cf. organsiationservice.updateOrganisation)
                 await userModel.update(user); // does not return IUserSchema, in opposite to .save
 
             // return of(userModel).toPromise(); // does not work either

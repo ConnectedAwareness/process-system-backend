@@ -28,6 +28,7 @@ export class UserController {
     return await this.userService.getUserByIdAsync(userId);
   }
 
+  // TODO needed?
   @Get('byemail/:email')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get user by email' })
@@ -46,7 +47,7 @@ export class UserController {
     return await this.userService.createUserAsync(user);
   }
 
-  @Put()
+  // TODO see service impl
   @Put(':userId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an user' })
@@ -66,10 +67,11 @@ export class UserController {
     return await this.userService.deleteUserAsync(userId);
   }
 
-  @Post()
+  // TODO make a "ChangePasswordDTO", maybe redefine route
+  @Put(':userId/:password')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an user\'s password' })
-  @ApiImplicitParam({ name: 'userId', required: true, description: 'id of user' })
+  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of user' })
   @ApiImplicitParam({ name: 'password', required: true, description: 'new password' })
   @ApiResponse({ status: 200, description: 'Update password successful' })
   async updateUserPassword(@Param('userId') userId: string, @Param('password') password: string): Promise<boolean> {

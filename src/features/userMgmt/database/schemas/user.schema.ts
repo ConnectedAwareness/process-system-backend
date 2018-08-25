@@ -5,7 +5,7 @@ import { RoleInOrganisationSchema } from './roleinorganisation.schema';
 export const UserSchema = new Schema({
     userId: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     firstName: { type: String, required: false },
     lastName: { type: String, required: false },
     capabilities: { type: [String], required: false, enum: [ UserCapability.Connector, UserCapability.ITAdmin,
