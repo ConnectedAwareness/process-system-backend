@@ -31,7 +31,7 @@ export class OrganisationService {
         if (res == null)
             return null;
 
-        return of(res.map(o => OrganisationFactory.createOrganisation(o, false))).toPromise();
+        return of(res.map(o => OrganisationFactory.createOrganisation(o))).toPromise();
     }
 
     async getOrganisationByIdAsync(organisationId: string): Promise<IOrganisation> {
@@ -41,7 +41,7 @@ export class OrganisationService {
         if (res == null)
             throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
 
-        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res)).toPromise();
     }
 
     async getOrganisationByNameAsync(name: string): Promise<IOrganisation> {
@@ -52,7 +52,7 @@ export class OrganisationService {
         if (res == null)
             return null;
 
-        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res)).toPromise();
     }
 
     async searchOrganisationsAsync(search?: string): Promise<IOrganisation[]> {
@@ -61,7 +61,7 @@ export class OrganisationService {
             const res = await this.organisationModel.find().or([
                 { name: { $regex: regex } }]);
 
-            return of(res.map(t => OrganisationFactory.createOrganisation(t, true))).toPromise();
+            return of(res.map(t => OrganisationFactory.createOrganisation(t))).toPromise();
         }
         else
             return this.getAllOrganisationsAsync();

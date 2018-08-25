@@ -7,11 +7,7 @@ import { IOrganisation } from '../interfaces/organisation.interface';
 import { IRoleOfUser } from '../interfaces/roleofuser.interface';
 
 export class OrganisationFactory {
-    public static createOrganisation(model: IOrganisationSchema, includeUser: boolean = true) {
-        if (!includeUser) { // TODO remove this; or copy this special handling to UserFactory
-            model.rolesOfUsers = new Array<IRoleOfUser>();
-        }
-
+    public static createOrganisation(model: IOrganisationSchema) {
         return mapDto(model, OrganisationDto);
     }
 
