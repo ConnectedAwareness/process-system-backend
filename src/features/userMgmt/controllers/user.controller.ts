@@ -11,6 +11,14 @@ import { IUser } from '../models/interfaces/user.interface';
 export class UserController {
   constructor(private userService: UserService) { }
 
+  @Get()
+  // @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ title: 'get all users' })
+  @ApiResponse({ status: 200, description: 'Get All successful' })
+  async getAllUsers(@Query('skip') skip: string, @Query('limit') limit: number) : Promise<IUser[]> {
+    return await this.userService.getAllUsersAsync();
+  }
+
   @Get(':userId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get user by Id' })

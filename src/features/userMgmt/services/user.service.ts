@@ -21,6 +21,15 @@ export class UserService {
     //     return model;
     // }
 
+    async getAllUsersAsync(): Promise<IUser[]> {
+        const res = await this.userModel.find();
+
+        if (res == null)
+            return null;
+
+        return of(res.map(u => UserFactory.createUser(u))).toPromise();
+    }
+
     async getUserByIdAsync(userId: string): Promise<IUser> {
         try {
             const query = { userId: userId };
