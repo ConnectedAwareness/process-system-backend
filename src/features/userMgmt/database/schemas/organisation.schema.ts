@@ -1,11 +1,11 @@
 import { Schema } from 'mongoose';
-import { RoleOfUserSchema } from './roleofuser.schema';
+import { UserInOrganisationSchema } from './userinorganisation.schema';
 
 export const OrganisationSchema = new Schema({
     organisationId: { type: String, required: true },
     name: { type: String, required: true },
     version: { type: String, required: false },
-    rolesOfUsers: { type: [RoleOfUserSchema], required: false }
+    users: { type: [Schema.Types.ObjectId], ref: 'UserInOrganisation' }
 }
 , {collection: 'organisations' }
 );

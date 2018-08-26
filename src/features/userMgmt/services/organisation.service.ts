@@ -10,21 +10,19 @@ import { UserService } from './user.service';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
 import { IUser, UserRole } from '../models/interfaces/user.interface';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
-import { RoleInOrganisationDto } from '../models/dtos/roleinorganisation.dto';
-import { IRoleInOrganisation } from '../models/interfaces/roleinorganisation.interface';
-import { IRoleOfUser } from '../models/interfaces/roleofuser.interface';
+import { IUserInOrganisation } from '../models/interfaces/userinorganisation.interface';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
-import { RoleOfUserDto } from '../models/dtos/roleofuser.dto';
+import { UserDto } from '../models/dtos/user.dto';
+import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
 
 @Injectable()
 export class OrganisationService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
-        // NOTE next line causes UnknownDependenciesException in injector.js:129
-        // @Inject('RoleOfUserModelToken') private readonly roleOfUserModel: Model<IRoleOfUserSchema>,
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
+        @Inject('UserInOrganisationModelToken') private readonly userInOrganisationModel: Model<IUserInOrganisationSchema>,
         private userService: UserService) { }
 
     async getAllOrganisationsAsync(): Promise<IOrganisation[]> {
@@ -33,15 +31,17 @@ export class OrganisationService {
         if (res == null)
             return null;
 
-        return of(res.map(o => OrganisationFactory.createOrganisation(o))).toPromise();
+        return of(res.map(o => OrganisationFactory.createOrganisation(o, false))).toPromise();
     }
 
     async getOrganisationByIdAsync(organisationId: string): Promise<IOrganisation> {
         const query = { organisationId: organisationId };
-        const res = await this.organisationModel.findOne(query);
+        let res = await this.organisationModel.findOne(query).exec();
 
         if (res == null)
             throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
+
+        res = await res.populate( { path: 'users' } ).execPopulate();
 
         return of(OrganisationFactory.createOrganisation(res)).toPromise();
     }
@@ -125,61 +125,81 @@ export class OrganisationService {
         return Promise.resolve(false);
     }
 
-    async addUserToOrganisationAsync(userInOrganisation: UserInOrganisationDto): Promise<boolean> {
-        if (!userInOrganisation.organisationId || userInOrganisation.organisationId.length === 0)
-            throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
+    async addUserToOrganisationAsync(uInO: UserInOrganisationDto): Promise<boolean> {
+        if (uInO.organisationIsObject) {
+            if (!uInO.organisation)
+                throw new HttpException("Can't add user to organisation! No organisation provided", HttpStatus.BAD_REQUEST);
+        } else
+            if (!uInO.organisationId || uInO.organisationId.length === 0)
+                throw new HttpException("Can't add user to organisation! No organisationId provided", HttpStatus.BAD_REQUEST);
 
-        if (!userInOrganisation.userId || userInOrganisation.userId.length === 0)
-            throw new HttpException("Can't add user to organisation! No userId provided", HttpStatus.BAD_REQUEST);
+        if (uInO.userIsObject) {
+            if (!uInO.user)
+                throw new HttpException("Can't add user to organisation! No user provided", HttpStatus.BAD_REQUEST);
+        } else
+            if (!uInO.userId || uInO.userId.length === 0)
+                throw new HttpException("Can't add user to organisation! No userId provided", HttpStatus.BAD_REQUEST);
 
-        if (!userInOrganisation.roles || userInOrganisation.roles.length === 0)
+        if (!uInO.roles || uInO.roles.length === 0)
             throw new HttpException("Can't add user to organisation! No roles provided", HttpStatus.BAD_REQUEST);
 
         try {
-            const user = await this.userModel.findOne({ userId: userInOrganisation.userId });
-
-            if (!user)
+            const userId = uInO.userIsObject ? uInO.user.userId : uInO.userId;
+            const userModel = await this.userModel.findOne({ userId: userId });
+            if (!userModel)
                 throw new InternalServerErrorException("Could not find user to add to organisation");
 
-            const organisation = await this.organisationModel.findOne({ organisationId: userInOrganisation.organisationId });
-
-            if (!organisation)
+            const organisationId = uInO.organisationIsObject ? uInO.organisation.organisationId : uInO.organisationId;
+            const organisationModel = await this.organisationModel.findOne({ organisationId: organisationId });
+            if (!organisationModel)
                 throw new InternalServerErrorException("Could not find organisation to add user");
 
-            const rolesTyped = userInOrganisation.roles.map(r => UserRole[r]);
+            const uio = new this.userInOrganisationModel(uInO);
+            uio.user = userModel;
+            uio.organisation = organisationModel;
+            uio.roles = uInO.roles.map(r => UserRole[r]);
+            uio.userAlias = uInO.userAlias;
+            await uio.save();
 
-            // first update user model
-            const rio: RoleInOrganisationDto = {
-                userAlias: userInOrganisation.alias,
-                userRoles: rolesTyped,
-                organisation: organisation
-            };
-            user.rolesInOrganisations.push(rio);
-            await user.save();
+            // { // NOTE no constructor, since some fields stay (purposefully) undefined
+            //     organisation: organisation,
+            //     user: user,
+            //     userAlias: null,
+            //     roles: roles
+            // } as UserInOrganisationDto;
 
-            // then update organisation model
-            const rou: RoleOfUserDto = {
-                userAlias: userInOrganisation.alias,
-                userRoles: rolesTyped,
-                user: user
-            };
-            organisation.rolesOfUsers.push(rou);
-            await organisation.save();
+            // // first update user model
+            // const rio: RoleInOrganisationDto = {
+            //     userAlias: uInO.alias,
+            //     userRoles: rolesTyped,
+            //     organisation: organisation
+            // };
+            userModel.rolesInOrganisations.push(uio);
+            await userModel.save();
 
-            console.log(`Successfully assigned user ${userInOrganisation.userId} with alias ${userInOrganisation.alias}` +
-                ` to organisation ${userInOrganisation.organisationId} using roles ${userInOrganisation.roles}`);
+            // // then update organisation model
+            // const rou: UserInOrganisationDto = {
+            //     userAlias: uInO.alias,
+            //     roles: rolesTyped,
+            //     user: user
+            // };
+            organisationModel.users.push(uio);
+            await organisationModel.save();
+
+            console.log(`Successfully assigned user ${userModel.userId} with alias ${uio.userAlias}` +
+                ` to organisation ${organisationModel.organisationId} using roles ${uio.roles}`);
 
             return Promise.resolve(true);
         }
         catch (ex) {
-            const msg = `Error assigning user with Id ${userInOrganisation.userId} to organisation with Id ${userInOrganisation.organisationId}`;
+            const msg = `Error assigning user ${uInO.user}/${uInO.userId} to organisation ${uInO.organisation}/${uInO.organisationId}`;
             console.error(msg, ex);
             throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // TODO this method is not proofed / reviewed since datamodel change; cf addUserToOrganisationAsync for how-to handle data structures
-    async updateOrganisationWithUserAsync(organisation: IOrganisation, role: IRoleInOrganisation, userToAdd: IUser): Promise<boolean> {
+    async updateOrganisationWithUserAsync(organisation: IOrganisation, role: IUserInOrganisation, userToAdd: IUser): Promise<boolean> {
         if (!organisation)
             throw new HttpException(`Supplied organisation is not set`, HttpStatus.BAD_REQUEST);
         if (!role)
@@ -193,13 +213,13 @@ export class OrganisationService {
             // update org model
             const organisationModel = await this.organisationModel.findOne({ organisationId: organisation.organisationId });
 
-            let roleOfUser = organisation.rolesOfUsers.find((r) => r.user.userId === userToAdd.userId);
+            let roleOfUser = organisation.users.find((r) => r.user.userId === userToAdd.userId);
             if (!roleOfUser) {
-                roleOfUser = Object.create(RoleOfUserDto.prototype) as IRoleOfUser;
+                roleOfUser = Object.create(UserInOrganisationDto.prototype) as IUserInOrganisation;
                 roleOfUser.user = userToAdd;
-                organisation.rolesOfUsers.push(roleOfUser);
+                organisation.users.push(roleOfUser);
             }
-            roleOfUser.userRoles = role.userRoles.map((r) => UserRole[r]);
+            roleOfUser.roles = role.roles.map((r) => UserRole[r]);
 
             const res = await organisationModel.save().catch(err => console.error(err));
             // TODO do we need this res-testing or could this exception be raised in save().catch?
@@ -254,10 +274,10 @@ export class OrganisationService {
         user = await user.save();
 
         // then update org model
-        if (!_.some(organisation.rolesOfUsers, (u) => u.user.userId === userId))
+        if (!_.some(organisation.users, (u) => u.user.userId === userId))
             throw new HttpException(`No user with userId ${userId} found on organisation ${organisation.name}`, HttpStatus.BAD_REQUEST);
 
-        if (!_.remove(organisation.rolesOfUsers, (u) => u.user.userId === userId))
+        if (!_.remove(organisation.users, (u) => u.user.userId === userId))
             throw new HttpException(`Internal error removing user with userId ${userId} from organisation ${organisation.name}`,
                 HttpStatus.BAD_REQUEST);
 

@@ -39,7 +39,7 @@ export class AuthService {
         user.rolesInOrganisations.forEach(rio => {
           payload.rolesInOrganisations.push({
             userAlias: rio.userAlias,
-            userRoles: rio.userRoles,
+            userRoles: rio.roles,
             organisationName: rio.organisation.name
           } as IRolesInOrganisation);
         }

@@ -1,4 +1,4 @@
-import { IRoleInOrganisation } from "./roleinorganisation.interface";
+import { IUserInOrganisation } from "./userinorganisation.interface";
 
 export enum UserRole {
     Connectee = 'Connectee',
@@ -19,5 +19,5 @@ export interface IUser {
     firstName: string;
     lastName: string;
     capabilities: UserCapability[];
-    rolesInOrganisations: IRoleInOrganisation[];
+    rolesInOrganisations: IUserInOrganisation[];
 }

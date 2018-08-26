@@ -68,7 +68,7 @@ export class InitialisationService {
                 organisationId: null,
                 name: io.name,
                 version: null,
-                rolesOfUsers: []
+                users: []
             };
             const os = await this.organisationService.createOrganisationAsync(o);
             organisations.push(os); // store organisation for later use
@@ -91,15 +91,18 @@ export class InitialisationService {
 
             // fourth, add user to organisation
             if (iu.rolesInOrganisations)
-                iu.rolesInOrganisations.forEach(async r => {
+                await iu.rolesInOrganisations.forEach(async r => {
                     const org = organisations.find(o => o.name === r.organisationName);
                     const roles = r.roles.map(rs => UserRole[rs]);
-                    await this.organisationService.addUserToOrganisationAsync({
-                        organisationId: org.organisationId,
-                        userId: us.userId,
-                        alias: null,
+                    const uio = { // NOTE no constructor, since some fields stay (purposefully) undefined
+                        organisation: org,
+                        organisationIsObject: true,
+                        user: us,
+                        userIsObject: true,
+                        userAlias: null,
                         roles: roles
-                    } as UserInOrganisationDto);
+                    } as UserInOrganisationDto;
+                    await this.organisationService.addUserToOrganisationAsync(uio);
                 });
         }
     }

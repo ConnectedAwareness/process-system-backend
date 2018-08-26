@@ -1,8 +1,8 @@
-import { IRoleOfUser } from "./roleofuser.interface";
+import { IUserInOrganisation } from "./userinorganisation.interface";
 
 export class IOrganisation {
   organisationId: string;
   name: string;
   version: string;
-  rolesOfUsers: IRoleOfUser[];
+  users: IUserInOrganisation[];
 }

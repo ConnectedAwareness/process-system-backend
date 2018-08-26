@@ -4,8 +4,8 @@ import { UserDto } from '../dtos/user.dto';
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 import { mapDto } from '../../../../main/util/util';
 import { IUser } from '../interfaces/user.interface';
-import { IRoleInOrganisation } from '../interfaces/roleinorganisation.interface';
-import { RoleInOrganisationDto } from '../dtos/roleinorganisation.dto';
+import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
+import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
 
 export class UserFactory {
     public static createUser(model: IUserSchema) {
@@ -20,11 +20,11 @@ export class UserFactory {
         return user;
     }
 
-    public static generateRoleInOrganisationFromJson(data) : IRoleInOrganisation {
-        const roleInOrg = new RoleInOrganisationDto();
-        Object.assign(roleInOrg, data);
+    public static generateUserInOrganisationFromJson(data) : IUserInOrganisation {
+        const userInOrg = new UserInOrganisationDto();
+        Object.assign(userInOrg, data);
 
-        return roleInOrg;
+        return userInOrg;
     }
 
     public static getId() : string {

@@ -12,8 +12,7 @@ import { IUser } from '../models/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
+    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>) { }
 
     // not used, we'll use this.userModel directly (?)
     // getModel(user: IUser): IUserSchema {
@@ -104,13 +103,13 @@ export class UserService {
                 const model = new this.userModel(user);
                 model.userId = UserFactory.getId();
 
-                return model.save();
+                return await model.save();
             }
             else // TODO take care of rolesInOrganisation, e.g. "rescue" them (cf. organsiationservice.updateOrganisation)
                 await userModel.update(user); // does not return IUserSchema, in opposite to .save
 
             // return of(userModel).toPromise(); // does not work either
-            return this.userModel.findOne(query);
+            return await this.userModel.findOne(query);
         }
         catch (err) {
             console.error(err);
@@ -152,11 +151,11 @@ export class UserService {
         const user = await this.userModel.findOne(query);
 
         if (!user)
-            return true;
+            return false;
 
         try {
             user.password = password;
-            user.save();
+            await user.save();
 
             return true;
         }
