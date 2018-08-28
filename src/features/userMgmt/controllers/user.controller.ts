@@ -5,6 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../services/user.service';
 import { UserDto } from '../models/dtos/user.dto';
 import { IUser } from '../models/interfaces/user.interface';
+import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
 @ApiUseTags('users')
 @Controller('users')
@@ -67,14 +68,11 @@ export class UserController {
     return await this.userService.deleteUserAsync(userId);
   }
 
-  // TODO make a "ChangePasswordDTO", maybe redefine route
-  @Put(':userId/:password')
+  @Post('resetpassword')
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ title: 'update an user\'s password' })
-  @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of user' })
-  @ApiImplicitParam({ name: 'password', required: true, description: 'new password' })
-  @ApiResponse({ status: 200, description: 'Update password successful' })
-  async updateUserPassword(@Param('userId') userId: string, @Param('password') password: string): Promise<boolean> {
-    return await this.userService.updateUserPasswordAsync(userId, password);
+  @ApiOperation({ title: 'reset an user\'s password' })
+  @ApiResponse({ status: 200, description: 'Reset password successful' })
+  async resetUserPassword(@Body() resetPassword: ResetPasswordDto): Promise<boolean> {
+    return await this.userService.resetUserPasswordAsync(resetPassword.userId, resetPassword.password);
   }
 }

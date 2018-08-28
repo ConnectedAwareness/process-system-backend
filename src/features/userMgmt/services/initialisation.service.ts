@@ -87,7 +87,7 @@ export class InitialisationService {
             const us = await this.userService.createUserAsync(u);
 
             // third, set user password
-            await this.userService.updateUserPasswordAsync(us.userId, iu.password);
+            await this.userService.resetUserPasswordAsync(us.userId, iu.password);
 
             // fourth, add user to organisation
             if (iu.rolesInOrganisations)

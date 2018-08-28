@@ -4,8 +4,6 @@ import { Model } from 'mongoose';
 
 import { of } from 'rxjs';
 
-import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
 import { IUser } from '../models/interfaces/user.interface';
@@ -145,7 +143,7 @@ export class UserService {
         return false;
     }
 
-    async updateUserPasswordAsync(userId: string, password: string): Promise<boolean> {
+    async resetUserPasswordAsync(userId: string, password: string): Promise<boolean> {
         const query = { userId: userId };
 
         const user = await this.userModel.findOne(query);
