@@ -99,7 +99,7 @@ export class InitialisationService {
                         organisationIsObject: true,
                         user: us,
                         userIsObject: true,
-                        userAlias: null,
+                        userAlias: r.alias,
                         roles: roles
                     } as UserInOrganisationDto;
                     await this.organisationService.addUserToOrganisationAsync(uio);
