@@ -4,16 +4,13 @@ import { Model } from 'mongoose';
 
 import { of } from 'rxjs';
 
-import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
 import { IUser } from '../models/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
+    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>) { }
 
     // not used, we'll use this.userModel directly (?)
     // getModel(user: IUser): IUserSchema {
