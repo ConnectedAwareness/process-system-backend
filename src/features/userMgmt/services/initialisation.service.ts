@@ -91,7 +91,7 @@ export class InitialisationService {
 
             // fourth, add user to organisation
             if (iu.rolesInOrganisations)
-                await iu.rolesInOrganisations.forEach(async r => {
+                for (const r of iu.rolesInOrganisations) {
                     const org = organisations.find(o => o.name === r.organisationName);
                     const roles = r.roles.map(rs => UserRole[rs]);
                     const uio = { // NOTE no constructor, since some fields stay (purposefully) undefined
@@ -103,7 +103,7 @@ export class InitialisationService {
                         roles: roles
                     } as UserInOrganisationDto;
                     await this.organisationService.addUserToOrganisationAsync(uio);
-                });
+                }
         }
     }
 }
