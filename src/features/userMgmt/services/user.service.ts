@@ -143,7 +143,7 @@ export class UserService {
         return false;
     }
 
-    async updateUserPasswordAsync(userId: string, password: string): Promise<boolean> {
+    async resetUserPasswordAsync(userId: string, password: string): Promise<boolean> {
         const query = { userId: userId };
 
         const user = await this.userModel.findOne(query);
