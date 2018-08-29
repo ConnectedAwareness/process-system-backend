@@ -28,6 +28,7 @@ export class AuthService {
       }
 
       const payload: IJwtPayload = {
+        userId: user.userId,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
