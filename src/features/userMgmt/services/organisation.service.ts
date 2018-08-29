@@ -36,12 +36,12 @@ export class OrganisationService {
 
     async getOrganisationByIdAsync(organisationId: string): Promise<IOrganisation> {
         const query = { organisationId: organisationId };
-        let res = await this.organisationModel.findOne(query).exec();
+
+        const res = await this.organisationModel.findOne(query)
+            .populate({path : 'users', populate : {path : 'user'}});
 
         if (res == null)
             throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
-
-        res = await res.populate( { path: 'users' } ).execPopulate();
 
         return of(OrganisationFactory.createOrganisation(res)).toPromise();
     }
@@ -154,12 +154,12 @@ export class OrganisationService {
             if (!organisationModel)
                 throw new InternalServerErrorException("Could not find organisation to add user");
 
-            const uio = new this.userInOrganisationModel(uInO);
+            let uio = new this.userInOrganisationModel(uInO);
             uio.user = userModel;
             uio.organisation = organisationModel;
             uio.roles = uInO.roles.map(r => UserRole[r]);
             uio.userAlias = uInO.userAlias;
-            await uio.save();
+            uio = await uio.save();
 
             // { // NOTE no constructor, since some fields stay (purposefully) undefined
             //     organisation: organisation,
@@ -248,7 +248,7 @@ export class OrganisationService {
             throw new HttpException("No userId is set to delete user!", HttpStatus.BAD_REQUEST);
 
         const organisation = await this.organisationModel.findOne({ organisationId: organisationId })
-            .populate({ path: 'users' });
+            .populate({path : 'users', populate : {path : 'user'}});
 
         if (!organisation)
             throw new HttpException(`No organisation with id ${organisationId} found!`, HttpStatus.BAD_REQUEST);

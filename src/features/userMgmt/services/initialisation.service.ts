@@ -13,6 +13,7 @@ import { ImportData } from '../models/dtos/importdata.dto';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
+import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
 
 class ImportedUserData {
     constructor() {
@@ -28,6 +29,7 @@ export class InitialisationService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
+        @Inject('UserInOrganisationModelToken') private readonly userInOrgSchema: Model<IUserInOrganisationSchema>,
         private userService: UserService,
         private organisationService: OrganisationService) { }
 
@@ -60,6 +62,7 @@ export class InitialisationService {
 
         await this.userModel.collection.remove({});
         await this.organisationModel.collection.remove({});
+        await this.userInOrgSchema.collection.remove({});
 
         // first, store organisations
         const organisations = Array<OrganisationDto>(); // to easily get org-id by name

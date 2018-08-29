@@ -11,7 +11,7 @@ export const UserSchema = new Schema({
     capabilities: { type: [String], required: false, enum: [ UserCapability.Connector, UserCapability.ITAdmin,
         // UserCapability.ProcessCoordinator,
         UserCapability.AwarenessIntegrator ] },
-    rolesInOrganisations: { type: [UserInOrganisationSchema], required: false }
+    rolesInOrganisations: [{ type: Schema.Types.ObjectId, ref: 'UserInOrganisation' }]
 }
 , {collection: 'users' }
 );

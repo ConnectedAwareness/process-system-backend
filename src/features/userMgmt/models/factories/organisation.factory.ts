@@ -12,23 +12,32 @@ export class OrganisationFactory {
         const org = mapDto(model, OrganisationDto);
         if (model.populated('users')) {
             if (model.users.length === 0) console.log("0 users for organisation " + model.organisationId);
-            model.users.forEach(u => org.users.push( {
-                                    organisationIsObject: false,
-                                    organisation: null,
-                                    organisationId: org.organisationId, // NOTE may be omitted, since it's parent org
-                                    organisationName: org.name, // NOTE may be omitted, since it's parent org
-                                    userIsObject: embedUserObject,
-                                    user: embedUserObject ? u.user : null,
-                                    userId: embedUserObject ? null : u.user.userId,
-                                    userEmail: embedUserObject ? null : u.user.email,
-                                    userAlias: u.userAlias,
-                                    roles: u.roles
-                            } as UserInOrganisationDto ));
+
+            org.users = model.users.map(u => {
+                if (embedUserObject)
+                    u.user.rolesInOrganisations = [];
+
+                return {
+                    organisationIsObject: false,
+                    organisation: null,
+                    organisationId: org.organisationId, // NOTE may be omitted, since it's parent org
+                    organisationName: org.name, // NOTE may be omitted, since it's parent org
+                    userIsObject: embedUserObject,
+                    user: embedUserObject ? u.user : null,
+                    userId: embedUserObject ? null : u.user.userId,
+                    userEmail: embedUserObject ? null : u.user.email,
+                    userAlias: u.userAlias,
+                    roles: u.roles
+                } as UserInOrganisationDto;
+            });
         }
+        else
+            org.users = [];
+
         return org;
     }
 
-    public static generateOrganisationFromJson(data) : IOrganisation {
+    public static generateOrganisationFromJson(data): IOrganisation {
         //data.organisationId = v4();
         const organisation = new OrganisationDto();
         Object.assign(organisation, data);
@@ -36,7 +45,7 @@ export class OrganisationFactory {
         return organisation;
     }
 
-    public static getId() : string {
+    public static getId(): string {
         return v4();
     }
 }

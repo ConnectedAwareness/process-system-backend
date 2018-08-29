@@ -8,8 +8,32 @@ import { IUserInOrganisation } from '../interfaces/userinorganisation.interface'
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
 
 export class UserFactory {
-    public static createUser(model: IUserSchema) {
-        return mapDto(model, UserDto);
+    public static createUser(model: IUserSchema, embedUserObject: boolean = true) {
+        const user = mapDto(model, UserDto);
+
+        if (model.populated('rolesInOrganisations')) {
+            user.rolesInOrganisations = model.rolesInOrganisations.map(o => {
+                if (embedUserObject)
+                    o.organisation.users = [];
+
+                return {
+                    organisationIsObject: embedUserObject,
+                    organisation: embedUserObject ? o.organisation : null,
+                    organisationId: embedUserObject ? o.organisation.organisationId : null,
+                    organisationName: embedUserObject ? o.organisation.name : null,
+                    userIsObject: false,
+                    user: null,
+                    userId: user.userId, // NOTE may be omitted, since it's parent user
+                    userEmail: user.email, // NOTE may be omitted, since it's parent user
+                    userAlias: o.userAlias,
+                    roles: o.roles
+                } as UserInOrganisationDto;
+            });
+        }
+        else
+            user.rolesInOrganisations = [];
+
+        return user;
     }
 
     public static generateUserFromJson(data) : IUser {

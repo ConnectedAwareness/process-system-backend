@@ -13,11 +13,11 @@ export class OrganisationDto implements IOrganisation {
   }
 
   @ApiModelProperty({type: String, required: false })
-  readonly organisationId: string;
+  organisationId: string;
   @ApiModelProperty({ type: String, required: true })
-  readonly name: string;
+  name: string;
   @ApiModelProperty({ type: String, required: false })
-  readonly version: string;
+  version: string;
   @ApiModelProperty({ type: UserInOrganisationDto, isArray: true, required: false })
-  readonly users: IUserInOrganisation[];
+  users: IUserInOrganisation[];
 }

@@ -13,15 +13,15 @@ export class UserDto implements IUser {
     }
 
     @ApiModelProperty({ type: String, required: false })
-    readonly userId: string;
+    userId: string;
     @ApiModelProperty({ type: String, required: true })
-    readonly email: string;
+    email: string;
     @ApiModelProperty({ type: String, required: false })
-    readonly firstName: string;
+    firstName: string;
     @ApiModelProperty({ type: String, required: false })
-    readonly lastName: string;
+    lastName: string;
     @ApiModelProperty({ type: UserCapability, isArray: true, required: true })
-    readonly capabilities: UserCapability[];
+    capabilities: UserCapability[];
     @ApiModelProperty({ type: IUserInOrganisation, isArray: true, required: false })
-    readonly rolesInOrganisations: IUserInOrganisation[];
+    rolesInOrganisations: IUserInOrganisation[];
 }

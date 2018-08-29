@@ -31,7 +31,8 @@ export class UserService {
         try {
             const query = { userId: userId };
 
-            const res = await this.userModel.findOne(query);
+            const res = await this.userModel.findOne(query)
+                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (res == null)
                 return null;
@@ -49,7 +50,8 @@ export class UserService {
         try {
             const query = { email: email };
 
-            const res = await this.userModel.findOne(query);
+            const res = await this.userModel.findOne(query)
+            .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (res == null)
                 return null;
@@ -95,7 +97,8 @@ export class UserService {
 
             const query = { email: user.email };
 
-            const userModel = await this.userModel.findOne(query);
+            const userModel = await this.userModel.findOne(query)
+                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (!userModel) {
                 const model = new this.userModel(user);
@@ -107,7 +110,8 @@ export class UserService {
                 await userModel.update(user); // does not return IUserSchema, in opposite to .save
 
             // return of(userModel).toPromise(); // does not work either
-            return await this.userModel.findOne(query);
+            return await this.userModel.findOne(query)
+                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
         }
         catch (err) {
             console.error(err);
@@ -169,7 +173,7 @@ export class UserService {
             const query = { email: email };
 
             const res = await this.userModel.findOne(query)
-                .populate('rolesInOrganisations.organisation');
+                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (res != null && res.password === password)
                 return of(UserFactory.createUser(res)).toPromise();
