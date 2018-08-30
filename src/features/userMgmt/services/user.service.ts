@@ -24,7 +24,7 @@ export class UserService {
         if (res == null)
             return null;
 
-        return of(res.map(u => UserFactory.createUser(u))).toPromise();
+        return of(res.map(u => UserFactory.createUser(u, false))).toPromise();
     }
 
     async getUserByIdAsync(userId: string): Promise<IUser> {
@@ -37,7 +37,7 @@ export class UserService {
             if (res == null)
                 return null;
 
-            return of(UserFactory.createUser(res)).toPromise();
+            return of(UserFactory.createUser(res, true)).toPromise();
         }
         catch (err) {
             console.error(err);
@@ -51,12 +51,12 @@ export class UserService {
             const query = { email: email };
 
             const res = await this.userModel.findOne(query)
-            .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (res == null)
                 return null;
 
-            return of(UserFactory.createUser(res)).toPromise();
+            return of(UserFactory.createUser(res, true)).toPromise();
         }
         catch (err) {
             console.error(err);
@@ -70,20 +70,24 @@ export class UserService {
         if (user.userId && user.userId.length)
             throw new HttpException("Can't create new user, user has already a userId", HttpStatus.BAD_REQUEST);
 
+        if (user.rolesInOrganisations && user.rolesInOrganisations.length)
+            throw new HttpException("Can't create new user, must not contain rolesInOrganisations", HttpStatus.BAD_REQUEST);
+
         const res = await this.createOrUpdateUserAsync(user);
 
         console.log(`new User ${res.userId} saved`);
 
-        return of(UserFactory.createUser(res)).toPromise();
+        return of(UserFactory.createUser(res, false)).toPromise();
     }
 
     // TODO refactor: don't call createOrUpdate, return boolean (like org.service)
+    // TODO handle rolesInOrganisation carefully
     async updateUserAsync(userId: string, user: IUser): Promise<IUser> {
         if (user.userId && user.userId.length && user.userId !== userId)
             throw new HttpException("Can't update existing user, userIds don't match", HttpStatus.BAD_REQUEST);
 
         const res = await this.createOrUpdateUserAsync(user);
-        return of(UserFactory.createUser(res)).toPromise();
+        return of(UserFactory.createUser(res, true)).toPromise();
     }
 
     // TODO get rid of it
@@ -176,7 +180,7 @@ export class UserService {
                 .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
 
             if (res != null && res.password === password)
-                return of(UserFactory.createUser(res)).toPromise();
+                return of(UserFactory.createUser(res, true)).toPromise();
         }
         catch (err) {
             console.error(`Error validating user with email ${email}`, err);

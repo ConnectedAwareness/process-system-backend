@@ -10,7 +10,7 @@ import { UserFactory } from './user.factory';
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 
 export class OrganisationFactory {
-    public static createOrganisation(model: IOrganisationSchema, embedUserObject: boolean = true) {
+    public static createOrganisation(model: IOrganisationSchema, embedUserObject: boolean) {
         const org = mapDto(model, OrganisationDto);
         if (model.populated('users')) {
             if (model.users.length === 0) console.log("0 users for organisation " + model.organisationId);

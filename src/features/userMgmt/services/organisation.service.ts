@@ -43,18 +43,19 @@ export class OrganisationService {
         if (res == null)
             throw new HttpException(`Organisation with Id: ${organisationId} not found`, HttpStatus.BAD_REQUEST);
 
-        return of(OrganisationFactory.createOrganisation(res)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
     }
 
     async getOrganisationByNameAsync(name: string): Promise<IOrganisation> {
         const query = { name: name };
 
-        const res = await this.organisationModel.findOne(query);
+        const res = await this.organisationModel.findOne(query)
+            .populate({path : 'users', populate : {path : 'user'}});
 
         if (res == null)
             return null;
 
-        return of(OrganisationFactory.createOrganisation(res)).toPromise();
+        return of(OrganisationFactory.createOrganisation(res, true)).toPromise();
     }
 
     async searchOrganisationsAsync(search?: string): Promise<IOrganisation[]> {
@@ -63,7 +64,7 @@ export class OrganisationService {
             const res = await this.organisationModel.find().or([
                 { name: { $regex: regex } }]);
 
-            return of(res.map(t => OrganisationFactory.createOrganisation(t))).toPromise();
+            return of(res.map(t => OrganisationFactory.createOrganisation(t, false))).toPromise();
         }
         else
             return this.getAllOrganisationsAsync();
@@ -74,6 +75,9 @@ export class OrganisationService {
             if (organisation.organisationId && organisation.organisationId.length)
                 throw new HttpException("Can't create new organisation, already has organisationId", HttpStatus.BAD_REQUEST);
 
+            if (organisation.users && organisation.users.length)
+                throw new HttpException("Can't create new organisation, must not contain users", HttpStatus.BAD_REQUEST);
+
             const model = new this.organisationModel(organisation);
             model.organisationId = OrganisationFactory.getId();
 
@@ -81,7 +85,7 @@ export class OrganisationService {
 
             console.log(`new Organisation ${model.organisationId} saved`);
 
-            return of(OrganisationFactory.createOrganisation(res)).toPromise();
+            return of(OrganisationFactory.createOrganisation(res, false)).toPromise();
 
         } catch (error) {
             console.log(error);

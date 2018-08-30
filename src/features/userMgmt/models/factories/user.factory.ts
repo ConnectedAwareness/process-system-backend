@@ -10,7 +10,7 @@ import { OrganisationFactory } from './organisation.factory';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
 
 export class UserFactory {
-    public static createUser(model: IUserSchema, embedOrganisationObject: boolean = true) {
+    public static createUser(model: IUserSchema, embedOrganisationObject: boolean) {
         const user = mapDto(model, UserDto);
 
         if (model.populated('rolesInOrganisations')) {
