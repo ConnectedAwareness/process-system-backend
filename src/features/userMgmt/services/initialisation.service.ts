@@ -14,15 +14,7 @@ import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
 import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
-
-class ImportedUserData {
-    constructor() {
-        this.organisations = new Array<IOrganisation>();
-        this.users = new Array<IUser>();
-    }
-    organisations: IOrganisation[];
-    users: IUser[];
-}
+import { RoleService } from './role.service';
 
 @Injectable()
 export class InitialisationService {
@@ -31,7 +23,8 @@ export class InitialisationService {
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
         @Inject('UserInOrganisationModelToken') private readonly userInOrgSchema: Model<IUserInOrganisationSchema>,
         private userService: UserService,
-        private organisationService: OrganisationService) { }
+        private organisationService: OrganisationService,
+        private roleService: RoleService) { }
 
     /**
      * User+Organisation data is expected to be as follows:
@@ -105,7 +98,7 @@ export class InitialisationService {
                         userAlias: r.alias,
                         roles: roles
                     } as UserInOrganisationDto;
-                    await this.organisationService.addUserToOrganisationAsync(uio);
+                    await this.roleService.addUserToOrganisationAsync(uio);
                 }
         }
     }
