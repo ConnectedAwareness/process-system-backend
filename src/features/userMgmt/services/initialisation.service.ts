@@ -105,7 +105,7 @@ export class InitialisationService {
                         userAlias: r.alias,
                         roles: roles
                     } as UserInOrganisationDto;
-                    await this.organisationService.addUserToOrganisationAsync(uio);
+                    //await this.organisationService.addUserToOrganisationAsync(uio); //TODO: change to new UserInOrganisationService
                 }
         }
     }
