@@ -6,21 +6,25 @@ import { mapDto } from '../../../../main/util/util';
 import { IUser } from '../interfaces/user.interface';
 import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
+import { OrganisationFactory } from './organisation.factory';
+import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
 
 export class UserFactory {
-    public static createUser(model: IUserSchema, embedUserObject: boolean = true) {
+    public static createUser(model: IUserSchema, embedOrganisationObject: boolean = true) {
         const user = mapDto(model, UserDto);
 
         if (model.populated('rolesInOrganisations')) {
             user.rolesInOrganisations = model.rolesInOrganisations.map(o => {
-                if (embedUserObject)
+                if (embedOrganisationObject)
                     o.organisation.users = [];
 
                 return {
-                    organisationIsObject: embedUserObject,
-                    organisation: embedUserObject ? o.organisation : null,
-                    organisationId: embedUserObject ? o.organisation.organisationId : null,
-                    organisationName: embedUserObject ? o.organisation.name : null,
+                    organisationIsObject: embedOrganisationObject,
+                    // NOTE (cast in next line) we KNOW that model.rolesInOrganisations.organisation are Schema objects...
+                    organisation: embedOrganisationObject ?
+                        OrganisationFactory.createOrganisation(o.organisation as IOrganisationSchema, false) : null,
+                    organisationId: embedOrganisationObject ? null : o.organisation.organisationId,
+                    organisationName: embedOrganisationObject ? null : o.organisation.name,
                     userIsObject: false,
                     user: null,
                     userId: user.userId, // NOTE may be omitted, since it's parent user

@@ -6,6 +6,8 @@ import { mapDto } from '../../../../main/util/util';
 import { IOrganisation } from '../interfaces/organisation.interface';
 import { Mongoose, Schema } from 'mongoose';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
+import { UserFactory } from './user.factory';
+import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 
 export class OrganisationFactory {
     public static createOrganisation(model: IOrganisationSchema, embedUserObject: boolean = true) {
@@ -23,7 +25,8 @@ export class OrganisationFactory {
                     organisationId: org.organisationId, // NOTE may be omitted, since it's parent org
                     organisationName: org.name, // NOTE may be omitted, since it's parent org
                     userIsObject: embedUserObject,
-                    user: embedUserObject ? u.user : null,
+                    // NOTE (cast in next line) we KNOW that model.users.user are Schema objects...
+                    user: embedUserObject ? UserFactory.createUser(u.user as IUserSchema, false) : null,
                     userId: embedUserObject ? null : u.user.userId,
                     userEmail: embedUserObject ? null : u.user.email,
                     userAlias: u.userAlias,
