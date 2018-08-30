@@ -8,7 +8,6 @@ import { UserRole, IUser, UserCapability } from '../models/interfaces/user.inter
 import { Model } from 'mongoose';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
-import { IOrganisation } from '../models/interfaces/organisation.interface';
 import { ImportData } from '../models/dtos/importdata.dto';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';

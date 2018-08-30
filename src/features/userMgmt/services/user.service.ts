@@ -32,7 +32,7 @@ export class UserService {
             const query = { userId: userId };
 
             const res = await this.userModel.findOne(query)
-                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+                .populate({ path: 'rolesInOrganisations', populate: { path: 'organisation' } });
 
             if (res == null)
                 return null;
@@ -51,7 +51,7 @@ export class UserService {
             const query = { email: email };
 
             const res = await this.userModel.findOne(query)
-                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+                .populate({ path: 'rolesInOrganisations', populate: { path: 'organisation' } });
 
             if (res == null)
                 return null;
@@ -65,57 +65,68 @@ export class UserService {
         return null;
     }
 
-    // TODO refactor: don't call createOrUpdate
     async createUserAsync(user: IUser): Promise<IUser> {
+        if (!user)
+            throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
+
         if (user.userId && user.userId.length)
-            throw new HttpException("Can't create new user, user has already a userId", HttpStatus.BAD_REQUEST);
+            throw new HttpException("Can't create new user, user has already an userId", HttpStatus.BAD_REQUEST);
 
-        if (user.rolesInOrganisations && user.rolesInOrganisations.length)
-            throw new HttpException("Can't create new user, must not contain rolesInOrganisations", HttpStatus.BAD_REQUEST);
+        if (!user.email)
+            throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
 
-        const res = await this.createOrUpdateUserAsync(user);
+        try {
+            const query = { email: user.email };
 
-        console.log(`new User ${res.userId} saved`);
+            let userModel = await this.userModel.findOne(query)
+                .populate({ path: 'rolesInOrganisations', populate: { path: 'organisation' } });
 
-        return of(UserFactory.createUser(res, false)).toPromise();
+            if (userModel)
+                throw new HttpException(`User with email address ${user.email} already exists`, HttpStatus.BAD_REQUEST);
+
+            userModel = new this.userModel(user);
+            userModel.userId = UserFactory.getId();
+
+            const res = await userModel.save();
+
+            console.log(`new User ${res.userId} saved`);
+
+            return of(UserFactory.createUser(res, false)).toPromise();
+        }
+        catch (err) {
+            console.error(err);
+        }
+
+        return null;
     }
 
-    // TODO refactor: don't call createOrUpdate, return boolean (like org.service)
-    // TODO handle rolesInOrganisation carefully
     async updateUserAsync(userId: string, user: IUser): Promise<IUser> {
+        if (!user)
+            throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
+
+        if (!user.email)
+            throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
+
         if (user.userId && user.userId.length && user.userId !== userId)
             throw new HttpException("Can't update existing user, userIds don't match", HttpStatus.BAD_REQUEST);
 
-        const res = await this.createOrUpdateUserAsync(user);
-        return of(UserFactory.createUser(res, true)).toPromise();
-    }
-
-    // TODO get rid of it
-    async createOrUpdateUserAsync(user: IUser): Promise<IUserSchema> {
         try {
-            if (!user)
-                throw new HttpException(`Supplied user is not set`, HttpStatus.BAD_REQUEST);
-
-            if (!user.email)
-                throw new HttpException("User has no email address set!", HttpStatus.BAD_REQUEST);
-
-            const query = { email: user.email };
+            const query = { userId: userId };
 
             const userModel = await this.userModel.findOne(query)
-                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+                .populate({ path: 'rolesInOrganisations', populate: { path: 'organisation' } });
 
-            if (!userModel) {
-                const model = new this.userModel(user);
-                model.userId = UserFactory.getId();
+            if (!userModel)
+                throw new HttpException(`Can't find user with userId ${userId}`, HttpStatus.BAD_REQUEST);
 
-                return await model.save();
-            }
-            else // TODO take care of rolesInOrganisation, e.g. "rescue" them (cf. organsiationservice.updateOrganisation)
-                await userModel.update(user); // does not return IUserSchema, in opposite to .save
+            userModel.capabilities = user.capabilities;
+            userModel.email = user.email;
+            userModel.firstName = user.firstName;
+            userModel.lastName = user.lastName;
 
-            // return of(userModel).toPromise(); // does not work either
-            return await this.userModel.findOne(query)
-                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+            const res = await userModel.save();
+
+            return of(UserFactory.createUser(res, true)).toPromise();
         }
         catch (err) {
             console.error(err);
@@ -125,24 +136,24 @@ export class UserService {
     }
 
     async deleteUserAsync(userId: string): Promise<boolean> {
-        const query = { userId: userId };
-
-        const user = await this.userModel.findOne(query);
-
-        if (!user)
-            return true;
-
-        if (user.rolesInOrganisations.length > 0) {
-            const msg = `Cannot delete user with email ${user.email}, user is still assigned to an organisation!`;
-            console.error(msg);
-            // throw new InternalServerErrorException(msg);
-            return false;
-        }
-
         try {
-            user.remove();
+            const query = { userId: userId };
 
-            return true;
+            const user = await this.userModel.findOne(query);
+
+            if (!user)
+                return true;
+
+            if (user.rolesInOrganisations.length > 0) {
+                const msg = `Cannot delete user with email ${user.email}, user is still assigned to an organisation!`;
+                console.error(msg);
+                // throw new InternalServerErrorException(msg);
+                return false;
+            }
+            const res = await this.userModel.remove(query);
+
+            if (res.ok && res.n)
+                return Promise.resolve(true);
         }
         catch (err) {
             console.error(err);
@@ -177,7 +188,7 @@ export class UserService {
             const query = { email: email };
 
             const res = await this.userModel.findOne(query)
-                .populate({path : 'rolesInOrganisations', populate : {path : 'organisation'}});
+                .populate({ path: 'rolesInOrganisations', populate: { path: 'organisation' } });
 
             if (res != null && res.password === password)
                 return of(UserFactory.createUser(res, true)).toPromise();

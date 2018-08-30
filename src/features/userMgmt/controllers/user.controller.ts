@@ -15,8 +15,10 @@ export class UserController {
   @Get()
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all users' })
+  @ApiImplicitQuery({ name: 'skip', required: false})
+  @ApiImplicitQuery({ name: 'limit', required: false})
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllUsers(@Query('skip') skip: string, @Query('limit') limit: number) : Promise<IUser[]> {
+  async getAllUsers(@Query('skip') skip?: string, @Query('limit') limit?: number) : Promise<IUser[]> {
     return await this.userService.getAllUsersAsync();
   }
 
@@ -44,17 +46,16 @@ export class UserController {
   @ApiOperation({ title: 'create an user' })
   @ApiImplicitBody({ name: 'user', required: true, description: 'The user to create', type: UserDto })
   @ApiResponse({ status: 201, description: 'Create user successful' })
-  async createUser(@Body('user') user: IUser): Promise<IUser> {
+  async createUser(@Body() user: IUser): Promise<IUser> {
     return await this.userService.createUserAsync(user);
   }
 
-  // TODO see service impl
   @Put(':userId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an user' })
   @ApiImplicitBody({ name: 'user', required: true, description: 'The user to update', type: UserDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: UserDto, isArray: false })
-  async updateUser(@Param('userId') userId: string, @Body('user') user: IUser): Promise<IUser> {
+  async updateUser(@Param('userId') userId: string, @Body() user: IUser): Promise<IUser> {
     return await this.userService.updateUserAsync(userId, user);
   }
 
