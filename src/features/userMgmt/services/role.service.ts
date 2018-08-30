@@ -5,12 +5,9 @@ import { Model } from 'mongoose';
 import { of } from 'rxjs';
 
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
-import { UserFactory } from '../models/factories/user.factory';
-import { IUser, UserRole } from '../models/interfaces/user.interface';
+import { UserRole } from '../models/interfaces/user.interface';
 import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
-import { UserService } from './user.service';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
-import { OrganisationSchema } from '../database/schemas/organisation.schema';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { IUserInOrganisation } from '../models/interfaces/userinorganisation.interface';
 import { RoleFactory } from '../models/factories/role.factory';
@@ -20,8 +17,7 @@ export class RoleService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('UserInOrganisationModelToken') private readonly roleModel: Model<IUserInOrganisationSchema>,
-        private userService: UserService) { }
+        @Inject('UserInOrganisationModelToken') private readonly roleModel: Model<IUserInOrganisationSchema>) { }
 
     private async checkParameterObjectAsync(uInO: UserInOrganisationDto, allowEmptyRoles: boolean):
         Promise<{ userModel: IUserSchema, organisationModel: IOrganisationSchema }> {
