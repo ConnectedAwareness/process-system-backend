@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
 import { IUser } from '../models/interfaces/user.interface';
+import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
 @Injectable()
 export class UserService {
@@ -162,25 +163,28 @@ export class UserService {
         return false;
     }
 
-    async resetUserPasswordAsync(userId: string, password: string): Promise<boolean> {
-        const query = { userId: userId };
+    async resetUserPasswordAsync(resetPassword: ResetPasswordDto): Promise<boolean> {
+        const query = { userId: resetPassword.userId };
 
         const user = await this.userModel.findOne(query);
 
         if (!user)
-            return false;
+            throw new HttpException(`Can't find user with userId ${resetPassword.userId}`, HttpStatus.BAD_REQUEST);
+
+        if (user.password !== resetPassword.oldPassword)
+            throw new HttpException(`Wrong password for user with userId ${resetPassword.userId}`, HttpStatus.BAD_REQUEST);
 
         try {
-            user.password = password;
+            user.password = resetPassword.newPassword;
             await user.save();
 
             return true;
         }
         catch (err) {
             console.error(err);
+            throw new HttpException(`An error occured when trying to set new password for user with userId ${resetPassword.userId}`,
+                HttpStatus.BAD_REQUEST);
         }
-
-        return false;
     }
 
     async validateUserAsync(email: string, password: string): Promise<IUser> {

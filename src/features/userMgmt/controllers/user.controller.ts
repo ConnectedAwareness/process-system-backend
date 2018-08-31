@@ -74,6 +74,6 @@ export class UserController {
   @ApiOperation({ title: 'reset an user\'s password' })
   @ApiResponse({ status: 200, description: 'Reset password successful' })
   async resetUserPassword(@Body() resetPassword: ResetPasswordDto): Promise<boolean> {
-    return await this.userService.resetUserPasswordAsync(resetPassword.userId, resetPassword.password);
+    return await this.userService.resetUserPasswordAsync(resetPassword);
   }
 }

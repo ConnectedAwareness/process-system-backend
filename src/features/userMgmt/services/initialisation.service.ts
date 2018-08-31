@@ -14,6 +14,7 @@ import { UserDto } from '../models/dtos/user.dto';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
 import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
 import { RoleService } from './role.service';
+import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
 @Injectable()
 export class InitialisationService {
@@ -82,7 +83,12 @@ export class InitialisationService {
             const us = await this.userService.createUserAsync(u);
 
             // third, set user password
-            await this.userService.resetUserPasswordAsync(us.userId, iu.password);
+            const rp: ResetPasswordDto = {
+                userId: us.userId,
+                oldPassword: null,
+                newPassword: iu.password
+            };
+            await this.userService.resetUserPasswordAsync(rp);
 
             // fourth, add user to organisation
             if (iu.rolesInOrganisations)
