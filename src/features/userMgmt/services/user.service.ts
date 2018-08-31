@@ -171,7 +171,7 @@ export class UserService {
         if (!user)
             throw new HttpException(`Can't find user with userId ${resetPassword.userId}`, HttpStatus.BAD_REQUEST);
 
-        if (user.password !== resetPassword.oldPassword)
+        if (user.password && user.password !== resetPassword.oldPassword)
             throw new HttpException(`Wrong password for user with userId ${resetPassword.userId}`, HttpStatus.BAD_REQUEST);
 
         try {
