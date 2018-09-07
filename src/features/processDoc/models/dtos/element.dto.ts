@@ -1,25 +1,21 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { OrgDto } from './org.dto';
-import { ElementType } from '../../database/interfaces/element.schema.interface';
+import { IElement } from '../interfaces/element.interface';
+import { IElementVersion } from '../interfaces/elementversion.interface';
+import { ElementVersionDto } from './elementversion.dto';
+import { ElementType } from '../interfaces/elementtype.enum';
 
-export class ElementDto {
+export class ElementDto implements IElement {
   constructor() {
-    this.type = null;
     this.elementId = null;
-    this.text = null;
-    this.elements = new Array<ElementDto>();
-    this.organisations = new Array<OrgDto>();
+    this.type = null;
+    this.elementVersions = new Array<IElementVersion>();
   }
 
-  @ApiModelProperty({type: ElementType, required: true})
-  public type: ElementType;
   @ApiModelProperty({type: String, required: false})
   public elementId: string;
-  @ApiModelProperty({type: String, required: false})
-  public text: string;
-  @ApiModelProperty({type: Object, isArray: true, required: false })
-  public elements: Array<ElementDto>;
-  @ApiModelProperty({type: OrgDto, isArray: true, required: false })
-  public organisations: Array<OrgDto>;
+  @ApiModelProperty({type: ElementType, required: true})
+  public type: ElementType;
+  @ApiModelProperty({type: ElementVersionDto, isArray: true, required: false })
+  public elementVersions: IElementVersion[];
 }

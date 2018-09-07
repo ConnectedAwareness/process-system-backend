@@ -1,16 +1,9 @@
 import * as mongoose from 'mongoose';
 
-import { OrgSchema } from './org.schema';
-
 export const ElementSchema = new mongoose.Schema({
-    type: { type: String, required: true },
     elementId: { type: String, required: false },
-    text: { type: String, required: true },
-    organisations: [OrgSchema],
+    type: { type: String, required: true },
+    elementVersions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ElementVersion' }]
 }, {collection: 'elements'});
 
-ElementSchema.add({
-  elements: [ElementSchema]
-});
-
-// export const VersionSchemaFeature = { name: 'Element', schema: ElementSchema };
+ElementSchema.index({ elementId: -1 }, { unique: true } );

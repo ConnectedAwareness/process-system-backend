@@ -6,20 +6,33 @@ import * as fs from 'fs';
 import { Observable, of } from 'rxjs';
 
 import { VersionDto } from '../models/dtos/version.dto';
-import { ElementDto } from '../models/dtos/element.dto';
 import { VersionFactory } from '../models/factories/version.factory';
 import { IVersionSchema } from '../database/interfaces/version.schema.interface';
-import { IElementSchema, ElementType } from '../database/interfaces/element.schema.interface';
+import { IVersion } from '../models/interfaces/version.interface';
+import { INodeContainer } from '../models/interfaces/nodecontainer.interface';
+import { INodeContainerSchema } from '../database/interfaces/nodecontainer.schema.interface';
+import { INodeSchema } from '../database/interfaces/node.schema.interface';
+import { NodeSchema } from '../database/schemas/node.schema';
 
 @Injectable()
 export class VersionService {
 
-    constructor(@Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
-                @Inject('ElementModelToken') private readonly elementModel: Model<IElementSchema>) { }
+    constructor(
+        @Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
+        @Inject('NodeModelToken') private readonly nodeModel: Model<INodeSchema>) { }
 
-    // CRUD
+    // "CRUD"
 
-    async getVersionAsync(versionId: string): Promise<VersionDto> {
+    async getAllVersionsAsync(): Promise<IVersion[]> {
+        const res = await this.versionModel.find();
+
+        if (res == null)
+            return null;
+
+        return of(res.map(v => VersionFactory.create(v))).toPromise();
+    }
+
+    async getVersionAsync(versionId: string): Promise<IVersion> {
         const query = { versionId: versionId };
         const res = await this.versionModel.findOne(query);
 
@@ -29,7 +42,7 @@ export class VersionService {
         return of(VersionFactory.create(res)).toPromise();
     }
 
-    async createVersionAsync(version: VersionDto): Promise<VersionDto> {
+    async createVersionAsync(version: IVersion): Promise<IVersion> {
         try {
             if (!version.versionId || version.versionId.length === 0)
                 throw new HttpException("Can't create new version, no versionId supplied", HttpStatus.BAD_REQUEST);
@@ -48,143 +61,38 @@ export class VersionService {
         }
     }
 
-    async updateVersionAsync(version: VersionDto): Promise<boolean> {
+    async updateVersionAsync(version: IVersion): Promise<IVersion> {
         if (!version.versionId || version.versionId.length === 0)
             throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
         const query = { versionId: version.versionId };
 
-        const model = this.versionModel.findOne(query);
+        const model = await this.versionModel.findOne(query);
 
-        const res = await model.update(version);
+        // TODO set some values... e.g. the complete tree (?!)
+        // TODO think about it ... do we even need an update?
+        model.published = version.published;
+
+        model.nodes = version.nodes.map(n => new this.nodeModel(n));
+        // // first reset nodes in model
+        // model.nodes = new Array<INodeSchema>();
+        // // then copy tree -- NOTE we must iterate through the complete tree, since mongo's push() replaces/wraps given obj by EmbeddedObject
+        // this.pushTreeIteratively(model, version);
+
+        const res = await model.save();
 
         console.log("Version updated");
         console.log(res);
 
-        //return of(VersionFactory.create(res)).toPromise();
-        return true;
+        return of(VersionFactory.create(res)).toPromise();
     }
 
-    // END CRUD
-
-    async importElementsRecursiveAsync(versionId: string, versionfile: string): Promise<boolean> {
-        versionfile = fs.readFileSync('version_import.txt').toString();
-
-        if (!versionId || versionId.length === 0)
-            throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
-
-        let version: VersionDto = await this.getVersionAsync(versionId);
-
-        console.log("original Version:");
-        console.log(version);
-
-        if (!versionfile || versionfile.length === 0)
-            throw new HttpException(`No elements found to import!`, HttpStatus.BAD_REQUEST);
-
-        version = await this.parseRecursive(versionfile, version);
-
-        console.log("Version to import:");
-        console.log(version);
-
-        const result = await this.updateVersionAsync(version);
-
-        const newVersion = await this.getVersionAsync(versionId);
-
-        console.log("imported Version:");
-        console.log(newVersion);
-
-        return result;
-    }
-
-    async parseRecursive(versionfile: string, version: VersionDto): Promise<VersionDto> {
-        if (version.elements && version.elements.length > 0)
-            throw new HttpException(`VersionDto object already has element list!`, HttpStatus.BAD_REQUEST);
-        try {
-            const parsedLevel = 0;
-            const elementList = versionfile.split("#####");
-
-            const elements = await this._parseRecursive(elementList, parsedLevel);
-
-            version.elements = new Array<ElementDto>();
-
-            elements.forEach(e => version.elements.push(e));
-            //version.elements.push(elements);
-
-            return version;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async _parseRecursive(elementList: string[], parsedLevel: number): Promise<Array<ElementDto>> {
-        const elements = new Array<ElementDto>();
-        let lastElement = null;
-        let parsedElement = null;
-
-        do {
-            parsedElement = elementList.shift();
-
-            if (parsedElement) {
-                const parts = parsedElement.split('\t');
-
-                if (parts.length === 6) {
-                    const id = parts[1].trim();
-                    const type = parts[2].trim();
-                    const level = +parts[3];
-                    const text = parts[5].trim();
-
-                    // add to element elements
-                    if (level === parsedLevel) {
-                        const newElement = Object.create(ElementDto.prototype);
-                        newElement.elementId = id;
-                        newElement.type = await this.parseElementType(type);
-                        newElement.text = text;
-                        newElement.elements = new Array<ElementDto>();
-
-                        lastElement = newElement;
-                        elements.push(newElement);
-                    }
-                    // go into recursive parsing and add list of elements to lastElement
-                    else if (level > parsedLevel) {
-                        // push parsedElement again at first position
-                        elementList.unshift(parsedElement);
-
-                        const subElements = await this._parseRecursive(elementList, level);
-                        lastElement.elements.push(subElements);
-                    }
-                    // stop iteration of elementList and return elements
-                    else if (level < parsedLevel) {
-                        // push parsedElement again at first position
-                        elementList.unshift(parsedElement);
-
-                        return elements;
-                    }
-                }
-            }
-        }
-        while (elementList.length > 0);
-
-        return elements;
-    }
-
-    async parseElementType(elementType: string): Promise<ElementType> {
-        switch (elementType) {
-            case "Header1":
-            case "Header2":
-            case "Header3":
-                return ElementType.Header;
-            case "Text":
-                return ElementType.Text;
-            case "Particle":
-                return ElementType.Particle;
-            case "Definition":
-                return ElementType.Definition;
-            case "Example":
-                return ElementType.Example;
-            case "Explanation":
-                return ElementType.Explanation;
-            default:
-                return ElementType.Unknown;
+    private pushTreeIteratively(targetNodeContainerModel: INodeContainerSchema, sourceNodeContainer: INodeContainer) {
+        for (const sourceNode of sourceNodeContainer.nodes) {
+            const sourceNodeModel = new this.nodeModel(sourceNode);
+            targetNodeContainerModel.nodes.push(sourceNodeModel);
+            const targetNodeModel = targetNodeContainerModel.nodes[targetNodeContainerModel.nodes.length - 1];
+            this.pushTreeIteratively(targetNodeModel, sourceNode);
         }
     }
 }

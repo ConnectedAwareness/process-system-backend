@@ -9,10 +9,18 @@ import { versionProviders } from './database/providers/version.providers';
 import { elementProviders } from './database/providers/element.providers';
 import { orgProviders } from './database/providers/org.providers';
 import { commentProviders } from './database/providers/comment.providers';
+import { elementVersionProviders } from './database/providers/elementversion.providers';
+import { ImportController } from './controllers/import.controller';
+import { ElementService } from './services/element.service';
+import { ImportService } from './services/import.service';
+import { ElementController } from './controllers/element.controller';
+import { nodeProviders } from './database/providers/node.providers';
 
 @Module({
     imports: [DatabaseModule],
-    controllers: [VersionController],
-    providers: [VersionService, ...versionProviders, ...elementProviders, ...orgProviders, ...commentProviders],
+    controllers: [VersionController, ElementController, ImportController],
+    providers: [ImportService, VersionService, ElementService,
+        ...versionProviders, ...nodeProviders, ...elementProviders, ...elementVersionProviders],
+    exports: [VersionService, ElementService, ImportService]
 })
 export class ProcessDocModule {}

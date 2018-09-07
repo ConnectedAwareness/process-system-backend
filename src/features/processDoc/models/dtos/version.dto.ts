@@ -1,30 +1,20 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { ElementDto } from './element.dto';
+import { IVersion } from '../interfaces/version.interface';
+import { INode } from '../interfaces/node.interface';
+import { NodeDto } from './node.dto';
 
-export class VersionDto {
+export class VersionDto implements IVersion {
   constructor() {
     this.versionId = null;
     this.published = null;
-    this.elements = new Array<ElementDto>();
+    this.nodes = new Array<INode>();
   }
 
   @ApiModelProperty({ type: String, required: true })
   versionId: string;
   @ApiModelProperty({ type: Boolean, required: true })
   published: boolean;
-  @ApiModelProperty({ type: ElementDto, isArray: true, required: false })
-  elements: Array<ElementDto>;
-}
-
-export class ImportVersion {
-  constructor() {
-    this.versionId = null;
-    this.elements = null;
-  }
-
-  @ApiModelProperty({ type: String, required: true })
-  versionId: string;
-  @ApiModelProperty({ type: String, required: true })
-  elements: string;
+  @ApiModelProperty({ type: NodeDto, isArray: true, required: false })
+  nodes: INode[];
 }

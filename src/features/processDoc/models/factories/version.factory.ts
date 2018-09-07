@@ -9,9 +9,9 @@ export class VersionFactory {
 
     public static generateFromJson(data) : VersionDto {
         //data.versionId = v4();
-        let version = Object.create(VersionDto.prototype) as VersionDto;
-        version =  Object.assign(data, JSON, {});
+        const document = new VersionDto();
+        Object.assign(document, data);
 
-        return version;
+        return document;
     }
 }

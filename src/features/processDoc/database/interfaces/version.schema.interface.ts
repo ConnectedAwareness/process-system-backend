@@ -1,9 +1,9 @@
 import { Document } from 'mongoose';
 
-import { IElementSchema } from './element.schema.interface';
+import { IVersion } from '../../models/interfaces/version.interface';
+import { INodeSchema } from './node.schema.interface';
+import { INodeContainerSchema } from './nodecontainer.schema.interface';
 
-export interface IVersionSchema extends Document {
-  readonly versionId: string;
-  readonly published: boolean;
-  readonly elements: IElementSchema[];
+export interface IVersionSchema extends Document, IVersion, INodeContainerSchema {
+    nodes: INodeSchema[];
 }
