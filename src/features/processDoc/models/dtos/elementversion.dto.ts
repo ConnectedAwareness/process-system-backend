@@ -6,11 +6,14 @@ import { IElement } from '../interfaces/element.interface';
 
 export class ElementVersionDto implements IElementVersion {
   constructor() {
+    this.elementVersionId = null;
     this.element = null;
     this.order = null;
     this.text = null;
   }
 
+  @ApiModelProperty({type: String, required: false})
+  public elementVersionId: string;
   @ApiModelProperty({type: ElementDto, required: false})
   public element: IElement;
   @ApiModelProperty({type: Number, required: false})

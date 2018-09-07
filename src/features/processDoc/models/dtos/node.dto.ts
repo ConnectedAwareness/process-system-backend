@@ -6,10 +6,13 @@ import { ElementVersionDto } from './elementversion.dto';
 
 export class NodeDto implements INode {
   constructor() {
+    this.nodeId = null;
     this.elementVersion = null;
     this.nodes = new Array<INode>();
   }
 
+  @ApiModelProperty({ type: String, required: false })
+  nodeId: string;
   @ApiModelProperty({ type: ElementVersionDto, required: true })
   elementVersion: IElementVersion;
   @ApiModelProperty({ type: Object, isArray: true, required: false })

@@ -1,10 +1,16 @@
 import { Connection } from 'mongoose';
-import { NodeSchema } from '../schemas/node.schema';
+import { TreeNodeSchema } from '../schemas/treenode.schema';
+import { LinkedNodeSchema } from '../schemas/linkednode.schema';
 
 export const nodeProviders = [
   {
-    provide: 'NodeModelToken',
-    useFactory: (connection: Connection) => connection.model('Node', NodeSchema),
+    provide: 'TreeNodeModelToken',
+    useFactory: (connection: Connection) => connection.model('TreeNode', TreeNodeSchema),
+    inject: ['DbConnectionToken'],
+  },
+  {
+    provide: 'LinkedNodeModelToken',
+    useFactory: (connection: Connection) => connection.model('LinkedNode', LinkedNodeSchema),
     inject: ['DbConnectionToken'],
   },
 ];

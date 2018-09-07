@@ -1,10 +1,10 @@
 import * as mongoose from 'mongoose';
 
-export const NodeSchema = new mongoose.Schema({
+export const TreeNodeSchema = new mongoose.Schema({
     elementVersion: { type: mongoose.Schema.Types.ObjectId, ref: 'ElementVersion' }
 });
-NodeSchema.add({
-    nodes: [NodeSchema]
+TreeNodeSchema.add({
+    nodes: [TreeNodeSchema]
 });
 
 // NOTE we'll use ref if we don't embed the node tree, but denormalize them in a specific collection

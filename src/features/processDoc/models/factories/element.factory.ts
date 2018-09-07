@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 import { mapDto } from '../../../../main/util/util';
 import { ElementDto } from '../dtos/element.dto';
 import { IElementSchema } from '../../database/interfaces/element.schema.interface';
@@ -27,5 +29,9 @@ export class ElementFactory {
         Object.assign(element, data);
 
         return element;
+    }
+
+    public static getElementVersionId(): string {
+        return v4();
     }
 }

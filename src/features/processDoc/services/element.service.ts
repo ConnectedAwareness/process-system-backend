@@ -39,7 +39,7 @@ export class ElementService {
         const res = await this.elementModel.findOne(query);
 
         if (res == null)
-            throw new HttpException(`ElementDto with Id: ${elementId} not found`, HttpStatus.BAD_REQUEST);
+            throw new HttpException(`Element with Id: ${elementId} not found`, HttpStatus.BAD_REQUEST);
 
         return res;
     }
@@ -70,7 +70,7 @@ export class ElementService {
             const res = await model.save();
 
             console.log(`new ElementDto ${element.elementId} saved`);
-            console.log(res);
+            // console.log(res);
 
             return of(ElementFactory.createElement(res)).toPromise();
 
@@ -88,7 +88,7 @@ export class ElementService {
     //     const model = await this.elementModel.findOne(query);
 
     //     // TODO set some values... e.g. the complete tree (?!)
-    //     // TODO think about it ... do we even need an update?
+    //     // think about it ... do we even need an update?
     //     // model.xyz = element.xyz;
 
     //     const res = await model.save();
@@ -109,19 +109,31 @@ export class ElementService {
         return of(ElementFactory.createElementVersion(res)).toPromise();
     }
 
+    // TODO should be private or protected since returning Schema
+    async getElementVersionSchemaAsync(elementVersionId: string): Promise<IElementVersionSchema> {
+        const query = { elementVersionId: elementVersionId };
+        const res = await this.elementVersionModel.findOne(query);
+
+        if (res == null)
+            throw new HttpException(`ElementVersion with ID: ${elementVersionId} not found`, HttpStatus.BAD_REQUEST);
+
+        return res;
+    }
+
     // TODO do we need elementId, since elementVersion.element should be set?!
     async appendElementVersionAsync(elementId: string, elementVersion: IElementVersion): Promise<IElementVersion> {
         const e = await this.getElementSchemaAsync(elementId);
 
         try {
             const model = new this.elementVersionModel(elementVersion);
+            model.elementVersionId = ElementFactory.getElementVersionId();
             model.element = e;
             const res = await model.save();
 
-            console.log(`new ElementVersionDto ${elementVersion.text.substring(0, 10)} saved`);
-            console.log(res);
+            console.log(`new ElementVersionDto ${elementVersion.text.substring(0, 20)} saved`);
+            // console.log(res);
 
-            e.elementVersions.push(model);
+            e.elementVersions.push(res);
             await e.save();
 
             return of(ElementFactory.createElementVersion(res)).toPromise();

@@ -18,6 +18,8 @@ import { NodeDto } from '../models/dtos/node.dto';
 import { INode } from '../models/interfaces/node.interface';
 import { ElementService } from './element.service';
 import { IElementVersion } from '../models/interfaces/elementversion.interface';
+import { ILinkedNodeSchema } from '../database/interfaces/linkednode.schema.interface.';
+import { IElementVersionSchema } from '../database/interfaces/elementversion.schema.interface';
 
 @Injectable()
 export class ImportService {
@@ -25,6 +27,8 @@ export class ImportService {
     constructor(
         @Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
         @Inject('ElementModelToken') private readonly elementModel: Model<IElementSchema>,
+        @Inject('ElementVersionModelToken') private readonly elementVersionModel: Model<IElementVersionSchema>,
+        @Inject('LinkedNodeModelToken') private readonly linkedNodeModel: Model<ILinkedNodeSchema>,
         private versionService: VersionService,
         private elementService: ElementService) { }
 
@@ -32,27 +36,55 @@ export class ImportService {
         if (!versionfile) versionfile = fs.readFileSync('ProzDok_1.1_Ausschnitt_formatiert_2018-09-02.tsv').toString();
 
         if (!versionfile || versionfile.length === 0)
-            throw new HttpException(`No versionfile csv found to import!`, HttpStatus.BAD_REQUEST);
+            throw new HttpException(`No versionfile tsv found to import!`, HttpStatus.BAD_REQUEST);
 
         if (!versionId || versionId.length === 0)
             throw new HttpException("Can't import version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
-        let version: VersionDto = await this.versionService.getVersionAsync(versionId);
+        // NOTE remove existing data since we'd get exceptions otherwise (i.e. it exists for simpler debugging purposes only)
+        // TODO replace this by:
+        // (a) [must] a method getOrCreateElement (by ID identity) (call in parseIterative)
+        // (b) [must] a method getOrCreateVersion (by value identity) (call in parseIterative)
+        // (c) [thinkabout] remove the linkedNodeModel tree starting at version.linkedNodeRoot (here)
+        console.log("### Emptying collections: elementModel, elementVersionModel, linkedNodeModel");
+        console.log("### this removes ALL existing version data; for debugging purposes only");
+        await this.elementModel.collection.remove({});
+        await this.elementVersionModel.collection.remove({});
+        await this.linkedNodeModel.collection.remove({});
 
-        if (version.nodes && version.nodes.length > 0) {
-            // we won't deny an update, just remove all previously existing nodes
-        //     throw new HttpException(`Can't import version, existing VersionDto object already has nodes!`, HttpStatus.BAD_REQUEST);
-            version.nodes = new Array<NodeDto>();
-            await this.versionService.updateVersionAsync(version);
-        }
+        const version: VersionDto = await this.versionService.getVersionAsync(versionId);
 
         console.log("original Version:");
         console.log(version);
 
-        version = await this.parseIterative(versionfile, version);
+        if (version.nodes && version.nodes.length > 0) {
+            // we won't deny an update, just remove all previously existing nodes
+        //     throw new HttpException(`Can't import version, existing VersionDto object already has nodes!`, HttpStatus.BAD_REQUEST);
+            console.log("Existing version has treeNodes, I will remove them");
+            version.nodes = new Array<NodeDto>();
+            await this.versionService.updateVersionAsync(version);
+        }
 
-        console.log("Version to import:");
-        console.log(version);
+        if (version.linkedNodeRoot) {
+            // we won't deny an update, just remove all previously existing nodes
+        //     throw new HttpException(`Can't import version, existing VersionDto object already has nodes!`, HttpStatus.BAD_REQUEST);
+            console.log("Existing version has linkedNodeRoot, I will remoe it");
+            version.linkedNodeRoot = null;
+            await this.versionService.updateVersionAsync(version);
+        }
+
+        // init the single linked node root
+        const n: NodeDto = {
+            nodeId: null,
+            elementVersion: null,
+            nodes: new Array<INode>()
+        };
+        const versionModel = await this.versionService.createAndAddLinkedNodeToVersionAsync(version, n);
+
+        const rootNode = await this.parseIterative(versionfile, versionModel.linkedNodeRoot);
+
+        // console.log("Version to import:");
+        // console.log(version);
 
         const result = await this.versionService.updateVersionAsync(version);
         // const newVersion = await this.documentService.getVersionAsync(versionId);
@@ -64,18 +96,17 @@ export class ImportService {
         return result;
     }
 
-    async parseIterative(versionfile: string, version: VersionDto): Promise<VersionDto> {
+    async parseIterative(versionfile: string, linkedNodeRoot: INode): Promise<NodeDto> {
 
         try {
             const lines = versionfile.split(/[\r\n]+\t/);
             lines[0] = lines[0].substring(1); // trim leading \t of first line
 
             // path: path to current IParentElement, used to retrieve parents. path[0] is always VersionDto
-            const path = new Array<INodeContainer>();
-            path.push(version);
+            const path = new Array<INode>();
+            path.push(linkedNodeRoot);
             // root: current root to push new elements to
             const root = () => path[path.length - 1];
-            const container = () => root().nodes;
 
             for (const line of lines) {
                 const parts = line.split('\t');
@@ -92,7 +123,7 @@ export class ImportService {
 
                     const isStructuringElement = elemType === ElementType.Header;
                     // set path.length so that last element is this headers parent
-                    if (isStructuringElement) path.length = Number.parseInt(type.substring(6)); // TODO dirtyly get level from "Header123"
+                    if (isStructuringElement) path.length = Number.parseInt(type.substring(6)); // NOTE dirtyly get level from "Header123"
 
                     let e: ElementDto = {
                         elementId: elemId,
@@ -101,33 +132,23 @@ export class ImportService {
                     };
                     e = await this.elementService.getOrCreateElementAsync(e);
 
+                    // NOTE appendElementVersionAsync could create Dto when given those 2 parameters
                     const v: ElementVersionDto = {
+                        elementVersionId: null,
                         element: null,
                         order: elemOrder,
                         text: text,
                     };
                     const vModel = await this.elementService.appendElementVersionAsync(e.elementId, v);
 
-                    // NOTE problems setting reference to elementVersion object
-                    // - when setting n.elementVersion to v, it is null after mongo's container().push()
-                    // - when setting n.elementVersion to vModel, we get a "Maximum call stack size exceeded" exception in mongo's container().push()
-                    // it seems like elementVersion shall be set in a Schema model, not in the dto
-                    const n: NodeDto = {
-                        elementVersion: null,
-                        nodes: new Array<INode>()
-                    };
-                    container().push(n);
-                    console.log(`pushed element ${elemType}:${elemId} to parent ${root()} `);
+                    const { rootModel, childModel } = await this.versionService.createAndAddLinkedNodeAsync(root(), vModel);
+                    path[path.length - 1] = rootModel; // we must replace the object with the newly saved one
+                    console.log(`pushed element ${elemType} ${elemId} to parent ${root().nodeId} `);
 
-                    // those lines fix the problem with setting elementVersion reference
-                    const nModel = container()[container().length - 1];
-                    nModel.elementVersion = vModel; // TODO "Maximum call stack size exceeded" at this line
-                    // TODO most probably nModel must have been save()d before adding
-
-                    if (isStructuringElement) path.push(nModel);
+                    if (isStructuringElement) path.push(childModel);
                 }
             }
-            return version;
+            return linkedNodeRoot;
         } catch (error) {
             console.log(error);
         }

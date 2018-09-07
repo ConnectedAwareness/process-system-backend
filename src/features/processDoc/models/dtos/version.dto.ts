@@ -9,6 +9,7 @@ export class VersionDto implements IVersion {
     this.versionId = null;
     this.published = null;
     this.nodes = new Array<INode>();
+    this.linkedNodeRoot = null;
   }
 
   @ApiModelProperty({ type: String, required: true })
@@ -17,4 +18,6 @@ export class VersionDto implements IVersion {
   published: boolean;
   @ApiModelProperty({ type: NodeDto, isArray: true, required: false })
   nodes: INode[];
+  @ApiModelProperty({ type: Object, required: true })
+  linkedNodeRoot: INode;
 }
