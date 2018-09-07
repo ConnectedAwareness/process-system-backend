@@ -1,6 +1,6 @@
 import { IUserInOrganisation } from "./userinorganisation.interface";
 
-export class IOrganisation {
+export interface IOrganisation {
   organisationId: string;
   name: string;
   version: string;
