@@ -178,7 +178,7 @@ export class UserService {
             user.password = resetPassword.newPassword;
             await user.save();
 
-            return true;
+            return true; // NOTE TODO Promise.resolve(true)? or is this wrapped automatically
         }
         catch (err) {
             console.error(err);

@@ -1,8 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
 import { IOrganisation } from '../interfaces/organisation.interface';
-import { UserInOrganisationDto } from './userinorganisation.dto';
 import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
+import { UserInOrganisationDto } from './userinorganisation.dto';
 
 export class OrganisationDto implements IOrganisation {
   constructor() {
