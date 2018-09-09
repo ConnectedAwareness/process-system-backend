@@ -20,21 +20,21 @@ export class RoleController {
       return await this.roleService.addUserToOrganisationAsync(userInOrganisation);
   }
 
-  @Post('update')
+  @Put('update')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Update an user in an organisation' })
-  // @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: UserInOrganisationDto })
   @ApiResponse({ status: 200, description: 'Update role successful' })
   async updateUserInOrganisationAsync(@Body() userInOrganisation: UserInOrganisationDto) : Promise<IUserInOrganisation> {
       return await this.roleService.updateUserInOrganisationAsync(userInOrganisation);
   }
 
-  @Post('remove')
+  @Delete('remove/organisation/:organisationId/user/:userId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Remove an user from an organisation' })
-  // @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: UserInOrganisationDto })
+  @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
+  @ApiImplicitParam({ name: 'userId', required: true, description: 'userId of user' })
   @ApiResponse({ status: 200, description: 'Delete role successful' })
-  async removeUserFromOrganisationAsync(@Body() userInOrganisation: UserInOrganisationDto) : Promise<boolean> {
-      return await this.roleService.removeUserFromOrganisationAsync(userInOrganisation);
+  async removeUserFromOrganisationAsync(@Param('organisationId') organisationId: string, @Param('userId') userId: string) : Promise<boolean> {
+      return await this.roleService.removeUserFromOrganisationAsync(organisationId, userId);
   }
 }

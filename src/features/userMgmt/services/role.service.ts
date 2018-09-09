@@ -35,7 +35,7 @@ export class RoleService {
             if (!uInO.userId || uInO.userId.length === 0)
                 throw new HttpException("Can't add user to organisation! No userId provided", HttpStatus.BAD_REQUEST);
 
-        if (!allowEmptyRoles && !uInO.roles || uInO.roles.length === 0)
+        if (!allowEmptyRoles && (!uInO.roles || uInO.roles.length === 0))
             throw new HttpException("Can't add user to organisation! No roles provided", HttpStatus.BAD_REQUEST);
 
         const userId = uInO.userIsObject ? uInO.user.userId : uInO.userId;
@@ -112,8 +112,17 @@ export class RoleService {
         }
     }
 
-    async removeUserFromOrganisationAsync(uInO: UserInOrganisationDto): Promise<boolean> {
-        const { userModel, organisationModel } = await this.checkParameterObjectAsync(uInO, false);
+    async removeUserFromOrganisationAsync(organisationId: string, userId: string): Promise<boolean> {
+        const uInO = {
+            organisation: null,
+            organisationId: organisationId,
+            organisationIsObject: false,
+            user: null,
+            userId: userId,
+            userIsObject: false,
+        } as UserInOrganisationDto;
+
+        const { userModel, organisationModel } = await this.checkParameterObjectAsync(uInO, true);
 
         try {
             // we need a start to find the UserInOrganisation object to remove
