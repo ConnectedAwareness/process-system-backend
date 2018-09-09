@@ -1,8 +1,8 @@
-import { v4 } from 'uuid';
+
+import * as util from '../../../../common/util/util';
 
 import { UserDto } from '../dtos/user.dto';
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
-import { mapDto } from '../../../../main/util/util';
 import { IUser } from '../interfaces/user.interface';
 import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
@@ -11,7 +11,7 @@ import { IOrganisationSchema } from '../../database/interfaces/organisation.sche
 
 export class UserFactory {
     public static createUser(model: IUserSchema, embedOrganisationObject: boolean) {
-        const user = mapDto(model, UserDto);
+        const user = util.mapDto(model, UserDto);
 
         if (model.populated('rolesInOrganisations')) {
             user.rolesInOrganisations = model.rolesInOrganisations.map(o => {
@@ -41,7 +41,6 @@ export class UserFactory {
     }
 
     public static generateUserFromJson(data) : IUser {
-        //data.userId = v4();
         const user = new UserDto();
         Object.assign(user, data);
 
@@ -53,9 +52,5 @@ export class UserFactory {
         Object.assign(userInOrg, data);
 
         return userInOrg;
-    }
-
-    public static getId() : string {
-        return v4();
     }
 }

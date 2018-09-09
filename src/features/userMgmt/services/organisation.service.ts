@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 
 import { of } from 'rxjs';
 
+import * as util from '../../../common/util/util';
+
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
 import { IOrganisation } from '../models/interfaces/organisation.interface';
@@ -81,7 +83,7 @@ export class OrganisationService {
                 throw new HttpException(`Organisation with name ${organisation.name} already exists`, HttpStatus.BAD_REQUEST);
 
             orgModel = new this.organisationModel(organisation);
-            orgModel.organisationId = OrganisationFactory.getId();
+            orgModel.organisationId = util.getId();
 
             const res = await orgModel.save();
 

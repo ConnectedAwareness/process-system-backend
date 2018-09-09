@@ -3,7 +3,7 @@ import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQue
 import { AuthGuard } from '@nestjs/passport';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { v4 } from 'uuid';
+import * as util from '../../../common/util/util';
 
 import { ImportService } from '../services/import.service';
 import { VersionDto } from '../models/dtos/version.dto';
@@ -26,13 +26,13 @@ export class ImportController {
   // TODO: sadly no swagger file upload decorator exists so far, see: https://github.com/nestjs/swagger/pull/87
   // file upload could work like that, but has to be tested by frontend code. Status "untested"
   // https://stackoverflow.com/questions/49096068/upload-file-using-nestjs-and-multer
-  // file is saved in folder "./uploads/<v4()>_<filename>.csv"
+  // file is saved in folder "./uploads/<uuid>_<filename>.csv"
   @Put(':versionId/upload')
   @UseInterceptors(FileInterceptor('file', {
       storage: diskStorage({
           destination: './uploads',
           filename: (req, file, cb) => {
-              const randomName = v4();
+              const randomName = util.getId();
               const extension = extname(file.originalname);
               const baseName = file.originalname.split('.')[0];
 

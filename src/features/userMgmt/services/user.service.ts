@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 
 import { of } from 'rxjs';
 
+import * as util from '../../../common/util/util';
+
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
 import { IUser } from '../models/interfaces/user.interface';
@@ -86,7 +88,7 @@ export class UserService {
                 throw new HttpException(`User with email address ${user.email} already exists`, HttpStatus.BAD_REQUEST);
 
             userModel = new this.userModel(user);
-            userModel.userId = UserFactory.getId();
+            userModel.userId = util.getId();
 
             const res = await userModel.save();
 

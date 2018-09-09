@@ -5,6 +5,8 @@ import * as fs from 'fs';
 
 import { Observable, of } from 'rxjs';
 
+import * as util from '../../../common/util/util';
+
 import { VersionDto } from '../models/dtos/version.dto';
 import { VersionFactory } from '../models/factories/version.factory';
 import { IVersionSchema } from '../database/interfaces/version.schema.interface';
@@ -117,7 +119,7 @@ export class VersionService {
                 throw new HttpException("Can't create new node, dto has nodeId", HttpStatus.BAD_REQUEST);
 
             const model = new this.linkedNodeModel(node);
-            model.nodeId = VersionFactory.getLinkedNodeId();
+            model.nodeId = util.getId();
 
             const res = await model.save();
 

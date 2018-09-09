@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { DatabaseModule } from '../../main/database/database.module';
+import { DatabaseModule } from '../../common/database/database.module';
 
 import { VersionController } from './controllers/version.controller';
 import { VersionService } from './services/version.service';

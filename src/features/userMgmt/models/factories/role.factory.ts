@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
-import { mapDto } from '../../../../main/util/util';
 import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
 import { OrganisationFactory } from './organisation.factory';
@@ -39,9 +38,5 @@ export class RoleFactory {
         Object.assign(userInOrg, data);
 
         return userInOrg;
-    }
-
-    public static getId() : string {
-        return v4();
     }
 }

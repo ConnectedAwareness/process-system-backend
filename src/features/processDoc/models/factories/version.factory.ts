@@ -1,18 +1,19 @@
 import { v4 } from 'uuid';
 
+import * as util from '../../../../common/util/util';
+
 import { VersionDto } from '../dtos/version.dto';
 import { IVersionSchema } from '../../database/interfaces/version.schema.interface';
-import { mapDto } from '../../../../main/util/util';
 import { ILinkedNodeSchema } from '../../database/interfaces/linkednode.schema.interface.';
 import { NodeDto } from '../dtos/node.dto';
 
 export class VersionFactory {
     public static create(model: IVersionSchema) {
-        return mapDto(model, VersionDto);
+        return util.mapDto(model, VersionDto);
     }
 
     public static generateFromJson(data) : VersionDto {
-        //data.versionId = v4();
+        //data.versionId = util.getId();
         const document = new VersionDto();
         Object.assign(document, data);
 
@@ -20,10 +21,6 @@ export class VersionFactory {
     }
 
     public static createLinkedNode(model: ILinkedNodeSchema) {
-        return mapDto(model, NodeDto);
-    }
-
-    public static getLinkedNodeId(): string {
-        return v4();
+        return util.mapDto(model, NodeDto);
     }
 }

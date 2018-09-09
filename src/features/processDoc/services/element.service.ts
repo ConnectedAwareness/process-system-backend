@@ -5,6 +5,8 @@ import * as fs from 'fs';
 
 import { Observable, of } from 'rxjs';
 
+import * as util from '../../../common/util/util';
+
 import { ElementDto } from '../models/dtos/element.dto';
 import { IElementSchema } from '../database/interfaces/element.schema.interface';
 import { ElementType } from '../models/interfaces/elementtype.enum';
@@ -126,7 +128,7 @@ export class ElementService {
 
         try {
             const model = new this.elementVersionModel(elementVersion);
-            model.elementVersionId = ElementFactory.getElementVersionId();
+            model.elementVersionId = util.getId();
             model.element = e;
             const res = await model.save();
 
