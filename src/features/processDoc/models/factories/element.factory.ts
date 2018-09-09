@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-
 import * as util from '../../../../common/util/util';
 
 import { ElementDto } from '../dtos/element.dto';
