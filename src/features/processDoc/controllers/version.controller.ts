@@ -16,7 +16,7 @@ export class VersionController {
   @ApiOperation({ title: 'get all versions' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
   async getAllVersions(): Promise<IVersion[]> {
-    return new Array<IVersion>();
+    return this.versionService.getAllVersionsAsync();
   }
 
   // CRUD
