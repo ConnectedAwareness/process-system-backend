@@ -5,29 +5,34 @@ import { AuthGuard } from '@nestjs/passport';
 import { VersionService } from '../services/version.service';
 import { VersionDto } from '../models/dtos/version.dto';
 import { IVersion } from '../models/interfaces/version.interface';
+import { Config } from '../../../environments/environments';
 
 @ApiUseTags('versions')
 @Controller('versions')
 export class VersionController {
   constructor(private versionService: VersionService) { }
 
-  @Get()
+  @Get('all/:depth?')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all versions' })
+  @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllVersions(): Promise<IVersion[]> {
-    return this.versionService.getAllVersionsAsync();
+  async getAllVersions(@Param('depth') depth: string): Promise<IVersion[]> {
+    const depthN = depth ? Number.parseInt(depth) : 0;
+    return this.versionService.getAllVersionsAsync(depthN);
   }
 
   // CRUD
 
-  @Get(':versionId')
+  @Get(':versionId/:depth?')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
+  @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getVersion(@Param('versionId') versionId: string): Promise<IVersion> {
-    return this.versionService.getVersionAsync(versionId);
+  async getVersion(@Param('versionId') versionId: string, @Param('depth') depth: string): Promise<IVersion> {
+    const depthN = depth ? Number.parseInt(depth) : Config.ASSUMED_MAXIMUM_VERSION_DEPTH;
+    return this.versionService.getVersionAsync(versionId, depthN);
   }
 
   @Post('create')

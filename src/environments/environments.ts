@@ -10,4 +10,6 @@ export class Config
     public static DB_PW: string = process.env.DB_PW || null;
 
     public static AUTH_SECRETKEY: string = process.env.AUTH_SECRETKEY;
+
+    public static ASSUMED_MAXIMUM_VERSION_DEPTH = 15;
 }

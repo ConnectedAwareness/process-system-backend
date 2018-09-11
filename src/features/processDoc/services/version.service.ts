@@ -32,8 +32,28 @@ export class VersionService {
 
     // "CRUD" version
 
-    async getAllVersionsAsync(): Promise<IVersion[]> {
-        const res = await this.versionModel.find();
+    /**
+     * Builds a mongoose populate object for Version/LinkedNode
+     * @param depth The depth of the populate path. Numbers from 0 upwards are populated as expected. null is not allowed
+     */
+    private buildPopulateTree(depth: number): object {
+        if (depth === 0) return { path: 'linkedNodeRoot' }; // NOTE a hack, since .populate() needs a non-empty object
+        const list = [...Array(depth).keys()]; // https://stackoverflow.com/questions/3746725/create-a-javascript-array-containing-1-n
+        const reducer = (accu, current) => accu === null ?
+            [
+                { path: 'nodes' },
+                { path: 'elementVersion', populate: { path: 'element' } }
+            ] : [
+                { path: 'nodes', populate: accu },
+                { path: 'elementVersion', populate: { path: 'element' } }
+            ];
+        const internpop = list.reduce(reducer, null); // NOTE need 'null' since omitting initialValue equals 0
+        const pop = { path: 'linkedNodeRoot', populate: internpop };
+        return pop;
+    }
+
+    async getAllVersionsAsync(depth: number): Promise<IVersion[]> {
+        const res = await this.versionModel.find().populate(this.buildPopulateTree(depth));
 
         if (res == null)
             return null;
@@ -41,9 +61,9 @@ export class VersionService {
         return of(res.map(v => VersionFactory.create(v))).toPromise();
     }
 
-    async getVersionSchemaAsync(versionId: string): Promise<IVersionSchema> {
+    async getVersionSchemaAsync(versionId: string, depth: number): Promise<IVersionSchema> {
         const query = { versionId: versionId };
-        const res = await this.versionModel.findOne(query);
+        const res = await this.versionModel.findOne(query).populate(this.buildPopulateTree(depth));
 
         if (res == null)
             throw new HttpException(`VersionDto with Id: ${versionId} not found`, HttpStatus.BAD_REQUEST);
@@ -51,8 +71,8 @@ export class VersionService {
         return res;
     }
 
-    async getVersionAsync(versionId: string): Promise<IVersion> {
-        return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId))).toPromise();
+    async getVersionAsync(versionId: string, depth: number): Promise<IVersion> {
+        return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth))).toPromise();
     }
 
     async createVersionAsync(version: IVersion): Promise<IVersion> {
@@ -162,7 +182,7 @@ export class VersionService {
     // }
 
     async createAndAddLinkedNodeToVersionAsync(version: IVersion, node: INode): Promise<IVersion> {
-        const vModel = await this.getVersionSchemaAsync(version.versionId);
+        const vModel = await this.getVersionSchemaAsync(version.versionId, 0);
         const nModel = await this.createLinkedNodeSchemaAsync(node);
 
         vModel.linkedNodeRoot = nModel;

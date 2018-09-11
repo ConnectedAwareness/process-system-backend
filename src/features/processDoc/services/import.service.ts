@@ -52,7 +52,7 @@ export class ImportService {
         await this.elementVersionModel.collection.remove({});
         await this.linkedNodeModel.collection.remove({});
 
-        const version: VersionDto = await this.versionService.getVersionAsync(versionId);
+        const version: VersionDto = await this.versionService.getVersionAsync(versionId, 0);
 
         console.log("original Version:");
         console.log(version);
