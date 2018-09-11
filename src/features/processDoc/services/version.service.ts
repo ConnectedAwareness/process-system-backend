@@ -91,6 +91,7 @@ export class VersionService {
 
         } catch (error) {
             console.log(error);
+            throw new HttpException("Error in creating version: " + error, HttpStatus.I_AM_A_TEAPOT);
         }
     }
 
