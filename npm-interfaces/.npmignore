@@ -1,0 +1,16 @@
+node_modules/
+karma.conf.js
+spec/
+
+# ignore src
+
+src/**/*
+index.ts
+package-lock.json
+tslint.json
+tsconfig.json
+.prettierrc
+
+# override above and include ts files
+
+#!src/**/*.ts
