@@ -71,8 +71,12 @@ export class VersionService {
         return res;
     }
 
-    async getVersionAsync(versionId: string, depth: number): Promise<IVersion> {
+    async getVersionDenormalizedAsync(versionId: string, depth: number): Promise<IVersion> {
         return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth))).toPromise();
+    }
+
+    async getVersionNormalizedAsync(versionId: string, depth: number): Promise<IVersion> {
+        return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth), false)).toPromise();
     }
 
     async createVersionAsync(version: IVersion): Promise<IVersion> {

@@ -18,7 +18,7 @@ export class VersionController {
   @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
   async getAllVersions(@Param('depth') depth: string): Promise<IVersion[]> {
-    const depthN = depth ? Number.parseInt(depth) : 0;
+    const depthN = depth && depth !== 'undefined' ? Number.parseInt(depth) : 0;
     return this.versionService.getAllVersionsAsync(depthN);
   }
 
@@ -32,7 +32,7 @@ export class VersionController {
   @ApiResponse({ status: 200, description: 'Get successful' })
   async getVersion(@Param('versionId') versionId: string, @Param('depth') depth: string): Promise<IVersion> {
     const depthN = depth ? Number.parseInt(depth) : Config.ASSUMED_MAXIMUM_VERSION_DEPTH;
-    return this.versionService.getVersionAsync(versionId, depthN);
+    return this.versionService.getVersionDenormalizedAsync(versionId, depthN);
   }
 
   @Post('create')

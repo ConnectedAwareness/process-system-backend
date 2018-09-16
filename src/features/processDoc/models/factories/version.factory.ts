@@ -8,15 +8,22 @@ import { ElementFactory } from './element.factory';
 import { ObjectID } from 'bson';
 
 export class VersionFactory {
-    public static create(model: IVersionSchema) {
+    public static create(model: IVersionSchema, denormalize: boolean = false) {
         const version = util.mapDto(model, VersionDto);
 
-        version.linkedNodeRoot = VersionFactory.createLinkedNodeRecursive(model.linkedNodeRoot);
+        if (version.linkedNodeRoot !== null && (version.nodes === null || !version.nodes.length)) {
+            const linkedNodeRoot = VersionFactory.createLinkedNodeRecursive(model.linkedNodeRoot);
+
+            if (denormalize) {
+                version.nodes = linkedNodeRoot.nodes;
+                version.linkedNodeRoot = null;
+            }
+        }
 
         return version;
     }
 
-    public static generateFromJson(data) : VersionDto {
+    public static generateFromJson(data): VersionDto {
         //data.versionId = util.getId();
         const document = new VersionDto();
         Object.assign(document, data);
