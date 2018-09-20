@@ -3,7 +3,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { IJwtPayload, IRolesInOrganisation } from '../interfaces/jwt-payload.interface';
 import { UserService } from '../../userMgmt/services/user.service';
 import { Config } from '../../../environments/environments';
-import { IUser } from '../../userMgmt/models/interfaces/user.interface';
+import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { TokenResponseDto } from '../models/tokenResponse.dto';
 import { AuthRequestDto } from '../models/authRequest.dto';
 

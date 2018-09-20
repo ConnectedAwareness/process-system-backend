@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { UserRole } from '../interfaces/user.interface';
-import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
+import { UserRole } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
+import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
 import { UserDto } from './user.dto';
 import { OrganisationDto } from './organisation.dto';
 

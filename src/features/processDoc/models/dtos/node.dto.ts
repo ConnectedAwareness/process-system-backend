@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { INode } from '../interfaces/node.interface';
-import { IElementVersion } from '../interfaces/elementversion.interface';
+import { INode } from '../../../../../npm-interfaces/src/processDoc/node.interface';
+import { IElementVersion } from '../../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { ElementVersionDto } from './elementversion.dto';
 
 export class NodeDto implements INode {

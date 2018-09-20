@@ -1,5 +1,5 @@
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
-import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
+import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
 import { OrganisationFactory } from './organisation.factory';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';

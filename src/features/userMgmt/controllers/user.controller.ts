@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { UserService } from '../services/user.service';
 import { UserDto } from '../models/dtos/user.dto';
-import { IUser } from '../models/interfaces/user.interface';
+import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
 @ApiUseTags('users')

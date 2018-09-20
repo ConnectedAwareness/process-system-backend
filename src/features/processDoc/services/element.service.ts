@@ -9,10 +9,9 @@ import * as util from '../../../common/util/util';
 
 import { ElementDto } from '../models/dtos/element.dto';
 import { IElementSchema } from '../database/interfaces/element.schema.interface';
-import { ElementType } from '../models/interfaces/elementtype.enum';
-import { IElement } from '../models/interfaces/element.interface';
+import { IElement } from '../../../../npm-interfaces/src/processDoc/element.interface';
 import { ElementFactory } from '../models/factories/element.factory';
-import { IElementVersion } from '../models/interfaces/elementversion.interface';
+import { IElementVersion } from '../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { IElementVersionSchema } from '../database/interfaces/elementversion.schema.interface';
 
 @Injectable()

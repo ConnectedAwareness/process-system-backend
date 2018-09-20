@@ -8,7 +8,7 @@ import * as util from '../../../common/util/util';
 
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
-import { IUser } from '../models/interfaces/user.interface';
+import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
 @Injectable()

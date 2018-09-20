@@ -2,7 +2,7 @@ import * as util from '../../../../common/util/util';
 
 import { OrganisationDto } from '../dtos/organisation.dto';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
-import { IOrganisation } from '../interfaces/organisation.interface';
+import { IOrganisation } from '../../../../../npm-interfaces/src/userMgmt/organisation.interface';
 import { Mongoose, Schema } from 'mongoose';
 import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
 import { UserFactory } from './user.factory';

@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IUser, UserCapability } from '../interfaces/user.interface';
-import { IUserInOrganisation } from '../interfaces/userinorganisation.interface';
+import { IUser, UserCapability } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
+import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
 import { UserInOrganisationDto } from './userinorganisation.dto';
 
 export class UserDto implements IUser {

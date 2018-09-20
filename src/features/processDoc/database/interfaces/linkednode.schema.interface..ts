@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import { INode } from '../../models/interfaces/node.interface';
+import { INode } from '../../../../../npm-interfaces/src/processDoc/node.interface';
 import { IElementVersionSchema } from './elementversion.schema.interface';
 import { INodeContainerSchema } from './nodecontainer.schema.interface';
 

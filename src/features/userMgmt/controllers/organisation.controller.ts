@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
-import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { IOrganisation } from '../../../../npm-interfaces/src/userMgmt/organisation.interface';
 
 @ApiUseTags('organisations')
 @Controller('organisations')

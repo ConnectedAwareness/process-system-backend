@@ -3,8 +3,7 @@ import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQue
 import { AuthGuard } from '@nestjs/passport';
 
 import { ElementService } from '../services/element.service';
-import { ElementDto } from '../models/dtos/element.dto';
-import { IElement } from '../models/interfaces/element.interface';
+import { IElement } from '../../../../npm-interfaces/src/processDoc/element.interface';
 
 @ApiUseTags('elements')
 @Controller('elements')

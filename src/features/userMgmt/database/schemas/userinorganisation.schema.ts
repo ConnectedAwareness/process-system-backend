@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { UserRole } from '../../models/interfaces/user.interface';
+import { UserRole } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
 
 export const UserInOrganisationSchema = new Schema({
     organisation: { type: Schema.Types.ObjectId, ref: 'Organisation' },

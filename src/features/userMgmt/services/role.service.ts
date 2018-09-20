@@ -5,11 +5,11 @@ import { Model } from 'mongoose';
 import { of } from 'rxjs';
 
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
-import { UserRole } from '../models/interfaces/user.interface';
+import { UserRole } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-import { IUserInOrganisation } from '../models/interfaces/userinorganisation.interface';
+import { IUserInOrganisation } from '../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
 import { RoleFactory } from '../models/factories/role.factory';
 
 @Injectable()

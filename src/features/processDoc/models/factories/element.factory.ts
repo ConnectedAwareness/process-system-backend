@@ -5,7 +5,6 @@ import { IElementSchema } from '../../database/interfaces/element.schema.interfa
 import { ElementVersionDto } from '../dtos/elementversion.dto';
 import { IElementVersionSchema } from '../../database/interfaces/elementversion.schema.interface';
 import { ObjectID } from 'bson';
-import { ElementSchema } from '../../database/schemas/element.schema';
 
 export class ElementFactory {
     public static createElement(model: IElementSchema) {

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 import { OrganisationService } from './organisation.service';
 import { UserService } from './user.service';
-import { UserRole, IUser, UserCapability } from '../models/interfaces/user.interface';
+import { UserRole, IUser, UserCapability } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { Model } from 'mongoose';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { IUserSchema } from '../database/interfaces/user.schema.interface';

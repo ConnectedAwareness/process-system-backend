@@ -7,8 +7,6 @@ import { VersionController } from './controllers/version.controller';
 import { VersionService } from './services/version.service';
 import { versionProviders } from './database/providers/version.providers';
 import { elementProviders } from './database/providers/element.providers';
-import { orgProviders } from './database/providers/org.providers';
-import { commentProviders } from './database/providers/comment.providers';
 import { elementVersionProviders } from './database/providers/elementversion.providers';
 import { ImportController } from './controllers/import.controller';
 import { ElementService } from './services/element.service';

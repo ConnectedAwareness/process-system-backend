@@ -1,8 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 
-import { IElementVersion } from '../interfaces/elementversion.interface';
+import { IElementVersion } from '../../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { ElementDto } from './element.dto';
-import { IElement } from '../interfaces/element.interface';
+import { IElement } from '../../../../../npm-interfaces/src/processDoc/element.interface';
 
 export class ElementVersionDto implements IElementVersion {
   constructor() {

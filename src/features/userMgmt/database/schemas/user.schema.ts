@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { UserCapability } from '../../models/interfaces/user.interface';
+import { UserCapability } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
 import { UserInOrganisationSchema } from './userinorganisation.schema';
 
 export const UserSchema = new Schema({

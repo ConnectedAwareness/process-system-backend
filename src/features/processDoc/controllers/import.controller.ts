@@ -7,7 +7,7 @@ import * as util from '../../../common/util/util';
 
 import { ImportService } from '../services/import.service';
 import { VersionDto } from '../models/dtos/version.dto';
-import { IVersion } from '../models/interfaces/version.interface';
+import { IVersion } from '../../../../npm-interfaces/src/processDoc/version.interface';
 
 @ApiUseTags('import')
 @Controller('import')

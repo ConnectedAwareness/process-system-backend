@@ -7,18 +7,16 @@ import { Observable, of } from 'rxjs';
 
 import * as util from '../../../common/util/util';
 
-import { VersionDto } from '../models/dtos/version.dto';
 import { VersionFactory } from '../models/factories/version.factory';
 import { IVersionSchema } from '../database/interfaces/version.schema.interface';
-import { IVersion } from '../models/interfaces/version.interface';
-import { INodeContainer } from '../models/interfaces/nodecontainer.interface';
+import { IVersion } from '../../../../npm-interfaces/src/processDoc/version.interface';
+import { INodeContainer } from '../../../../npm-interfaces/src/processDoc/nodecontainer.interface';
 import { INodeContainerSchema } from '../database/interfaces/nodecontainer.schema.interface';
 import { ITreeNodeSchema } from '../database/interfaces/treenode.schema.interface';
-import { TreeNodeSchema } from '../database/schemas/treenode.schema';
-import { INode } from '../models/interfaces/node.interface';
+import { INode } from '../../../../npm-interfaces/src/processDoc/node.interface';
 import { ILinkedNodeSchema } from '../database/interfaces/linkednode.schema.interface.';
 import { NodeDto } from '../models/dtos/node.dto';
-import { IElementVersion } from '../models/interfaces/elementversion.interface';
+import { IElementVersion } from '../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { ElementService } from './element.service';
 
 @Injectable()

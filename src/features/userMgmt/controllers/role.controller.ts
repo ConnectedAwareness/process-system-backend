@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { RoleService } from '../services/role.service';
 import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
-import { IUserInOrganisation } from '../models/interfaces/userinorganisation.interface';
+import { IUserInOrganisation } from '../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
 
 @ApiUseTags('roles')
 @Controller('roles')

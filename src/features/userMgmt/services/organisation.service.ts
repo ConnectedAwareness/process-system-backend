@@ -9,7 +9,7 @@ import * as util from '../../../common/util/util';
 
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { OrganisationFactory } from '../models/factories/organisation.factory';
-import { IOrganisation } from '../models/interfaces/organisation.interface';
+import { IOrganisation } from '../../../../npm-interfaces/src/userMgmt/organisation.interface';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 
 @Injectable()

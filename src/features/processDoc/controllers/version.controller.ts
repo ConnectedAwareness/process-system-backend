@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { VersionService } from '../services/version.service';
 import { VersionDto } from '../models/dtos/version.dto';
-import { IVersion } from '../models/interfaces/version.interface';
+import { IVersion } from '../../../../npm-interfaces/src/processDoc/version.interface';
 import { Config } from '../../../environments/environments';
 
 @ApiUseTags('versions')
