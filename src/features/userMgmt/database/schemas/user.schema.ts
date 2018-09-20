@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { UserCapability } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
-import { UserInOrganisationSchema } from './userinorganisation.schema';
+import { SchemaTypeNames } from '../../../../common/util/constants';
 
 export const UserSchema = new Schema({
     userId: { type: String, required: true },
@@ -11,7 +11,7 @@ export const UserSchema = new Schema({
     capabilities: { type: [String], required: false, enum: [ UserCapability.Connector, UserCapability.ITAdmin,
         // UserCapability.ProcessCoordinator,
         UserCapability.AwarenessIntegrator ] },
-    rolesInOrganisations: [{ type: Schema.Types.ObjectId, ref: 'UserInOrganisation' }]
+    rolesInOrganisations: [{ type: Schema.Types.ObjectId, ref: SchemaTypeNames.UserInOrganisation }]
 }
 , {collection: 'users' }
 );

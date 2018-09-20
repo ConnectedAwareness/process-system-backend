@@ -1,12 +1,12 @@
 import * as mongoose from 'mongoose';
 import { TreeNodeSchema } from './treenode.schema';
-import { LinkedNodeSchema } from './linkednode.schema';
+import { SchemaTypeNames } from '../../../../common/util/constants';
 
 export const VersionSchema = new mongoose.Schema({
     versionId: { type: String, required: true },
     published: { type: Boolean, required: true },
     nodes: [TreeNodeSchema],
-    linkedNodeRoot: { type: mongoose.Schema.Types.ObjectId, ref: 'LinkedNode' }
+    linkedNodeRoot: { type: mongoose.Schema.Types.ObjectId, ref: SchemaTypeNames.LinkedNode }
 }
 , {collection: 'versions' }
 );

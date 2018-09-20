@@ -1,7 +1,8 @@
 import * as mongoose from 'mongoose';
+import { SchemaTypeNames } from '../../../../common/util/constants';
 
 export const TreeNodeSchema = new mongoose.Schema({
-    elementVersion: { type: mongoose.Schema.Types.ObjectId, ref: 'ElementVersion' }
+    elementVersion: { type: mongoose.Schema.Types.ObjectId, ref: SchemaTypeNames.ElementVersion }
 });
 TreeNodeSchema.add({
     nodes: [TreeNodeSchema]
@@ -12,5 +13,5 @@ TreeNodeSchema.add({
 // see http://confluence.connectedawareness.org/display/PROSYS/Besprechung+ProzDok+-+Konzept+Datenmodell
 // see version.schema.ts, node.dto.ts
 // NodeSchema.add({
-//     nodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Node' }]
+//     nodes: [{ type: mongoose.Schema.Types.ObjectId, ref: SchemaTypeNames.Node }]
 // });

@@ -1,11 +1,11 @@
 import { Schema } from 'mongoose';
-import { UserInOrganisationSchema } from './userinorganisation.schema';
+import { SchemaTypeNames } from '../../../../common/util/constants';
 
 export const OrganisationSchema = new Schema({
     organisationId: { type: String, required: true },
     name: { type: String, required: true },
     version: { type: String, required: false },
-    users: [{ type: Schema.Types.ObjectId, ref: 'UserInOrganisation' }]
+    users: [{ type: Schema.Types.ObjectId, ref: SchemaTypeNames.UserInOrganisation }]
 }
 , {collection: 'organisations' }
 );
