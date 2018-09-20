@@ -1,4 +1,4 @@
-import { IUserInOrganisation } from "./userinorganisation.interface";
+import { IRole } from "./role.interface";
 
 /** interface representing the organisation */
 export interface IOrganisation {
@@ -9,5 +9,5 @@ export interface IOrganisation {
   /** latest version of the process document the organisation is using */
   version: string;
   /** list of users assigned to this organisation */
-  users: IUserInOrganisation[];
+  users: IRole[];
 }

@@ -1,4 +1,4 @@
-import { IUserInOrganisation } from "./userinorganisation.interface";
+import { IRole } from "./role.interface";
 
 /** defined roles a user can have in one organisation */
 export enum UserRole {
@@ -34,5 +34,5 @@ export interface IUser {
     /** list of capabilities that are assigned to the user */
     capabilities: UserCapability[];
     /** list of organisations the user is assigned with the roles depending on each organisation */
-    rolesInOrganisations: IUserInOrganisation[];
+    rolesInOrganisations: IRole[];
 }

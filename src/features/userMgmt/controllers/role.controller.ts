@@ -3,8 +3,8 @@ import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQue
 import { AuthGuard } from '@nestjs/passport';
 
 import { RoleService } from '../services/role.service';
-import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
-import { IUserInOrganisation } from '../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
+import { RoleDto } from '../models/dtos/role.dto';
+import { IRole } from '../../../../npm-interfaces/src/userMgmt/role.interface';
 
 @ApiUseTags('roles')
 @Controller('roles')
@@ -14,18 +14,18 @@ export class RoleController {
   @Post('add')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
-  // @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: UserInOrganisationDto })
+  // @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: RoleDto })
   @ApiResponse({ status: 200, description: 'Add user to organisation successful' })
-  async addUserToOrganisationAsync(@Body() userInOrganisation: UserInOrganisationDto) : Promise<IUserInOrganisation> {
-      return await this.roleService.addUserToOrganisationAsync(userInOrganisation);
+  async addUserToOrganisationAsync(@Body() role: RoleDto) : Promise<IRole> {
+      return await this.roleService.addUserToOrganisationAsync(role);
   }
 
   @Put('update')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Update an user in an organisation' })
   @ApiResponse({ status: 200, description: 'Update role successful' })
-  async updateUserInOrganisationAsync(@Body() userInOrganisation: UserInOrganisationDto) : Promise<IUserInOrganisation> {
-      return await this.roleService.updateUserInOrganisationAsync(userInOrganisation);
+  async updateRoleAsync(@Body() role: RoleDto) : Promise<IRole> {
+      return await this.roleService.updateRoleAsync(role);
   }
 
   @Delete('remove/organisation/:organisationId/user/:userId')

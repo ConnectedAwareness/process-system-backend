@@ -4,7 +4,7 @@ import { OrganisationDto } from '../dtos/organisation.dto';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
 import { IOrganisation } from '../../../../../npm-interfaces/src/userMgmt/organisation.interface';
 import { Mongoose, Schema } from 'mongoose';
-import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
+import { RoleDto } from '../dtos/role.dto';
 import { UserFactory } from './user.factory';
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 
@@ -29,8 +29,8 @@ export class OrganisationFactory {
                     userId: embedUserObject ? null : u.user.userId,
                     userEmail: embedUserObject ? null : u.user.email,
                     userAlias: u.userAlias,
-                    roles: u.roles
-                } as UserInOrganisationDto;
+                    userRoles: u.userRoles
+                } as RoleDto;
             });
         }
         else

@@ -6,10 +6,10 @@ import { of } from 'rxjs';
 
 import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserRole } from '../../../../npm-interfaces/src/userMgmt/user.interface';
-import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
-import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
+import { IRoleSchema } from '../database/interfaces/role.schema.interface';
+import { RoleDto } from '../models/dtos/role.dto';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-import { IUserInOrganisation } from '../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
+import { IRole } from '../../../../npm-interfaces/src/userMgmt/role.interface';
 import { RoleFactory } from '../models/factories/role.factory';
 
 @Injectable()
@@ -17,9 +17,9 @@ export class RoleService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('UserInOrganisationModelToken') private readonly roleModel: Model<IUserInOrganisationSchema>) { }
+        @Inject('RoleModelToken') private readonly roleModel: Model<IRoleSchema>) { }
 
-    private async checkParameterObjectAsync(uInO: UserInOrganisationDto, allowEmptyRoles: boolean):
+    private async checkParameterObjectAsync(uInO: RoleDto, allowEmptyRoles: boolean):
         Promise<{ userModel: IUserSchema, organisationModel: IOrganisationSchema }> {
         if (uInO.organisationIsObject) {
             if (!uInO.organisation)
@@ -35,7 +35,7 @@ export class RoleService {
             if (!uInO.userId || uInO.userId.length === 0)
                 throw new HttpException("Can't add user to organisation! No userId provided", HttpStatus.BAD_REQUEST);
 
-        if (!allowEmptyRoles && (!uInO.roles || uInO.roles.length === 0))
+        if (!allowEmptyRoles && (!uInO.userRoles || uInO.userRoles.length === 0))
             throw new HttpException("Can't add user to organisation! No roles provided", HttpStatus.BAD_REQUEST);
 
         const userId = uInO.userIsObject ? uInO.user.userId : uInO.userId;
@@ -52,14 +52,14 @@ export class RoleService {
         return Promise.resolve({ userModel, organisationModel });
     }
 
-    async addUserToOrganisationAsync(uInO: UserInOrganisationDto): Promise<IUserInOrganisation> {
+    async addUserToOrganisationAsync(uInO: RoleDto): Promise<IRole> {
         const { userModel, organisationModel } = await this.checkParameterObjectAsync(uInO, false);
 
         try {
             let uio = new this.roleModel(uInO);
             uio.user = userModel;
             uio.organisation = organisationModel;
-            uio.roles = uInO.roles.map(r => UserRole[r]);
+            uio.userRoles = uInO.userRoles.map(r => UserRole[r]);
             uio.userAlias = uInO.userAlias;
             uio = await uio.save();
 
@@ -70,7 +70,7 @@ export class RoleService {
             await organisationModel.save();
 
             console.log(`Successfully assigned user ${userModel.userId} with alias ${uio.userAlias}` +
-                ` to organisation ${organisationModel.organisationId} using roles ${uio.roles}`);
+                ` to organisation ${organisationModel.organisationId} using roles ${uio.userRoles}`);
 
             return of(RoleFactory.createRole(uio, uInO.userIsObject, uInO.organisationIsObject)).toPromise();
         }
@@ -81,17 +81,17 @@ export class RoleService {
         }
     }
 
-    async updateUserInOrganisationAsync(uInO: UserInOrganisationDto): Promise<IUserInOrganisation> {
+    async updateRoleAsync(uInO: RoleDto): Promise<IRole> {
         const { userModel, organisationModel } = await this.checkParameterObjectAsync(uInO, false);
 
         try {
-            // we need a start to find the UserInOrganisation object to remove
+            // we need a start to find the Role object to remove
             const uInOModel = userModel.rolesInOrganisations
-                .find(r => r.organisation.organisationId === organisationModel.organisationId) as IUserInOrganisationSchema;
+                .find(r => r.organisation.organisationId === organisationModel.organisationId) as IRoleSchema;
             if (!uInOModel)
                 throw new InternalServerErrorException("Could not find existing role to update");
 
-            uInOModel.roles = uInO.roles.map(r => UserRole[r]);
+            uInOModel.userRoles = uInO.userRoles.map(r => UserRole[r]);
             uInOModel.userAlias = uInO.userAlias;
 
             const res = await uInOModel.save().catch(err => console.error(err));
@@ -120,23 +120,23 @@ export class RoleService {
             user: null,
             userId: userId,
             userIsObject: false,
-        } as UserInOrganisationDto;
+        } as RoleDto;
 
         const { userModel, organisationModel } = await this.checkParameterObjectAsync(uInO, true);
 
         try {
-            // we need a start to find the UserInOrganisation object to remove
+            // we need a start to find the Role object to remove
             const uInOModel = userModel.rolesInOrganisations
-                .find(r => r.organisation.organisationId === organisationModel.organisationId) as IUserInOrganisationSchema;
+                .find(r => r.organisation.organisationId === organisationModel.organisationId) as IRoleSchema;
             if (!uInOModel)
                 throw new InternalServerErrorException("Could not find existing role to remove");
 
             const removedUInO = await uInOModel.remove();
 
-            userModel.rolesInOrganisations = (userModel.rolesInOrganisations as IUserInOrganisationSchema[]).filter(r => r !== uInOModel);
+            userModel.rolesInOrganisations = (userModel.rolesInOrganisations as IRoleSchema[]).filter(r => r !== uInOModel);
             await userModel.save();
 
-            organisationModel.users = (organisationModel.users as IUserInOrganisationSchema[]).filter(r => r !== uInOModel);
+            organisationModel.users = (organisationModel.users as IRoleSchema[]).filter(r => r !== uInOModel);
             await organisationModel.save();
 
             console.log(`User ${userModel.email} removed from organisation ${organisationModel.name}`);

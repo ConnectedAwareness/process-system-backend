@@ -1,6 +1,6 @@
 {
   "name": "@connectedawareness/process-system-interfaces",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "lib of interfaces for process system",
   "repository": {
     "type": "git",

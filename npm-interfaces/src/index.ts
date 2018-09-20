@@ -11,4 +11,4 @@ export { INodeContainer } from "./processDoc/nodecontainer.interface";
 export { IVersion } from "./processDoc/version.interface";
 export { IOrganisation } from "./userMgmt/organisation.interface";
 export { IUser, UserCapability, UserRole } from "./userMgmt/user.interface";
-export { IUserInOrganisation } from "./userMgmt/userinorganisation.interface";
+export { IRole } from "./userMgmt/role.interface";

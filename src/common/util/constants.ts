@@ -3,7 +3,7 @@ export enum SchemaTypeNames {
     Element = "Element",
     LinkedNode = "LinkedNode",
     Node = "Node",
-    UserInOrganisation = "UserInOrganisation",
+    Role = "Role",
     Organisation = "Organisation",
     User = "User"
   }

@@ -11,8 +11,8 @@ import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { ImportData } from '../models/dtos/importdata.dto';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { UserDto } from '../models/dtos/user.dto';
-import { UserInOrganisationDto } from '../models/dtos/userinorganisation.dto';
-import { IUserInOrganisationSchema } from '../database/interfaces/userinorganisation.schema.interface';
+import { RoleDto } from '../models/dtos/role.dto';
+import { IRoleSchema } from '../database/interfaces/role.schema.interface';
 import { RoleService } from './role.service';
 import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
 
@@ -21,7 +21,7 @@ export class InitialisationService {
     constructor(
         @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
         @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('UserInOrganisationModelToken') private readonly userInOrgSchema: Model<IUserInOrganisationSchema>,
+        @Inject('RoleModelToken') private readonly userInOrgSchema: Model<IRoleSchema>,
         private userService: UserService,
         private organisationService: OrganisationService,
         private roleService: RoleService) { }
@@ -101,8 +101,8 @@ export class InitialisationService {
                         user: us,
                         userIsObject: true,
                         userAlias: r.alias,
-                        roles: roles
-                    } as UserInOrganisationDto;
+                        userRoles: roles
+                    } as RoleDto;
                     await this.roleService.addUserToOrganisationAsync(uio);
                 }
         }

@@ -1,10 +1,10 @@
 import { Connection } from 'mongoose';
-import { UserInOrganisationSchema } from '../schemas/userinorganisation.schema';
+import { RoleSchema } from '../schemas/role.schema';
 
 export const roleProviders = [
   {
-    provide: 'UserInOrganisationModelToken',
-    useFactory: (connection: Connection) => connection.model('UserInOrganisation', UserInOrganisationSchema),
+    provide: 'RoleModelToken',
+    useFactory: (connection: Connection) => connection.model('Role', RoleSchema),
     inject: ['DbConnectionToken'],
   },
 ];

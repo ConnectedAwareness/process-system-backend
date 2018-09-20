@@ -4,8 +4,8 @@ import * as util from '../../../../common/util/util';
 import { UserDto } from '../dtos/user.dto';
 import { IUserSchema } from '../../database/interfaces/user.schema.interface';
 import { IUser } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
-import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
-import { UserInOrganisationDto } from '../dtos/userinorganisation.dto';
+import { IRole } from '../../../../../npm-interfaces/src/userMgmt/role.interface';
+import { RoleDto } from '../dtos/role.dto';
 import { OrganisationFactory } from './organisation.factory';
 import { IOrganisationSchema } from '../../database/interfaces/organisation.schema.interface';
 
@@ -30,8 +30,8 @@ export class UserFactory {
                     userId: user.userId, // NOTE may be omitted, since it's parent user
                     userEmail: user.email, // NOTE may be omitted, since it's parent user
                     userAlias: o.userAlias,
-                    roles: o.roles
-                } as UserInOrganisationDto;
+                    userRoles: o.userRoles
+                } as RoleDto;
             });
         }
         else
@@ -47,8 +47,8 @@ export class UserFactory {
         return user;
     }
 
-    public static generateUserInOrganisationFromJson(data) : IUserInOrganisation {
-        const userInOrg = new UserInOrganisationDto();
+    public static generateRoleFromJson(data) : IRole {
+        const userInOrg = new RoleDto();
         Object.assign(userInOrg, data);
 
         return userInOrg;

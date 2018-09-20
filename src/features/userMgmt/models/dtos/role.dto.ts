@@ -1,10 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { UserRole } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
-import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
+import { IRole } from '../../../../../npm-interfaces/src/userMgmt/role.interface';
 import { UserDto } from './user.dto';
 import { OrganisationDto } from './organisation.dto';
 
-export class UserInOrganisationDto implements IUserInOrganisation {
+export class RoleDto implements IRole {
     constructor() {
         this.organisation = null;
         this.organisationIsObject = false;
@@ -15,7 +15,7 @@ export class UserInOrganisationDto implements IUserInOrganisation {
         this.userId = null;
         this.userEmail = null;
         this.userAlias = null;
-        this.roles = new Array<UserRole>();
+        this.userRoles = new Array<UserRole>();
     }
 
     @ApiModelProperty({type: OrganisationDto, required: false })
@@ -37,5 +37,5 @@ export class UserInOrganisationDto implements IUserInOrganisation {
     @ApiModelProperty({type: String, required: false })
     readonly userAlias: string;
     @ApiModelProperty({ type: UserRole, isArray: true, required: true })
-    readonly roles: UserRole[];
+    readonly userRoles: UserRole[];
 }

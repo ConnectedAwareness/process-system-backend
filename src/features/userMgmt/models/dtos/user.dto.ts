@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IUser, UserCapability } from '../../../../../npm-interfaces/src/userMgmt/user.interface';
-import { IUserInOrganisation } from '../../../../../npm-interfaces/src/userMgmt/userinorganisation.interface';
-import { UserInOrganisationDto } from './userinorganisation.dto';
+import { IRole } from '../../../../../npm-interfaces/src/userMgmt/role.interface';
+import { RoleDto } from './role.dto';
 
 export class UserDto implements IUser {
     constructor() {
@@ -10,7 +10,7 @@ export class UserDto implements IUser {
         this.firstName = null;
         this.lastName = null;
         this.capabilities = new Array<UserCapability>();
-        this.rolesInOrganisations = new Array<IUserInOrganisation>();
+        this.rolesInOrganisations = new Array<IRole>();
     }
 
     @ApiModelProperty({ type: String, required: false })
@@ -23,6 +23,6 @@ export class UserDto implements IUser {
     lastName: string;
     @ApiModelProperty({ type: UserCapability, isArray: true, required: true })
     capabilities: UserCapability[];
-    @ApiModelProperty({ type: UserInOrganisationDto, isArray: true, required: false })
-    rolesInOrganisations: IUserInOrganisation[];
+    @ApiModelProperty({ type: RoleDto, isArray: true, required: false })
+    rolesInOrganisations: IRole[];
 }
