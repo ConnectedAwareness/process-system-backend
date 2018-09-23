@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Param, Body, Post } from '@nestjs/common';
-import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from '../services/auth.service';
@@ -17,7 +17,6 @@ export class AuthController {
   // nestjs/swagger sets OpenAPI "in:" parameter type dependent on which ApiImplicit* we choose; @ApiImplicitParam gets "in:path"
   // see https://github.com/nestjs/swagger/blob/master/lib/decorators/api-implicit-param.decorator.ts
   // additionally, "Implicit" seems not to be expressive enough, they have to be made explicit in @Get/@Post annotation
-  //@ApiImplicitBody({ name: 'authRequest', required: true, description: 'The user to add', type: AuthRequestDto })
   @ApiResponse({ status: 200, description: 'Login successful' })
   async loginAsync(@Body() authRequest: AuthRequestDto): Promise<TokenResponseDto> {
     return await this.authService.loginAsync(authRequest);

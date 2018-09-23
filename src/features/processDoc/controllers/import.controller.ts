@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, UploadedFile, UseInterceptors, FileInterceptor } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody, ApiImplicitFile } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitFile } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -13,15 +13,6 @@ import { IVersion } from '../../../../npm-interfaces/src/processDoc/version.inte
 @Controller('import')
 export class ImportController {
   constructor(private importService: ImportService) {}
-
-  // @Put(':versionId/import')
-  // // @UseGuards(AuthGuard('jwt'))
-  // @ApiOperation({ title: 'import version from file. Note: existing content will be replaced' })
-  // @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
-  // @ApiResponse({ status: 200, description: 'Import successful', type: VersionDto, isArray: false })
-  // async import(@Param('versionId') versionId: string, @Body() versionFile: string) : Promise<IVersion> {
-  //   return this.importService.importElementsRecursiveAsync(versionId, null);
-  // }
 
   // file upload could work like that, but has to be tested by frontend code. Status "untested"
   // https://stackoverflow.com/questions/49096068/upload-file-using-nestjs-and-multer

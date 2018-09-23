@@ -16,7 +16,7 @@ export class VersionDto implements IVersion {
   versionId: string;
   @ApiModelProperty({ type: Boolean, required: true })
   published: boolean;
-  @ApiModelProperty({ type: NodeDto, isArray: true, required: false })
+  @ApiModelProperty({ type: Object, isArray: true, required: false })
   nodes: INode[];
   @ApiModelProperty({ type: Object, required: true })
   linkedNodeRoot: INode;

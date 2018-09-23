@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode, Query, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { RoleService } from '../services/role.service';
@@ -14,7 +14,6 @@ export class RoleController {
   @Post('add')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
-  // @ApiImplicitBody({ name: 'userInorganisation', required: true, description: 'transfer object', type: RoleDto })
   @ApiResponse({ status: 200, description: 'Add user to organisation successful' })
   async addUserToOrganisationAsync(@Body() role: RoleDto) : Promise<IRole> {
       return await this.roleService.addUserToOrganisationAsync(role);

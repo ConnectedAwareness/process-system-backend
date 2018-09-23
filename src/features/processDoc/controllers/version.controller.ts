@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { VersionService } from '../services/version.service';
@@ -38,9 +38,8 @@ export class VersionController {
   @Post('create')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Create a version' })
-  @ApiImplicitBody({ name: 'version', required: true, description: 'The version to create', type: VersionDto })
   @ApiResponse({ status: 201, description: 'Creation successful' })
-  async createVersion(@Body() version: IVersion): Promise<IVersion> {
+  async createVersion(@Body() version: VersionDto): Promise<IVersion> {
     console.log('Create version');
     return await this.versionService.createVersionAsync(version);
   }
@@ -51,9 +50,8 @@ export class VersionController {
   @Put(':versionId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update a version' })
-  @ApiImplicitBody({ name: 'version', required: true, description: 'The version to update', type: VersionDto })
-  @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto, isArray: false })
-  async updateVersion(@Body() version: IVersion): Promise<IVersion> {
+  @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto })
+  async updateVersion(@Param('versionId') versionId: string, @Body() version: VersionDto): Promise<IVersion> {
     return this.versionService.updateVersionAsync(version);
   }
 

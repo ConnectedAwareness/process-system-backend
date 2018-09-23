@@ -19,23 +19,23 @@ export class RoleDto implements IRole {
     }
 
     @ApiModelProperty({type: OrganisationDto, required: false })
-    readonly organisation: OrganisationDto;
+    organisation: OrganisationDto;
     @ApiModelProperty({type: Boolean, required: false })
-    readonly organisationIsObject: boolean;
+    organisationIsObject: boolean;
     @ApiModelProperty({type: String, required: false })
-    readonly organisationId: string;
+    organisationId: string;
     @ApiModelProperty({type: String, required: false })
-    readonly organisationName: string;
-    @ApiModelProperty({type: UserDto, required: false })
-    readonly user: UserDto;
+    organisationName: string;
+    // @ApiModelProperty({type: UserDto, required: false })
+    user: UserDto;
     @ApiModelProperty({type: Boolean, required: false })
-    readonly userIsObject: boolean;
+    userIsObject: boolean;
     @ApiModelProperty({type: String, required: false })
-    readonly userId: string;
+    userId: string;
     @ApiModelProperty({type: String, required: false })
-    readonly userEmail: string;
+    userEmail: string;
     @ApiModelProperty({type: String, required: false })
-    readonly userAlias: string;
+    userAlias: string;
     @ApiModelProperty({ type: UserRole, isArray: true, required: true })
-    readonly userRoles: UserRole[];
+    userRoles: UserRole[];
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode, Query, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { OrganisationService } from '../services/organisation.service';
@@ -33,9 +33,8 @@ export class OrganisationController {
   @Post('create')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an organisation' })
-  @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to create', type: OrganisationDto })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
-  async createOrganisation(@Body() organisation: IOrganisation) : Promise<IOrganisation> {
+  async createOrganisation(@Body() organisation: OrganisationDto) : Promise<IOrganisation> {
       return await this.organisationService.createOrganisationAsync(organisation);
   }
 
@@ -43,9 +42,8 @@ export class OrganisationController {
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
-  @ApiImplicitBody({ name: 'organisation', required: true, description: 'The organisation to update', type: OrganisationDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
-  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: IOrganisation) : Promise<IOrganisation> {
+  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: OrganisationDto) : Promise<IOrganisation> {
     return await this.organisationService.updateOrganisationAsync(organisationId, organisation);
   }
 

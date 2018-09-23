@@ -14,7 +14,7 @@ export class ElementVersionDto implements IElementVersion {
 
   @ApiModelProperty({type: String, required: false})
   public elementVersionId: string;
-  @ApiModelProperty({type: ElementDto, required: false})
+  @ApiModelProperty({type: Object, required: false})
   public element: IElement;
   @ApiModelProperty({type: Number, required: false})
   public order: number;

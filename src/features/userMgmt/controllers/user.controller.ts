@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode, Query, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiImplicitBody } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { UserService } from '../services/user.service';
@@ -42,20 +42,19 @@ export class UserController {
   }
 
   @Post()
+  @HttpCode(201)
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an user' })
-  @ApiImplicitBody({ name: 'user', required: true, description: 'The user to create', type: UserDto })
-  @ApiResponse({ status: 201, description: 'Create user successful' })
-  async createUser(@Body() user: IUser): Promise<IUser> {
+  @ApiResponse({ status: 201, description: 'Create user successful', type: UserDto })
+  async createUser(@Body() user: UserDto): Promise<IUser> {
     return await this.userService.createUserAsync(user);
   }
 
   @Put(':userId')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an user' })
-  @ApiImplicitBody({ name: 'user', required: true, description: 'The user to update', type: UserDto })
   @ApiResponse({ status: 200, description: 'Update successful', type: UserDto, isArray: false })
-  async updateUser(@Param('userId') userId: string, @Body() user: IUser): Promise<IUser> {
+  async updateUser(@Param('userId') userId: string, @Body() user: UserDto): Promise<IUser> {
     return await this.userService.updateUserAsync(userId, user);
   }
 
