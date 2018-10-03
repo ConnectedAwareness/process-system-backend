@@ -31,7 +31,8 @@ export class VersionController {
   @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })
   @ApiResponse({ status: 200, description: 'Get successful' })
   async getVersion(@Param('versionId') versionId: string, @Param('depth') depth: string): Promise<IVersion> {
-    const depthN = depth ? Number.parseInt(depth) : Config.ASSUMED_MAXIMUM_VERSION_DEPTH;
+    // NOTE: I have no idea why swagger sets depth to "undefined" instead of leaving it unset, if it's kept empty in the form
+    const depthN = depth && depth !== "undefined" ? Number.parseInt(depth) : Config.ASSUMED_MAXIMUM_VERSION_DEPTH;
     return this.versionService.getVersionDenormalizedAsync(versionId, depthN);
   }
 
