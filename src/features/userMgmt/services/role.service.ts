@@ -149,4 +149,9 @@ export class RoleService {
             throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    async deleteAllRolesAsync(): Promise<boolean> {
+        await this.roleModel.collection.remove({});
+        return Promise.resolve(true);
+    }
 }

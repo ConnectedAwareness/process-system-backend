@@ -205,4 +205,10 @@ export class UserService {
 
         return null;
     }
+
+    async deleteAllUsersAsync(): Promise<boolean> {
+        // NOTE no check, although deleteUserAsync does check for roles - maybe TODO implement check?
+        await this.userModel.collection.remove({});
+        return Promise.resolve(true);
+    }
 }

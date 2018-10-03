@@ -2,26 +2,19 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 
 import * as fs from 'fs';
 
-import { OrganisationService } from './organisation.service';
-import { UserService } from './user.service';
-import { UserRole, IUser, UserCapability } from '../../../../npm-interfaces/src/userMgmt/user.interface';
-import { Model } from 'mongoose';
-import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
-import { IUserSchema } from '../database/interfaces/user.schema.interface';
-import { ImportData } from '../models/dtos/importdata.dto';
-import { OrganisationDto } from '../models/dtos/organisation.dto';
-import { UserDto } from '../models/dtos/user.dto';
-import { RoleDto } from '../models/dtos/role.dto';
-import { IRoleSchema } from '../database/interfaces/role.schema.interface';
-import { RoleService } from './role.service';
-import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
+import { OrganisationService } from '../../userMgmt/services/organisation.service';
+import { UserService } from '../../userMgmt/services/user.service';
+import { UserRole, UserCapability } from '../../../../npm-interfaces/src/userMgmt/user.interface';
+import { ImportData } from '../../userMgmt/models/dtos/importdata.dto';
+import { OrganisationDto } from '../../userMgmt/models/dtos/organisation.dto';
+import { UserDto } from '../../userMgmt/models/dtos/user.dto';
+import { RoleDto } from '../../userMgmt/models/dtos/role.dto';
+import { RoleService } from '../../userMgmt/services/role.service';
+import { ResetPasswordDto } from '../../userMgmt/models/dtos/resetpasswort.dto';
 
 @Injectable()
-export class InitialisationService {
+export class UserInitializationService {
     constructor(
-        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
-        @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('RoleModelToken') private readonly userInOrgSchema: Model<IRoleSchema>,
         private userService: UserService,
         private organisationService: OrganisationService,
         private roleService: RoleService) { }
@@ -34,17 +27,17 @@ export class InitialisationService {
      * - organisation of User.rolesInOrganisation is identified by name
      */
     async init(): Promise<void> {
-        const importDataFlag = `${process.env.IMPORT_INITIAL_DATA}` === 'true';
+        const importDataFlag = `${process.env.INITIALIZE_USER_DATA}` === 'true';
 
         //console.log('Starting to initialise DB');
         if (importDataFlag) {
             try {
-                const importDataJson = fs.readFileSync('importInitData.json');
+                const importDataJson = fs.readFileSync(`${process.env.INITIALIZE_USER_DATA_SRC}`);
                 const importData = JSON.parse(importDataJson.toString()) as ImportData;
 
                 await this.loadUserAndOrganisationData(importData);
 
-                console.log("Import of initialisation data successful");
+                console.log("Import of user initialization data successful");
             } catch (e) {
                 console.error(e);
             }
@@ -53,9 +46,9 @@ export class InitialisationService {
 
     async loadUserAndOrganisationData(data: ImportData) {
 
-        await this.userModel.collection.remove({});
-        await this.organisationModel.collection.remove({});
-        await this.userInOrgSchema.collection.remove({});
+        await this.roleService.deleteAllRolesAsync();
+        await this.userService.deleteAllUsersAsync();
+        await this.organisationService.deleteAllOrganisationsAsync();
 
         // first, store organisations
         const organisations = Array<OrganisationDto>(); // to easily get org-id by name
@@ -109,11 +102,11 @@ export class InitialisationService {
     }
 }
 
-export const initialisationPovider = {
-    provide: 'DbInit',
-    useFactory: async (initialisationService: InitialisationService) => {
+export const userInitializationPovider = {
+    provide: 'DbInitUsers',
+    useFactory: async (userInitializationService: UserInitializationService) => {
 
-        return await initialisationService.init();
+        return await userInitializationService.init();
     },
-    inject: [InitialisationService],
+    inject: [UserInitializationService],
 };

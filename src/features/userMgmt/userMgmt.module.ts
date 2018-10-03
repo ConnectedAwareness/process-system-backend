@@ -9,7 +9,6 @@ import { organisationProviders } from './database/providers/organisation.provide
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { userProviders } from './database/providers/user.providers';
-import { initialisationPovider, InitialisationService } from './services/initialisation.service';
 import { RoleService } from './services/role.service';
 import { RoleController } from './controllers/role.controller';
 import { roleProviders } from './database/providers/role.providers';
@@ -17,8 +16,8 @@ import { roleProviders } from './database/providers/role.providers';
 @Module({
     imports: [DatabaseModule],
     controllers: [OrganisationController, UserController, RoleController],
-    providers: [OrganisationService, UserService, RoleService, InitialisationService,
-                ...organisationProviders, ...userProviders, ...roleProviders, initialisationPovider],
+    providers: [OrganisationService, UserService, RoleService,
+                ...organisationProviders, ...userProviders, ...roleProviders],
     exports: [OrganisationService, UserService, RoleService]
 })
 export class UserMgmtModule {}

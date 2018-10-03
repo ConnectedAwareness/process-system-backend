@@ -149,4 +149,10 @@ export class OrganisationService {
 
         return Promise.resolve(false);
     }
+
+    async deleteAllOrganisationsAsync(): Promise<boolean> {
+        // NOTE no check, as deleteOrganisationAsync does not check too
+        await this.organisationModel.collection.remove({});
+        return Promise.resolve(true);
+    }
 }
