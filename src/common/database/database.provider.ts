@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
 import { Config } from '../../environments/environments';
+import { TokenNames } from '../util/constants';
 
 export function dbConnection() {
   let res;
@@ -16,7 +17,7 @@ export function dbConnection() {
 
 export const databaseProvider = [
   {
-    provide: 'DbConnectionToken',
+    provide: TokenNames.DbConnectionToken,
     useFactory: async (): Promise<typeof mongoose> =>
       await mongoose.connect(dbConnection()),
   },

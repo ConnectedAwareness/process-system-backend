@@ -18,14 +18,15 @@ import { ILinkedNodeSchema } from '../database/interfaces/linkednode.schema.inte
 import { NodeDto } from '../models/dtos/node.dto';
 import { IElementVersion } from '../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { ElementService } from './element.service';
+import { TokenNames } from '../../../common/util/constants';
 
 @Injectable()
 export class VersionService {
 
     constructor(
-        @Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
-        @Inject('TreeNodeModelToken') private readonly treeNodeModel: Model<ITreeNodeSchema>,
-        @Inject('LinkedNodeModelToken') private readonly linkedNodeModel: Model<ILinkedNodeSchema>,
+        @Inject(TokenNames.VersionModelToken) private readonly versionModel: Model<IVersionSchema>,
+        @Inject("TreeNodeModelToken") private readonly treeNodeModel: Model<ITreeNodeSchema>, // NOTE maybe not needed
+        @Inject(TokenNames.LinkedNodeModelToken) private readonly linkedNodeModel: Model<ILinkedNodeSchema>,
         private elementService: ElementService) { }
 
     // "CRUD" version

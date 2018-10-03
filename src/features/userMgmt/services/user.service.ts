@@ -10,10 +10,11 @@ import { IUserSchema } from '../database/interfaces/user.schema.interface';
 import { UserFactory } from '../models/factories/user.factory';
 import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
 import { ResetPasswordDto } from '../models/dtos/resetpasswort.dto';
+import { TokenNames } from '../../../common/util/constants';
 
 @Injectable()
 export class UserService {
-    constructor(@Inject('UserModelToken') private readonly userModel: Model<IUserSchema>) { }
+    constructor(@Inject(TokenNames.UserModelToken) private readonly userModel: Model<IUserSchema>) { }
 
     // not used, we'll use this.userModel directly (?)
     // getModel(user: IUser): IUserSchema {

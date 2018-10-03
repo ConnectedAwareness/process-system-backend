@@ -11,10 +11,11 @@ import { IOrganisationSchema } from '../database/interfaces/organisation.schema.
 import { OrganisationFactory } from '../models/factories/organisation.factory';
 import { IOrganisation } from '../../../../npm-interfaces/src/userMgmt/organisation.interface';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
+import { TokenNames } from '../../../common/util/constants';
 
 @Injectable()
 export class OrganisationService {
-    constructor(@Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>) { }
+    constructor(@Inject(TokenNames.OrganisationModelToken) private readonly organisationModel: Model<IOrganisationSchema>) { }
 
     async getAllOrganisationsAsync(): Promise<IOrganisation[]> {
         const res = await this.organisationModel.find();

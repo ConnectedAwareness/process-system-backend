@@ -13,13 +13,14 @@ import { IElement } from '../../../../npm-interfaces/src/processDoc/element.inte
 import { ElementFactory } from '../models/factories/element.factory';
 import { IElementVersion } from '../../../../npm-interfaces/src/processDoc/elementversion.interface';
 import { IElementVersionSchema } from '../database/interfaces/elementversion.schema.interface';
+import { TokenNames } from '../../../common/util/constants';
 
 @Injectable()
 export class ElementService {
 
     constructor(
-        @Inject('ElementModelToken') private readonly elementModel: Model<IElementSchema>,
-        @Inject('ElementVersionModelToken') private readonly elementVersionModel: Model<IElementVersionSchema>) { }
+        @Inject(TokenNames.ElementModelToken) private readonly elementModel: Model<IElementSchema>,
+        @Inject(TokenNames.ElementVersionModelToken) private readonly elementVersionModel: Model<IElementVersionSchema>) { }
 
     // "CRUD" for IElement
 

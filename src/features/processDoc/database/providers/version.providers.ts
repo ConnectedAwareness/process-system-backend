@@ -1,10 +1,11 @@
 import { Connection } from 'mongoose';
 import { VersionSchema } from '../schemas/version.schema';
+import { TokenNames, SchemaTypeNames } from '../../../../common/util/constants';
 
 export const versionProviders = [
   {
-    provide: 'VersionModelToken',
-    useFactory: (connection: Connection) => connection.model('Version', VersionSchema),
-    inject: ['DbConnectionToken'],
+    provide: TokenNames.VersionModelToken,
+    useFactory: (connection: Connection) => connection.model(SchemaTypeNames.Version, VersionSchema),
+    inject: [TokenNames.DbConnectionToken],
   },
 ];

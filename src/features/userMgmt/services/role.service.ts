@@ -11,13 +11,14 @@ import { RoleDto } from '../models/dtos/role.dto';
 import { IOrganisationSchema } from '../database/interfaces/organisation.schema.interface';
 import { IRole } from '../../../../npm-interfaces/src/userMgmt/role.interface';
 import { RoleFactory } from '../models/factories/role.factory';
+import { TokenNames } from '../../../common/util/constants';
 
 @Injectable()
 export class RoleService {
     constructor(
-        @Inject('OrganisationModelToken') private readonly organisationModel: Model<IOrganisationSchema>,
-        @Inject('UserModelToken') private readonly userModel: Model<IUserSchema>,
-        @Inject('RoleModelToken') private readonly roleModel: Model<IRoleSchema>) { }
+        @Inject(TokenNames.OrganisationModelToken) private readonly organisationModel: Model<IOrganisationSchema>,
+        @Inject(TokenNames.UserModelToken) private readonly userModel: Model<IUserSchema>,
+        @Inject(TokenNames.RoleModelToken) private readonly roleModel: Model<IRoleSchema>) { }
 
     private async checkParameterObjectAsync(uInO: RoleDto, allowEmptyRoles: boolean):
         Promise<{ userModel: IUserSchema, organisationModel: IOrganisationSchema }> {
