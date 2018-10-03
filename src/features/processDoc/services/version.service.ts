@@ -235,4 +235,11 @@ export class VersionService {
 
         return Promise.resolve(version);
     }
+
+    async deleteAllVersionsAsync(): Promise<boolean> {
+        await this.linkedNodeModel.collection.remove({});
+        await this.treeNodeModel.collection.remove({}); // NOTE maybe not needed
+        await this.versionModel.collection.remove({});
+        return Promise.resolve(true);
+    }
 }

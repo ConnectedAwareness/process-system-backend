@@ -153,4 +153,10 @@ export class ElementService {
             console.log(error);
         }
     }
+
+    async deleteAllElementsAsync(): Promise<boolean> {
+        await this.elementVersionModel.collection.remove({});
+        await this.elementModel.collection.remove({});
+        return Promise.resolve(true);
+    }
 }
