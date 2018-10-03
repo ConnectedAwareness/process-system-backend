@@ -49,6 +49,7 @@ export class ElementService {
         let res = null as ElementDto;
         try {
             res = await this.getElementAsync(element.elementId);
+            // TODO check all other fields on equality, otherwise do ... what?
         } catch (HttpException) {
             res = await this.createElementAsync(element);
         }
@@ -70,7 +71,7 @@ export class ElementService {
 
             const res = await model.save();
 
-            console.log(`new ElementDto ${element.elementId} saved`);
+            // console.log(`new ElementDto ${element.elementId} saved`);
             // console.log(res);
 
             return of(ElementFactory.createElement(res)).toPromise();
@@ -110,7 +111,7 @@ export class ElementService {
         return of(ElementFactory.createElementVersion(res)).toPromise();
     }
 
-    // TODO should be private or protected since returning Schema
+    // TODO should be private or protected since returning Schema -- NO! all non-schema returning methods must be changed to return schema
     async getElementVersionSchemaAsync(elementVersionId: string): Promise<IElementVersionSchema> {
         const query = { elementVersionId: elementVersionId };
         const res = await this.elementVersionModel.findOne(query);
@@ -121,23 +122,31 @@ export class ElementService {
         return res;
     }
 
+    // NOTE check for existance is done inline
     // TODO do we need elementId, since elementVersion.element should be set?!
     async appendElementVersionAsync(elementId: string, elementVersion: IElementVersion): Promise<IElementVersion> {
         const e = await this.getElementSchemaAsync(elementId);
 
         try {
-            const model = new this.elementVersionModel(elementVersion);
-            model.elementVersionId = util.getId();
-            model.element = e;
-            const res = await model.save();
+            const query = {
+                element: e,
+                order: elementVersion.order,
+                text: elementVersion.text
+            };
+            let model = await this.elementVersionModel.findOne(query);
+            if (model == null) {
+                model = new this.elementVersionModel(elementVersion);
+                model.elementVersionId = util.getId();
+                model.element = e;
 
-            console.log(`new ElementVersionDto ${elementVersion.text.substring(0, 20)} saved`);
-            // console.log(res);
+                model = await model.save();
+                // console.log(`new ElementVersionDto ${elementVersion.text.substring(0, 20)} saved`);
+                // console.log(res);
+                e.elementVersions.push(model);
+                await e.save();
+            }
 
-            e.elementVersions.push(res);
-            await e.save();
-
-            return of(ElementFactory.createElementVersion(res)).toPromise();
+            return of(ElementFactory.createElementVersion(model)).toPromise();
 
         } catch (error) {
             console.log(error);

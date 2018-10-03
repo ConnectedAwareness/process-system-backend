@@ -1,14 +1,10 @@
-import { Injectable, Inject, HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus, BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import * as fs from 'fs';
 
-import { Observable, of } from 'rxjs';
-
-import { VersionDto } from '../models/dtos/version.dto';
 import { ElementDto } from '../models/dtos/element.dto';
 import { IVersionSchema } from '../database/interfaces/version.schema.interface';
-import { IElementSchema } from '../database/interfaces/element.schema.interface';
 import { ElementType } from '../../../../npm-interfaces/src/processDoc/elementtype.enum';
 import { VersionService } from './version.service';
 import { IVersion } from '../../../../npm-interfaces/src/processDoc/version.interface';
@@ -17,17 +13,12 @@ import { NodeDto } from '../models/dtos/node.dto';
 import { INode } from '../../../../npm-interfaces/src/processDoc/node.interface';
 import { ElementService } from './element.service';
 import { IElementVersion } from '../../../../npm-interfaces/src/processDoc/elementversion.interface';
-import { ILinkedNodeSchema } from '../database/interfaces/linkednode.schema.interface.';
-import { IElementVersionSchema } from '../database/interfaces/elementversion.schema.interface';
+import { Config } from '../../../environments/environments';
 
 @Injectable()
 export class ImportService {
 
     constructor(
-        @Inject('VersionModelToken') private readonly versionModel: Model<IVersionSchema>,
-        @Inject('ElementModelToken') private readonly elementModel: Model<IElementSchema>,
-        @Inject('ElementVersionModelToken') private readonly elementVersionModel: Model<IElementVersionSchema>,
-        @Inject('LinkedNodeModelToken') private readonly linkedNodeModel: Model<ILinkedNodeSchema>,
         private versionService: VersionService,
         private elementService: ElementService) { }
 
@@ -46,36 +37,29 @@ export class ImportService {
             if (!versionId || versionId.length === 0)
                 throw new HttpException("Can't import version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
-            // NOTE remove existing data since we'd get exceptions otherwise (i.e. it exists for simpler debugging purposes only)
-            // TODO replace this by:
-            // (a) [must] a method getOrCreateElement (by ID identity) (call in parseIterative)
-            // (b) [must] a method getOrCreateVersion (by value identity) (call in parseIterative)
-            // (c) [thinkabout] remove the linkedNodeModel tree starting at version.linkedNodeRoot (here)
-            console.log("### Emptying collections: elementModel, elementVersionModel, linkedNodeModel");
-            console.log("### this removes ALL existing version data; for debugging purposes only");
-            await this.elementModel.collection.remove({});
-            await this.elementVersionModel.collection.remove({});
-            await this.linkedNodeModel.collection.remove({});
+            // NOTE we fetch fully populated version, so we can easily delete nodes in tree content if present
+            let version: IVersionSchema = await this.versionService.getVersionSchemaAsync(versionId, Config.ASSUMED_MAXIMUM_VERSION_DEPTH);
+            // const version: VersionDto = await this.versionService.getVersionNormalizedAsync(versionId, 0);
 
-            const version: VersionDto = await this.versionService.getVersionNormalizedAsync(versionId, 0);
-
-            console.log("original Version:");
+            console.log("Original version:");
             console.log(version);
 
             if (version.nodes && version.nodes.length > 0) {
+                throw new UnprocessableEntityException("version.nodes is set, but shall not");
                 // we won't deny an update, just remove all previously existing nodes
-                //     throw new HttpException(`Can't import version, existing VersionDto object already has nodes!`, HttpStatus.BAD_REQUEST);
-                console.log("Existing version has treeNodes, I will remove them");
-                version.nodes = new Array<NodeDto>();
-                await this.versionService.updateVersionAsync(version);
+                // console.log("Existing version has treeNodes, I will remove them");
+                // version.nodes = new Array<NodeDto>();
+                // await this.versionService.updateVersionAsync(version);
             }
 
             if (version.linkedNodeRoot) {
                 // we won't deny an update, just remove all previously existing nodes
-                //     throw new HttpException(`Can't import version, existing VersionDto object already has nodes!`, HttpStatus.BAD_REQUEST);
-                console.log("Existing version has linkedNodeRoot, I will remoe it");
-                version.linkedNodeRoot = null;
-                await this.versionService.updateVersionAsync(version);
+                console.info("Removing node tree for version " + versionId);
+                version = await this.versionService.removeLinkedNodeFromVersionAsync(version);
+                // NOTE the above method does not only remove nodes, but also elementVersions, while keeping elements in the db
+                // NOTE/TODO this may be replaced by an algorithm that keeps identical element(Versions) in place:
+                // 1. a method getOrCreateElement (by ID identity) (call in parseIterative)
+                // 2. a method getOrCreateVersion (by value identity) (call in parseIterative)
             }
 
             // init the single linked node root
@@ -84,18 +68,19 @@ export class ImportService {
                 elementVersion: null,
                 nodes: new Array<INode>()
             };
-            const versionModel = await this.versionService.createAndAddLinkedNodeToVersionAsync(version, n);
+            version = await this.versionService.createAndAddLinkedNodeToVersionAsync(version, n);
 
-            const rootNode = await this.parseIterative(versionfile, versionModel.linkedNodeRoot);
+            console.info("Parsing source document for version " + versionId + " ... this may take a while.");
+            const rootNode = await this.parseIterative(versionfile, version.linkedNodeRoot);
 
             // console.log("Version to import:");
             // console.log(version);
 
             // no update of version needed here
             //const result = await this.versionService.updateVersionAsync(version);
-            const newVersion = await this.versionService.getVersionDenormalizedAsync(versionId, 999);
+            const newVersion = await this.versionService.getVersionDenormalizedAsync(versionId, Config.ASSUMED_MAXIMUM_VERSION_DEPTH);
 
-            console.log("imported Version:");
+            console.log("Imported version:");
             console.log(newVersion);
 
             return newVersion;
@@ -143,7 +128,7 @@ export class ImportService {
                     };
                     e = await this.elementService.getOrCreateElementAsync(e);
 
-                    // NOTE appendElementVersionAsync could create Dto when given those 2 parameters
+                    // NOTE appendElementVersionAsync will re-use existing elementVersion if matching
                     const v: ElementVersionDto = {
                         elementVersionId: null,
                         element: null,
@@ -154,7 +139,7 @@ export class ImportService {
 
                     const { rootModel, childModel } = await this.versionService.createAndAddLinkedNodeAsync(root(), vModel);
                     path[path.length - 1] = rootModel; // we must replace the object with the newly saved one
-                    console.log(`pushed element ${elemType} ${elemId} to parent ${root().nodeId} `);
+                    // console.log(`pushed element ${elemType} ${elemId} to parent ${root().nodeId} `);
 
                     if (isStructuringElement) path.push(childModel);
                 }

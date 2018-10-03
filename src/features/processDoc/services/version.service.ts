@@ -1,4 +1,4 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus, InternalServerErrorException } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import * as fs from 'fs';
@@ -69,10 +69,10 @@ export class VersionService {
         return res;
     }
 
+    // TODO check whether both of them are truly required...
     async getVersionDenormalizedAsync(versionId: string, depth: number): Promise<IVersion> {
         return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth))).toPromise();
     }
-
     async getVersionNormalizedAsync(versionId: string, depth: number): Promise<IVersion> {
         return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth), false)).toPromise();
     }
@@ -117,7 +117,7 @@ export class VersionService {
 
         const res = await model.save();
 
-        console.log("Version updated");
+        console.log("Version updated:");
         console.log(res);
 
         return of(VersionFactory.create(res)).toPromise();
@@ -146,7 +146,7 @@ export class VersionService {
 
             const res = await model.save();
 
-            console.log(`new NodeDto ${model.nodeId} saved`);
+            // console.log(`new NodeDto ${model.nodeId} saved`);
             // console.log(res);
 
             return res;
@@ -184,13 +184,13 @@ export class VersionService {
     //     return res;
     // }
 
-    async createAndAddLinkedNodeToVersionAsync(version: IVersion, node: INode): Promise<IVersion> {
+    async createAndAddLinkedNodeToVersionAsync(version: IVersionSchema, node: INode): Promise<IVersionSchema> {
         const vModel = await this.getVersionSchemaAsync(version.versionId, 0);
         const nModel = await this.createLinkedNodeSchemaAsync(node);
 
         vModel.linkedNodeRoot = nModel;
         const res = await vModel.save();
-        return of(VersionFactory.create(vModel)).toPromise();
+        return of(vModel).toPromise();
     }
 
     async createAndAddLinkedNodeAsync(nodeContainer: INode, elementVersion: IElementVersion): Promise<{ rootModel: INode, childModel: INode }> {
@@ -213,5 +213,25 @@ export class VersionService {
             rootModel: VersionFactory.createLinkedNode(ncModel),
             childModel: VersionFactory.createLinkedNode(nModel)
         }).toPromise();
+    }
+
+    async removeLinkedNodeFromVersionAsync(version: IVersionSchema): Promise<IVersionSchema> {
+        // inspired by https://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
+        const flatten = (arr, result = []) => {
+            for (const value of arr) {
+                result.push(value);
+                flatten(value.nodes, result);
+            }
+            return result;
+        };
+
+        const nodes = flatten(version.linkedNodeRoot.nodes);
+        nodes.unshift(version.linkedNodeRoot);
+        nodes.forEach(n => n.remove());
+
+        version.linkedNodeRoot = null;
+        await this.updateVersionAsync(version);
+
+        return Promise.resolve(version);
     }
 }
