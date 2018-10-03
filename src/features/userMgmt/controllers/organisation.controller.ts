@@ -30,7 +30,7 @@ export class OrganisationController {
     return await this.organisationService.getOrganisationByIdAsync(organisationId);
   }
 
-  @Post('create')
+  @Post()
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
