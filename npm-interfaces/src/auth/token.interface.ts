@@ -1,4 +1,4 @@
-export interface IJwtPayload {
+export interface IToken {
   userId: string;
   email: string;
   firstName: string;
@@ -8,7 +8,7 @@ export interface IJwtPayload {
 }
 
 export class IRolesInOrganisation {
-  userAlias: string; // redundance: copied to IRoleOfUser
-  userRoles: string[]; // redundance: copied to IRoleOfUser
-  organisationName: string;
+  userAlias: string;
+  userRoles: string[];
+  organisationId: string;
 }

@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { IJwtPayload, IRolesInOrganisation } from '../interfaces/jwt-payload.interface';
+import { IToken, IRolesInOrganisation } from '../../../../npm-interfaces/src/auth/token.interface';
 import { UserService } from '../../userMgmt/services/user.service';
 import { Config } from '../../../environments/environments';
 import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
@@ -27,7 +27,7 @@ export class AuthService {
         throw new HttpException(response, HttpStatus.UNAUTHORIZED);
       }
 
-      const payload: IJwtPayload = {
+      const payload: IToken = {
         userId: user.userId,
         email: user.email,
         firstName: user.firstName,
@@ -41,7 +41,7 @@ export class AuthService {
           payload.rolesInOrganisations.push({
             userAlias: rio.userAlias,
             userRoles: rio.userRoles,
-            organisationName: rio.organisation.name
+            organisationId: rio.organisation.organisationId
           } as IRolesInOrganisation);
         }
         );
@@ -55,7 +55,7 @@ export class AuthService {
     return response;
   }
 
-  async validateUser(payload: IJwtPayload): Promise<IUser> {
+  async validateUser(payload: IToken): Promise<IUser> {
     return await this.userService.getUserByEmailAsync(payload.email);
   }
 }
