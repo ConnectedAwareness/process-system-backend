@@ -14,7 +14,8 @@
     "pre-build": "rimraf dist && rimraf doc"
   },
   "keywords": [
-    "connected awareness", "process system"
+    "connected awareness",
+    "process system"
   ],
   "author": "jhberg",
   "license": "ISC",
