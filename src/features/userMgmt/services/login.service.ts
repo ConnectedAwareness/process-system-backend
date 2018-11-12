@@ -1,15 +1,18 @@
-import * as jwt from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+
 import { IToken, IRolesInOrganisation } from '../../../../npm-interfaces/src/auth/token.interface';
-import { UserService } from '../../userMgmt/services/user.service';
-import { Config } from '../../../environments/environments';
 import { IUser } from '../../../../npm-interfaces/src/userMgmt/user.interface';
-import { TokenResponseDto } from '../models/tokenResponse.dto';
-import { AuthRequestDto } from '../models/authRequest.dto';
+
+import { TokenResponseDto } from '../models/dtos/tokenResponse.dto';
+import { AuthRequestDto } from '../models/dtos/authRequest.dto';
+import { UserService } from './user.service';
 
 @Injectable()
-export class AuthService {
-  constructor(private readonly userService: UserService) { }
+export class LoginService {
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService) { }
 
   async loginAsync(authRequest: AuthRequestDto): Promise<TokenResponseDto> {
     const response = new TokenResponseDto();
@@ -46,7 +49,8 @@ export class AuthService {
         }
         );
 
-      response.token = jwt.sign(payload, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
+      response.token = this.jwtService.sign(payload);
+      //response.token = jwt.sign(payload, Config.AUTH_SECRETKEY, { expiresIn: 3600 });
 
     } catch (err) {
       response.message = "Error validating User";

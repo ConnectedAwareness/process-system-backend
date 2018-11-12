@@ -13,7 +13,6 @@ export class VersionController {
   constructor(private versionService: VersionService) { }
 
   @Get('all/:depth?')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all versions' })
   @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
@@ -25,7 +24,6 @@ export class VersionController {
   // CRUD
 
   @Get(':versionId/:depth?')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })
@@ -37,7 +35,6 @@ export class VersionController {
   }
 
   @Post('create')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Create a version' })
   @ApiResponse({ status: 201, description: 'Creation successful' })
   async createVersion(@Body() version: VersionDto): Promise<IVersion> {
@@ -49,7 +46,6 @@ export class VersionController {
   // are versions immutable?
   // we'd need more like "create new version as copy from old one"
   @Put(':versionId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update a version' })
   @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto })
   async updateVersion(@Param('versionId') versionId: string, @Body() version: VersionDto): Promise<IVersion> {

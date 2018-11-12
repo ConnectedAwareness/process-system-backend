@@ -2,14 +2,14 @@ import { Controller, Get, UseGuards, Param, Body, Post } from '@nestjs/common';
 import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-import { AuthService } from '../services/auth.service';
-import { TokenResponseDto } from '../models/tokenResponse.dto';
-import { AuthRequestDto } from '../models/authRequest.dto';
+import { LoginService } from '../services/login.service';
+import { TokenResponseDto } from '../models/dtos/tokenResponse.dto';
+import { AuthRequestDto } from '../models/dtos/authRequest.dto';
 
 @ApiUseTags('auth')
 @Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class LoginController {
+  constructor(private readonly authService: LoginService) {}
 
   @Post('login')
   @ApiOperation({ title: 'login' })
@@ -23,7 +23,7 @@ export class AuthController {
   }
 
   @Get('data')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard())
   findAll() {
       return "Hello World, you are authenticated!";
   }

@@ -12,7 +12,6 @@ export class RoleController {
   constructor(private roleService: RoleService) { }
 
   @Post('add')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Add an user to an organisation' })
   @ApiResponse({ status: 200, description: 'Add user to organisation successful' })
   async addUserToOrganisationAsync(@Body() role: RoleDto) : Promise<IRole> {
@@ -20,7 +19,6 @@ export class RoleController {
   }
 
   @Put('update')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Update an user in an organisation' })
   @ApiResponse({ status: 200, description: 'Update role successful' })
   async updateRoleAsync(@Body() role: RoleDto) : Promise<IRole> {
@@ -28,7 +26,6 @@ export class RoleController {
   }
 
   @Delete('remove/organisation/:organisationId/user/:userId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Remove an user from an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'userId of user' })

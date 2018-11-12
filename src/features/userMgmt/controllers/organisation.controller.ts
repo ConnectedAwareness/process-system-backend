@@ -5,14 +5,20 @@ import { AuthGuard } from '@nestjs/passport';
 import { OrganisationService } from '../services/organisation.service';
 import { OrganisationDto } from '../models/dtos/organisation.dto';
 import { IOrganisation } from '../../../../npm-interfaces/src/userMgmt/organisation.interface';
+import { RolesGuard } from '../../../common/auth/guards/roles.guard';
+import { Roles } from '../../../common/auth/guards/roles.decorator';
+import { Capabilities } from '../../../common/auth/guards/capabilities.decorator';
 
 @ApiUseTags('organisations')
 @Controller('organisations')
+@UseGuards(AuthGuard())
+@UseGuards(RolesGuard)
 export class OrganisationController {
   constructor(private organisationService: OrganisationService) {}
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
+  @Roles('Connector')
+  @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'get all organisations' })
   @ApiImplicitQuery({ name: 'skip', required: false})
   @ApiImplicitQuery({ name: 'limit', required: false})
@@ -22,7 +28,6 @@ export class OrganisationController {
   }
 
   @Get(':organisationId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get organisation by Id' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiResponse({ status: 200, description: 'Get successful' })
@@ -31,7 +36,6 @@ export class OrganisationController {
   }
 
   @Post()
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
   async createOrganisation(@Body() organisation: OrganisationDto) : Promise<IOrganisation> {
@@ -39,7 +43,6 @@ export class OrganisationController {
   }
 
   @Put(':organisationId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
@@ -48,7 +51,6 @@ export class OrganisationController {
   }
 
   @Delete(':organisationId')
-  // @UseGuards(AuthGuard('jwt'))
   @HttpCode(202)
   @ApiOperation({ title: 'delete an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })

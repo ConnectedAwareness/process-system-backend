@@ -12,7 +12,6 @@ export class ElementController {
   constructor(private elementService: ElementService) {}
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all elements' })
   @ApiResponse({ status: 200, description: 'Get All successful', type: ElementDto, isArray: true })
   async getAllElements() : Promise<IElement[]> {
@@ -22,7 +21,6 @@ export class ElementController {
   // CRUD
 
   @Get(':elementId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get a specific element by id' })
   @ApiImplicitParam({ name: 'elementId', required: true, description: 'id of element' })
   @ApiResponse({ status: 200, description: 'Get successful', type: ElementDto })
@@ -31,7 +29,6 @@ export class ElementController {
   }
 
   @Post()
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Create an element' })
   @ApiResponse({ status: 201, description: 'Creation successful', type: ElementDto })
   async createElement(@Body() element: ElementDto) : Promise<IElement> {
@@ -42,7 +39,6 @@ export class ElementController {
   // TODO do not use until we know why we should
   // we'd need more like "append element-version if changed, otherwise return old version"
   // @Put()
-  // // @UseGuards(AuthGuard('jwt'))
   // @ApiOperation({ title: 'update an element' })
   // @ApiResponse({ status: 200, description: 'Update successful', type: ElementDto, isArray: false })
   // async updateElement(@Body() element: ElementDto) : Promise<IElement> {

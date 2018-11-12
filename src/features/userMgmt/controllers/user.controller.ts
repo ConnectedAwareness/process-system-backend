@@ -13,7 +13,6 @@ export class UserController {
   constructor(private userService: UserService) { }
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get all users' })
   @ApiImplicitQuery({ name: 'skip', required: false})
   @ApiImplicitQuery({ name: 'limit', required: false})
@@ -23,7 +22,6 @@ export class UserController {
   }
 
   @Get(':userId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get user by Id' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'userId of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
@@ -33,7 +31,6 @@ export class UserController {
 
   // TODO needed?
   @Get('byemail/:email')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'get user by email' })
   @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
   @ApiResponse({ status: 200, description: 'Get successful' })
@@ -43,7 +40,6 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'create an user' })
   @ApiResponse({ status: 201, description: 'Create user successful', type: UserDto })
   async createUser(@Body() user: UserDto): Promise<IUser> {
@@ -51,7 +47,6 @@ export class UserController {
   }
 
   @Put(':userId')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'update an user' })
   @ApiResponse({ status: 200, description: 'Update successful', type: UserDto, isArray: false })
   async updateUser(@Param('userId') userId: string, @Body() user: UserDto): Promise<IUser> {
@@ -59,7 +54,6 @@ export class UserController {
   }
 
   @Delete(':userId')
-  // @UseGuards(AuthGuard('jwt'))
   @HttpCode(202)
   @ApiOperation({ title: 'delete an user' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'Id of the user to delete' })
@@ -69,7 +63,6 @@ export class UserController {
   }
 
   @Post('resetpassword')
-  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'reset an user\'s password' })
   @ApiResponse({ status: 200, description: 'Reset password successful' })
   async resetUserPassword(@Body() resetPassword: ResetPasswordDto): Promise<boolean> {
