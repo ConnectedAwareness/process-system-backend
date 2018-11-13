@@ -20,4 +20,4 @@ import { JwtStrategy } from './providers/jwt.strategy';
   providers: [AuthorizationService, RolesGuard, JwtStrategy], //, ...rolesProvider, ...capabilitiesProvider],
   exports: [AuthorizationService, RolesGuard] //, ...rolesProvider, ...capabilitiesProvider]
 })
-export class PassportAuthModule { }
+export class AuthModule { }
