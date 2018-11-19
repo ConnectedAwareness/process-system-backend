@@ -25,10 +25,10 @@
       "firstName": "Jens",
       "lastName": "Tester",
       "capabilities": [
-        "ITAdmin"
+        "Connector", "ITAdmin", "AwarenessIntegrator"
       ],
       "rolesInOrganisations": [{
-        "roles": ["Connectee"],
+        "roles": ["Connectee", "ProcessCoordinator", "Connector"],
         "organisationName": "Connected Awareness"
       }]
     },
@@ -38,8 +38,12 @@
       "firstName": "Ammon",
       "lastName": "Tester",
       "capabilities": [
-        "ITAdmin"
-      ]
+        "Connector", "ITAdmin", "AwarenessIntegrator"
+      ],
+      "rolesInOrganisations": [{
+        "roles": ["Connectee", "ProcessCoordinator", "Connector"],
+        "organisationName": "Connected Awareness"
+      }]
     },
     {
       "email": "frieder@email.com",
@@ -47,10 +51,10 @@
       "firstName": "Frieder",
       "lastName": "Tester",
       "capabilities": [
-        "ITAdmin"
+        "Connector", "ITAdmin", "AwarenessIntegrator"
       ],
       "rolesInOrganisations": [{
-        "roles": ["Connectee"],
+        "roles": ["Connectee", "ProcessCoordinator", "Connector"],
         "organisationName": "Connected Awareness"
       }]
     },

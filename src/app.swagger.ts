@@ -10,6 +10,7 @@ export class SwaggerConfiguration {
             .setTitle('process-system-backend')
             .setDescription('backend service for process system')
             .setVersion('v0.1')
+            .addBearerAuth()
             .addTag('versions', 'Api for versions')
             .addTag('organisations', 'Api for organisation management')
             .addTag('users', 'Api for user management')

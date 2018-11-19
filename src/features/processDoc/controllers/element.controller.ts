@@ -1,13 +1,18 @@
 import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ElementService } from '../services/element.service';
 import { IElement } from '../../../../npm-interfaces/src/processDoc/element.interface';
 import { ElementDto } from '../models/dtos/element.dto';
+import { RolesGuard } from '../../../common/auth/guards/roles.guard';
+import { Capabilities } from '../../../common/auth/guards/capabilities.decorator';
 
 @ApiUseTags('elements')
 @Controller('elements')
+@UseGuards(AuthGuard())
+@UseGuards(RolesGuard)
+@ApiBearerAuth()
 export class ElementController {
   constructor(private elementService: ElementService) {}
 
@@ -29,6 +34,7 @@ export class ElementController {
   }
 
   @Post()
+  @Capabilities('ITAdmin', 'AwarenessIntegrator')
   @ApiOperation({ title: 'Create an element' })
   @ApiResponse({ status: 201, description: 'Creation successful', type: ElementDto })
   async createElement(@Body() element: ElementDto) : Promise<IElement> {

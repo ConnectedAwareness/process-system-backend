@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 
+import { AuthModule } from '../../common/auth/auth.module';
 import { DatabaseModule } from '../../common/database/database.module';
 
 import { VersionController } from './controllers/version.controller';
@@ -15,7 +15,7 @@ import { ElementController } from './controllers/element.controller';
 import { nodeProviders } from './database/providers/node.providers';
 
 @Module({
-    imports: [DatabaseModule],
+    imports: [AuthModule, DatabaseModule],
     controllers: [VersionController, ElementController, ImportController],
     providers: [ImportService, VersionService, ElementService,
         ...versionProviders, ...nodeProviders, ...elementProviders, ...elementVersionProviders],

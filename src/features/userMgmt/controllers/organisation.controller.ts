@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Patch, HttpCode, Query, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiImplicitQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { OrganisationService } from '../services/organisation.service';
@@ -13,6 +13,7 @@ import { Capabilities } from '../../../common/auth/guards/capabilities.decorator
 @Controller('organisations')
 @UseGuards(AuthGuard())
 @UseGuards(RolesGuard)
+@ApiBearerAuth()
 export class OrganisationController {
   constructor(private organisationService: OrganisationService) {}
 
@@ -36,6 +37,8 @@ export class OrganisationController {
   }
 
   @Post()
+  @Roles('Connector')
+  @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
   async createOrganisation(@Body() organisation: OrganisationDto) : Promise<IOrganisation> {
@@ -43,6 +46,8 @@ export class OrganisationController {
   }
 
   @Put(':organisationId')
+  @Roles('Connector')
+  @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
@@ -52,6 +57,8 @@ export class OrganisationController {
 
   @Delete(':organisationId')
   @HttpCode(202)
+  @Roles('Connector')
+  @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'delete an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 202, description: 'Delete successful' })
