@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Param, Body, Post } from '@nestjs/common';
-import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiOperation, ApiImplicitParam, ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { LoginService } from '../services/login.service';
@@ -24,6 +24,7 @@ export class LoginController {
 
   @Get('data')
   @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   findAll() {
       return "Hello World, you are authenticated!";
   }
