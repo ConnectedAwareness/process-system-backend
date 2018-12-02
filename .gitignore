@@ -392,3 +392,4 @@ docker-compose.yml
 dist
 .vscode/launch.json
 upload
+/.vscode/settings.json
