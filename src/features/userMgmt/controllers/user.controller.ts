@@ -30,6 +30,7 @@ export class UserController {
   }
 
   @Get(':userId')
+  @Roles('Connectee', 'Connector')
   @Capabilities('ITAdmin', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get user by Id' })
   @ApiImplicitParam({ name: 'userId', required: true, description: 'userId of user' })
@@ -40,6 +41,7 @@ export class UserController {
 
   // TODO needed?
   @Get('byemail/:email')
+  @Roles('Connectee', 'Connector')
   @Capabilities('ITAdmin', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get user by email' })
   @ApiImplicitParam({ name: 'email', required: true, description: 'email of user' })
@@ -50,7 +52,7 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  @Roles('ProcessCoordinator')
+  @Roles('ProcessCoordinator', 'Connector')
   @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'create an user' })
   @ApiResponse({ status: 201, description: 'Create user successful', type: UserDto })
@@ -59,7 +61,7 @@ export class UserController {
   }
 
   @Put(':userId')
-  @Roles('ProcessCoordinator')
+  @Roles('ProcessCoordinator', 'Connector')
   @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'update an user' })
   @ApiResponse({ status: 200, description: 'Update successful', type: UserDto, isArray: false })

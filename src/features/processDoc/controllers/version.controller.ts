@@ -32,6 +32,8 @@ export class VersionController {
   // CRUD
 
   @Get(':versionId/:depth?')
+  @Roles('Connectee', 'Connector')
+  @Capabilities('ITAdmin', 'Connector', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
   @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })

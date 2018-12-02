@@ -29,6 +29,8 @@ export class OrganisationController {
   }
 
   @Get(':organisationId')
+  @Roles('Connectee', 'Connector')
+  @Capabilities('ITAdmin', 'Connector', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get organisation by Id' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiResponse({ status: 200, description: 'Get successful' })
