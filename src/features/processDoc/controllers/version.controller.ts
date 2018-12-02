@@ -19,20 +19,20 @@ import { BooleanPipe, NumberPipe } from '../../../common/util/util';
 export class VersionController {
   constructor(private versionService: VersionService) { }
 
-  @Get('all/:depth?')
+  @Get()
   @Roles('ProcessCoordinator', 'Connector')
   @Capabilities('ITAdmin', 'Connector', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get all versions' })
-  @ApiImplicitQuery({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
+  // @ApiImplicitQuery({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
   @ApiImplicitQuery({ name: 'skip', required: false, description: 'number of elements to skip' })
   @ApiImplicitQuery({ name: 'limit', required: false, description: 'max number of elements to return' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
   async getAllVersions(
-    @Query('depth', new NumberPipe()) depth?: number,
+    //@Query('depth', new NumberPipe()) depth?: number,
     @Query('skip', new NumberPipe()) skip?: number,
     @Query('limit', new NumberPipe()) limit?: number): Promise<IVersion[]> {
 
-    return this.versionService.getAllVersionsAsync(depth, skip, limit);
+    return this.versionService.getAllVersionsAsync(skip, limit);
   }
 
   // CRUD
@@ -50,7 +50,7 @@ export class VersionController {
     return this.versionService.getVersionDenormalizedAsync(versionId, depthN);
   }
 
-  @Post('create')
+  @Post()
   @Capabilities('ITAdmin', 'AwarenessIntegrator')
   @ApiOperation({ title: 'Create a version' })
   @ApiResponse({ status: 201, description: 'Creation successful' })
@@ -80,5 +80,4 @@ export class VersionController {
   async publishVersion(@Param('versionId') versionId: string, @Param('publish', new BooleanPipe()) publish: boolean): Promise<boolean> {
     return this.versionService.publishVersionAsync(versionId, publish);
   }
-
 }

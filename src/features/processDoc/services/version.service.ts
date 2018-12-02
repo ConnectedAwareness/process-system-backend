@@ -49,8 +49,26 @@ export class VersionService {
         return pop;
     }
 
-    async getAllVersionsAsync(depth: number = 0, skip: number = 0, limit: number = 0): Promise<IVersion[]> {
-        const res = await this.versionModel.find().populate(this.buildPopulateTree(depth));
+    async getAllVersionsAsync(skip: number = 0, limit: number = 0): Promise<IVersion[]> {
+        let res: Array<IVersionSchema> = null;
+
+        if (skip > 0 && limit > 0)
+            res = await this.versionModel.find()
+                .limit(limit)
+                .skip(skip * limit)
+                .sort('versionId')
+                //.populate(this.buildPopulateTree(depth))
+                .exec();
+        else if (limit > 0)
+            res = await this.versionModel.find()
+                .limit(limit)
+                .sort('versionId')
+                //.populate(this.buildPopulateTree(depth))
+                .exec();
+        else
+            res = await this.versionModel.find()
+                .sort('versionId');
+                //.populate(this.buildPopulateTree(depth));
 
         if (res == null)
             return null;
@@ -100,25 +118,32 @@ export class VersionService {
         if (!versionId || versionId.length === 0)
             throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
-        const query = { versionId: versionId };
+        try {
+            const query = { versionId: versionId };
 
-        const model = await this.versionModel.findOne(query);
+            const model = await this.versionModel.findOne(query);
 
-        // TODO set some values... e.g. the complete tree (?!)
-        // think about it ... do we even need an update?
+            // TODO set some values... e.g. the complete tree (?!)
+            // think about it ... do we even need an update?
 
-        model.nodes = version.nodes.map(n => new this.treeNodeModel(n));
-        // // first reset nodes in model
-        // model.nodes = new Array<INodeSchema>();
-        // // then copy tree -- NOTE we must iterate through the complete tree, since mongo's push() replaces/wraps given obj by EmbeddedObject
-        // this.pushTreeIteratively(model, version);
+            model.nodes = version.nodes.map(n => new this.treeNodeModel(n));
+            // // first reset nodes in model
+            // model.nodes = new Array<INodeSchema>();
+            // // then copy tree -- NOTE we must iterate through the complete tree, since mongo's push() replaces/wraps given obj by EmbeddedObject
+            // this.pushTreeIteratively(model, version);
 
-        const res = await model.save();
+            const res = await model.save();
 
-        console.log("Version updated:");
-        console.log(res);
+            console.log("Version updated:");
+            console.log(res);
 
-        return of(VersionFactory.create(res)).toPromise();
+            return of(VersionFactory.create(res)).toPromise();
+        }
+        catch (err) {
+            const msg = `Error updating version with versionId ${versionId}`;
+            console.error(msg, err);
+            throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public async publishVersionAsync(versionId: string, publish: boolean): Promise<boolean> {
@@ -141,7 +166,9 @@ export class VersionService {
             return of(true).toPromise();
         }
         catch (err) {
-            console.error(`Error publishing version with versionId ${versionId}`, err);
+            const msg = `Error publishing version with versionId ${versionId}`;
+            console.error(msg, err);
+            throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -252,7 +279,7 @@ export class VersionService {
         nodes.forEach(n => n.remove());
 
         version.linkedNodeRoot = null;
-        await this.updateVersionAsync(version);
+        await this.updateVersionAsync(version.versionId, version);
 
         return Promise.resolve(version);
     }

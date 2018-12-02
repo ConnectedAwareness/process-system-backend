@@ -18,7 +18,22 @@ export class OrganisationService {
     constructor(@Inject(TokenNames.OrganisationModelToken) private readonly organisationModel: Model<IOrganisationSchema>) { }
 
     async getAllOrganisationsAsync(skip: number = 0, limit: number = 0): Promise<IOrganisation[]> {
-        const res = await this.organisationModel.find();
+        let res: Array<IOrganisationSchema> = null;
+
+        if (skip > 0 && limit > 0)
+            res = await this.organisationModel.find()
+                .limit(limit)
+                .skip(skip * limit)
+                .sort('name')
+                .exec();
+        else if (limit > 0)
+            res = await this.organisationModel.find()
+                .limit(limit)
+                .sort('name')
+                .exec();
+        else
+            res = await this.organisationModel.find()
+                .sort('name');
 
         if (res == null)
             return null;
