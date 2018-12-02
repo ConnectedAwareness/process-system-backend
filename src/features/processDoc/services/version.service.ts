@@ -1,7 +1,5 @@
 import { Injectable, Inject, HttpException, HttpStatus, InternalServerErrorException } from '@nestjs/common';
-import { Model } from 'mongoose';
-
-import * as fs from 'fs';
+import { Model, version } from 'mongoose';
 
 import { Observable, of } from 'rxjs';
 
@@ -51,7 +49,7 @@ export class VersionService {
         return pop;
     }
 
-    async getAllVersionsAsync(depth: number): Promise<IVersion[]> {
+    async getAllVersionsAsync(depth: number = 0, skip: number = 0, limit: number = 0): Promise<IVersion[]> {
         const res = await this.versionModel.find().populate(this.buildPopulateTree(depth));
 
         if (res == null)
@@ -78,7 +76,7 @@ export class VersionService {
         return of(VersionFactory.create(await this.getVersionSchemaAsync(versionId, depth), false)).toPromise();
     }
 
-    async createVersionAsync(version: IVersion): Promise<IVersion> {
+    public async createVersionAsync(version: IVersion): Promise<IVersion> {
         try {
             if (!version.versionId || version.versionId.length === 0)
                 throw new HttpException("Can't create new version, no versionId supplied", HttpStatus.BAD_REQUEST);
@@ -98,17 +96,16 @@ export class VersionService {
         }
     }
 
-    async updateVersionAsync(version: IVersion): Promise<IVersion> {
-        if (!version.versionId || version.versionId.length === 0)
+    public async updateVersionAsync(versionId: string, version: IVersion): Promise<IVersion> {
+        if (!versionId || versionId.length === 0)
             throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
 
-        const query = { versionId: version.versionId };
+        const query = { versionId: versionId };
 
         const model = await this.versionModel.findOne(query);
 
         // TODO set some values... e.g. the complete tree (?!)
         // think about it ... do we even need an update?
-        model.published = version.published;
 
         model.nodes = version.nodes.map(n => new this.treeNodeModel(n));
         // // first reset nodes in model
@@ -122,6 +119,30 @@ export class VersionService {
         console.log(res);
 
         return of(VersionFactory.create(res)).toPromise();
+    }
+
+    public async publishVersionAsync(versionId: string, publish: boolean): Promise<boolean> {
+        if (!versionId || versionId.length === 0)
+            throw new HttpException("Can't fetch version, no versionId supplied", HttpStatus.BAD_REQUEST);
+
+        try {
+            const query = { versionId: versionId };
+
+            const model = await this.versionModel.findOne(query);
+
+            // TODO set some values... e.g. the complete tree (?!)
+            // think about it ... do we even need an update?
+            model.published = publish;
+
+            const res = await model.save();
+
+            console.log("Version published", res);
+
+            return of(true).toPromise();
+        }
+        catch (err) {
+            console.error(`Error publishing version with versionId ${versionId}`, err);
+        }
     }
 
     private pushTreeIteratively(targetNodeContainerModel: INodeContainerSchema, sourceNodeContainer: INodeContainer) {

@@ -17,7 +17,7 @@ import { TokenNames } from '../../../common/util/constants';
 export class OrganisationService {
     constructor(@Inject(TokenNames.OrganisationModelToken) private readonly organisationModel: Model<IOrganisationSchema>) { }
 
-    async getAllOrganisationsAsync(): Promise<IOrganisation[]> {
+    async getAllOrganisationsAsync(skip: number = 0, limit: number = 0): Promise<IOrganisation[]> {
         const res = await this.organisationModel.find();
 
         if (res == null)

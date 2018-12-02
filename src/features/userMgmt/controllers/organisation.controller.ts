@@ -8,6 +8,7 @@ import { IOrganisation } from '../../../../npm-interfaces/src/userMgmt/organisat
 import { RolesGuard } from '../../../common/auth/guards/roles.guard';
 import { Roles } from '../../../common/auth/guards/roles.decorator';
 import { Capabilities } from '../../../common/auth/guards/capabilities.decorator';
+import { NumberPipe } from '../../../common/util/util';
 
 @ApiUseTags('organisations')
 @Controller('organisations')
@@ -15,17 +16,19 @@ import { Capabilities } from '../../../common/auth/guards/capabilities.decorator
 @UseGuards(RolesGuard)
 @ApiBearerAuth()
 export class OrganisationController {
-  constructor(private organisationService: OrganisationService) {}
+  constructor(private organisationService: OrganisationService) { }
 
   @Get()
   @Roles('Connector')
   @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'get all organisations' })
-  @ApiImplicitQuery({ name: 'skip', required: false})
-  @ApiImplicitQuery({ name: 'limit', required: false})
+  @ApiImplicitQuery({ name: 'skip', required: false, description: 'number of elements to skip' })
+  @ApiImplicitQuery({ name: 'limit', required: false, description: 'max number of elements to return' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllOrganisations(@Query('skip') skip?: string, @Query('limit') limit?: number) : Promise<IOrganisation[]> {
-    return await this.organisationService.getAllOrganisationsAsync();
+  async getAllOrganisations(
+    @Query('skip', new NumberPipe()) skip?: number,
+    @Query('limit', new NumberPipe()) limit?: number): Promise<IOrganisation[]> {
+    return await this.organisationService.getAllOrganisationsAsync(skip, limit);
   }
 
   @Get(':organisationId')
@@ -34,7 +37,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'get organisation by Id' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'organisationId of organisation' })
   @ApiResponse({ status: 200, description: 'Get successful' })
-  async getOrganisationById(@Param('organisationId') organisationId: string) : Promise<IOrganisation> {
+  async getOrganisationById(@Param('organisationId') organisationId: string): Promise<IOrganisation> {
     return await this.organisationService.getOrganisationByIdAsync(organisationId);
   }
 
@@ -43,8 +46,8 @@ export class OrganisationController {
   @Capabilities('ITAdmin', 'Connector')
   @ApiOperation({ title: 'create an organisation' })
   @ApiResponse({ status: 201, description: 'Create organisation successful' })
-  async createOrganisation(@Body() organisation: OrganisationDto) : Promise<IOrganisation> {
-      return await this.organisationService.createOrganisationAsync(organisation);
+  async createOrganisation(@Body() organisation: OrganisationDto): Promise<IOrganisation> {
+    return await this.organisationService.createOrganisationAsync(organisation);
   }
 
   @Put(':organisationId')
@@ -53,7 +56,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'update an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 200, description: 'Update successful', type: OrganisationDto, isArray: false })
-  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: OrganisationDto) : Promise<IOrganisation> {
+  async updateOrganisation(@Param('organisationId') organisationId: string, @Body() organisation: OrganisationDto): Promise<IOrganisation> {
     return await this.organisationService.updateOrganisationAsync(organisationId, organisation);
   }
 
@@ -64,7 +67,7 @@ export class OrganisationController {
   @ApiOperation({ title: 'delete an organisation' })
   @ApiImplicitParam({ name: 'organisationId', required: true, description: 'Id of the organisation to delete' })
   @ApiResponse({ status: 202, description: 'Delete successful' })
-  async deleteOrganisation(@Param('organisationId') organisationId: string) : Promise<boolean> {
+  async deleteOrganisation(@Param('organisationId') organisationId: string): Promise<boolean> {
     return await this.organisationService.deleteOrganisationAsync(organisationId);
   }
 }

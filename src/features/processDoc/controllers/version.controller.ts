@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Patch, Delete, Query, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiOperation, ApiImplicitParam, ApiBearerAuth, ApiImplicitQuery } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 import { VersionService } from '../services/version.service';
@@ -9,6 +9,7 @@ import { Config } from '../../../environments/environments';
 import { RolesGuard } from '../../../common/auth/guards/roles.guard';
 import { Roles } from '../../../common/auth/guards/roles.decorator';
 import { Capabilities } from '../../../common/auth/guards/capabilities.decorator';
+import { BooleanPipe, NumberPipe } from '../../../common/util/util';
 
 @ApiUseTags('versions')
 @Controller('versions')
@@ -22,11 +23,16 @@ export class VersionController {
   @Roles('ProcessCoordinator', 'Connector')
   @Capabilities('ITAdmin', 'Connector', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get all versions' })
-  @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
+  @ApiImplicitQuery({ name: 'depth', required: false, description: 'depth of version trees to fetch. missing value will fetch empty tree' })
+  @ApiImplicitQuery({ name: 'skip', required: false, description: 'number of elements to skip' })
+  @ApiImplicitQuery({ name: 'limit', required: false, description: 'max number of elements to return' })
   @ApiResponse({ status: 200, description: 'Get All successful' })
-  async getAllVersions(@Param('depth') depth: string): Promise<IVersion[]> {
-    const depthN = depth && depth !== 'undefined' ? Number.parseInt(depth) : 0;
-    return this.versionService.getAllVersionsAsync(depthN);
+  async getAllVersions(
+    @Query('depth', new NumberPipe()) depth?: number,
+    @Query('skip', new NumberPipe()) skip?: number,
+    @Query('limit', new NumberPipe()) limit?: number): Promise<IVersion[]> {
+
+    return this.versionService.getAllVersionsAsync(depth, skip, limit);
   }
 
   // CRUD
@@ -36,7 +42,7 @@ export class VersionController {
   @Capabilities('ITAdmin', 'Connector', 'AwarenessIntegrator')
   @ApiOperation({ title: 'get a specific version by id' })
   @ApiImplicitParam({ name: 'versionId', required: true, description: 'id of version' })
-  @ApiImplicitParam({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })
+  @ApiImplicitQuery({ name: 'depth', required: false, description: 'depth of version tree to fetch. missing value will fetch full tree' })
   @ApiResponse({ status: 200, description: 'Get successful' })
   async getVersion(@Param('versionId') versionId: string, @Param('depth') depth: string): Promise<IVersion> {
     // NOTE: I have no idea why swagger sets depth to "undefined" instead of leaving it unset, if it's kept empty in the form
@@ -61,7 +67,18 @@ export class VersionController {
   @ApiOperation({ title: 'update a version' })
   @ApiResponse({ status: 200, description: 'Update successful', type: VersionDto })
   async updateVersion(@Param('versionId') versionId: string, @Body() version: VersionDto): Promise<IVersion> {
-    return this.versionService.updateVersionAsync(version);
+    return this.versionService.updateVersionAsync(versionId, version);
+  }
+
+  // TODO do not use until we know why we should
+  // are versions immutable?
+  // we'd need more like "create new version as copy from old one"
+  @Put('publish/:versionId/:publish')
+  @Capabilities('ITAdmin', 'AwarenessIntegrator')
+  @ApiOperation({ title: 'update a version' })
+  @ApiResponse({ status: 200, description: 'Update successful', type: Boolean })
+  async publishVersion(@Param('versionId') versionId: string, @Param('publish', new BooleanPipe()) publish: boolean): Promise<boolean> {
+    return this.versionService.publishVersionAsync(versionId, publish);
   }
 
 }
